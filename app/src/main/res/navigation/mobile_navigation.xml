@@ -7,19 +7,34 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.myuw.ui.home.HomeFragment"
+        android:name="com.example.myuw.ui.page1.page1Fragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/webview_fragment" >
+        <argument
+            android:name="base_url"
+            app:argType="string"
+            android:defaultValue="https://my-test.s.uw.edu/" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.myuw.ui.dashboard.DashboardFragment"
+        android:name="com.example.myuw.ui.page1.page1Fragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/webview_fragment" >
+        <argument
+            android:name="base_url"
+            app:argType="string"
+            android:defaultValue="https://my-test.s.uw.edu/profile/" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.myuw.ui.notifications.NotificationsFragment"
+        android:name="com.example.myuw.ui.page1.page1Fragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/webview_fragment" >
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/academics/"
+            app:argType="string" />
+    </fragment>
 </navigation>
