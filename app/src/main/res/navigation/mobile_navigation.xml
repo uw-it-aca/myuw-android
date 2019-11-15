@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -20,7 +20,7 @@
         android:label="@string/academics">
         <argument
             android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/profile/"
+            android:defaultValue="https://my-test.s.uw.edu/academics/"
             app:argType="string" />
     </fragment>
 
@@ -30,7 +30,7 @@
         android:label="@string/profile">
         <argument
             android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/academics/"
+            android:defaultValue="https://my-test.s.uw.edu/profile/"
             app:argType="string" />
     </fragment>
 </navigation>
