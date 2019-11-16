@@ -1,6 +1,7 @@
 package com.example.myuw
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -28,8 +29,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home, R.id.navigation_academics, R.id.navigation_profile
             )
         )
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        // navView.menu.removeItem(R.id.navigation_profile)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

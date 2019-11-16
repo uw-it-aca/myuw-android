@@ -12,10 +12,19 @@ class LoginActivity: AppCompatActivity() {
     lateinit var webView: WebView
 
     inner class CustomWebViewClient: WebViewClient() {
-        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+        /*override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
             super.onPageStarted(view, url, favicon)
             Log.d("LoginActivity - CustomWebViewClient", url)
             if (url == "https://my-test.s.uw.edu/") {
+                startMainActivity()
+            }
+        }*/
+
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+            Log.d("LoginActivity - CustomWebViewClient", url)
+            if (url == "https://my-test.s.uw.edu/") {
+                webView.evaluateJavascript("for (x in user) if (user[x]) NativeLogin.decodeUserStream(x, user[x])", null)
                 startMainActivity()
             }
         }
@@ -29,6 +38,7 @@ class LoginActivity: AppCompatActivity() {
         webView = findViewById(R.id.webview_in_login)
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = CustomWebViewClient()
+        webView.addJavascriptInterface(UserInfoStore, "NativeLogin")
 
         webView.loadUrl("https://my-test.s.uw.edu/saml/login?next=/")
     }
