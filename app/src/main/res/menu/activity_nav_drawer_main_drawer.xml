@@ -9,20 +9,32 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_academics"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:title="@string/academics" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_husky_experience"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:title="Husky Experience" />
         <item
-            android:id="@+id/nav_tools"
+            android:id="@+id/nav_accounts"
             android:icon="@drawable/ic_menu_manage"
-            android:title="@string/menu_tools" />
+            android:title="Accounts" />
+        <item
+            android:id="@+id/nav_notices"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Notices" />
+        <item
+            android:id="@+id/nav_academic_calendar"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Academic Calendar" />
+        <item
+            android:id="@+id/nav_resources"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Resources" />
     </group>
 
-    <item android:title="Communicate">
+    <!--item android:title="Communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
@@ -33,6 +45,6 @@
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/menu_send" />
         </menu>
-    </item>
+    </item-->
 
 </menu>

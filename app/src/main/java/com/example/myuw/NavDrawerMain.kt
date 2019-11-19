@@ -13,6 +13,8 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 
 class NavDrawerMain : AppCompatActivity() {
 
@@ -36,8 +38,9 @@ class NavDrawerMain : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send
+                R.id.nav_home, R.id.nav_academics, R.id.nav_husky_experience,
+                R.id.nav_accounts, R.id.nav_notices, R.id.nav_academic_calendar,
+                R.id.nav_resources
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -53,5 +56,24 @@ class NavDrawerMain : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_open_email -> {
+                Toast.makeText(this, "Opening Email", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.action_open_search -> {
+                Toast.makeText(this, "Opening Search", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.action_view_profile -> {
+                ProfileWebViewDialog().show(supportFragmentManager, "profile dialog")
+                Toast.makeText(this, "Opening Profile", Toast.LENGTH_SHORT).show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

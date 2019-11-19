@@ -7,37 +7,71 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.myuw.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        android:name="com.example.myuw.CommonWebViewFragment"
+        android:label="@string/title_home">
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/"
+            app:argType="string" />
+    </fragment>
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.myuw.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_academics"
+        android:name="com.example.myuw.CommonWebViewFragment"
+        android:label="@string/academics">
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/academics/"
+            app:argType="string" />
+    </fragment>
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.myuw.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_husky_experience"
+        android:name="com.example.myuw.CommonWebViewFragment"
+        android:label="Husky Experience">
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/husky_experience/"
+            app:argType="string" />
+    </fragment>
 
     <fragment
-        android:id="@+id/nav_tools"
-        android:name="com.example.myuw.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
+        android:id="@+id/nav_accounts"
+        android:name="com.example.myuw.CommonWebViewFragment"
+        android:label="Accounts">
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/accounts/"
+            app:argType="string" />
+    </fragment>
 
     <fragment
-        android:id="@+id/nav_share"
-        android:name="com.example.myuw.ui.share.ShareFragment"
-        android:label="@string/menu_share"
-        tools:layout="@layout/fragment_share" />
+        android:id="@+id/nav_notices"
+        android:name="com.example.myuw.CommonWebViewFragment"
+        android:label="Notices">
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/notices/"
+            app:argType="string" />
+    </fragment>
 
     <fragment
-        android:id="@+id/nav_send"
-        android:name="com.example.myuw.ui.send.SendFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
+        android:id="@+id/nav_academic_calendar"
+        android:name="com.example.myuw.CommonWebViewFragment"
+        android:label="Academic Calendar">
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/academic_calendar/"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_resources"
+        android:name="com.example.myuw.CommonWebViewFragment"
+        android:label="Resources">
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/resources/"
+            app:argType="string" />
+    </fragment>
 </navigation>
