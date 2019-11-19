@@ -10,12 +10,21 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 private var viewFragmentMap: MutableMap<String, View> = mutableMapOf()
 
 class CommonWebViewFragment: Fragment() {
     val args: CommonWebViewFragmentArgs by navArgs()
-    protected lateinit var webView: WebView
+    lateinit var webView: WebView
+    lateinit var swipeRefreshLayout: SwipeRefreshLayout
+
+    inner class CustomWebViewClient: WebViewClient() {
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+            swipeRefreshLayout.isRefreshing = false
+        }
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
@@ -30,7 +39,16 @@ class CommonWebViewFragment: Fragment() {
             viewFragmentMap[name] = inflater.inflate(R.layout.webview_fragment, container, false)
             webView = viewFragmentMap[name]!!.findViewById(R.id.webview_in_fragment)
             webView.settings.javaScriptEnabled = true
-            webView.webViewClient = WebViewClient()
+            webView.webViewClient = CustomWebViewClient()
+
+            webView.setOnScrollChangeListener { _, _, top, _, _ ->
+                swipeRefreshLayout.isEnabled = top == 0
+            }
+
+            swipeRefreshLayout = viewFragmentMap[name]!!.findViewById(R.id.swipe_to_refresh)
+            swipeRefreshLayout.setOnRefreshListener {
+                webView.reload()
+            }
         }
         webView = viewFragmentMap[name]!!.findViewById(R.id.webview_in_fragment)
 
