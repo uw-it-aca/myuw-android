@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.myuw.CommonWebViewFragment"
+        android:label="@string/title_home">
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_academics"
+        android:name="com.example.myuw.CommonWebViewFragment"
+        android:label="@string/academics">
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/academics/"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.myuw.CommonWebViewFragment"
+        android:label="@string/profile">
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/profile/"
+            app:argType="string" />
+    </fragment>
+</navigation>
