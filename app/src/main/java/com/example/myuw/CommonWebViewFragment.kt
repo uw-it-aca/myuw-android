@@ -8,11 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
-private var viewFragmentMap: MutableMap<String, View> = mutableMapOf()
+private var viewFragmentMap: MutableMap<String, WebView> = mutableMapOf()
 
 class CommonWebViewFragment: Fragment() {
     val args: CommonWebViewFragmentArgs by navArgs()
@@ -26,35 +27,46 @@ class CommonWebViewFragment: Fragment() {
         }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // TODO: clicking the same entry multiple times causes the app to crash
-        val title = args.title
+        return inflater.inflate(R.layout.webview_fragment, container, false)
+    }
 
-        Log.d("CommonWebViewFragment", "Title: $title")
+    @SuppressLint("SetJavaScriptEnabled")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        if (!viewFragmentMap.containsKey(title)) {
-            viewFragmentMap[title] = inflater.inflate(R.layout.webview_fragment, container, false)
-            webView = viewFragmentMap[title]!!.findViewById(R.id.webview_in_fragment)
-            webView.settings.javaScriptEnabled = true
-            webView.webViewClient = CustomWebViewClient()
+        Log.d("CommonWebViewFragment", "Title: ${args.title}")
 
-            webView.setOnScrollChangeListener { _, _, top, _, _ ->
+        if (!viewFragmentMap.containsKey(args.title)) {
+            viewFragmentMap[args.title] = WebView(view.context)
+            viewFragmentMap[args.title]!!.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+            viewFragmentMap[args.title]!!.settings.javaScriptEnabled = true
+            viewFragmentMap[args.title]!!.webViewClient = CustomWebViewClient()
+
+            viewFragmentMap[args.title]!!.setOnScrollChangeListener { _, _, top, _, _ ->
                 swipeRefreshLayout.isEnabled = top == 0
             }
-
-            swipeRefreshLayout = viewFragmentMap[title]!!.findViewById(R.id.swipe_to_refresh)
-            swipeRefreshLayout.setOnRefreshListener {
-                webView.reload()
-            }
         }
-        webView = viewFragmentMap[title]!!.findViewById(R.id.webview_in_fragment)
 
-        return viewFragmentMap[title]
+        webView = viewFragmentMap[args.title]!!
+        swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh)
+        swipeRefreshLayout.setOnRefreshListener {
+            webView.reload()
+        }
+
+        (webView.parent as ViewGroup?)?.removeView(webView)
+        view.findViewById<LinearLayout>(R.id.webView_attach_point).addView(webView)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        swipeRefreshLayout.findViewById<LinearLayout>(R.id.webView_attach_point).removeView(webView)
     }
 
     override fun onStart() {

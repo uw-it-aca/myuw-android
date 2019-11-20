@@ -69,7 +69,6 @@ class NavDrawerMain : AppCompatActivity() {
                 true
             }
             R.id.action_view_profile -> {
-                ProfileWebViewDialog().show(supportFragmentManager, "profile dialog")
                 Toast.makeText(this, "Opening Profile", Toast.LENGTH_SHORT).show()
                 true
             }

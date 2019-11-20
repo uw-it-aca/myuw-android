@@ -5,12 +5,7 @@
     android:id="@+id/swipe_to_refresh">
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <WebView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/webview_in_fragment" />
+        android:layout_height="match_parent" android:id="@+id/webView_attach_point">
 
     </LinearLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
