@@ -22,7 +22,6 @@ class LoginActivity: AppCompatActivity() {
 
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
-            Log.d("LoginActivity - CustomWebViewClient", url)
             if (url == "https://my-test.s.uw.edu/") {
                 webView.evaluateJavascript("for (x in user) if (user[x]) NativeLogin.decodeUserStream(x, user[x])", null)
                 startMainActivity()

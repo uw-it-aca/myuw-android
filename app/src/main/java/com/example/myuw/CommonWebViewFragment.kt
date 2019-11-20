@@ -32,12 +32,14 @@ class CommonWebViewFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val name = args.baseUrl.split('/')[3]
-        Log.d("CommonWebViewFragment", "Name: $name")
+        // TODO: clicking the same entry multiple times causes the app to crash
+        val title = args.title
 
-        if (!viewFragmentMap.containsKey(name)) {
-            viewFragmentMap[name] = inflater.inflate(R.layout.webview_fragment, container, false)
-            webView = viewFragmentMap[name]!!.findViewById(R.id.webview_in_fragment)
+        Log.d("CommonWebViewFragment", "Title: $title")
+
+        if (!viewFragmentMap.containsKey(title)) {
+            viewFragmentMap[title] = inflater.inflate(R.layout.webview_fragment, container, false)
+            webView = viewFragmentMap[title]!!.findViewById(R.id.webview_in_fragment)
             webView.settings.javaScriptEnabled = true
             webView.webViewClient = CustomWebViewClient()
 
@@ -45,14 +47,14 @@ class CommonWebViewFragment: Fragment() {
                 swipeRefreshLayout.isEnabled = top == 0
             }
 
-            swipeRefreshLayout = viewFragmentMap[name]!!.findViewById(R.id.swipe_to_refresh)
+            swipeRefreshLayout = viewFragmentMap[title]!!.findViewById(R.id.swipe_to_refresh)
             swipeRefreshLayout.setOnRefreshListener {
                 webView.reload()
             }
         }
-        webView = viewFragmentMap[name]!!.findViewById(R.id.webview_in_fragment)
+        webView = viewFragmentMap[title]!!.findViewById(R.id.webview_in_fragment)
 
-        return viewFragmentMap[name]
+        return viewFragmentMap[title]
     }
 
     override fun onStart() {
