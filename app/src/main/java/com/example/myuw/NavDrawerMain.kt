@@ -40,6 +40,8 @@ class NavDrawerMain : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+
+        UserInfoStore.setNavigationMenu(navView.menu, resources)
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, R.id.nav_academics, R.id.nav_husky_experience,
