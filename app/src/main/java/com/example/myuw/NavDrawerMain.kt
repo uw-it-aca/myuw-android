@@ -1,6 +1,9 @@
 package com.example.myuw
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.navigation.findNavController
@@ -14,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.LinearLayout
 import android.widget.Toast
 
 class NavDrawerMain : AppCompatActivity() {
@@ -39,12 +43,18 @@ class NavDrawerMain : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, R.id.nav_academics, R.id.nav_husky_experience,
-                R.id.nav_accounts, R.id.nav_notices, R.id.nav_academic_calendar,
-                R.id.nav_resources
+                R.id.nav_accounts, R.id.nav_notices, R.id.nav_profile,
+                R.id.nav_academic_calendar, R.id.nav_resources
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        navView.getHeaderView(0).setOnClickListener{
+            navController.navigate(R.id.nav_profile)
+            navView.setCheckedItem(R.id.nav_profile)
+            drawerLayout.closeDrawer(navView)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -66,10 +76,6 @@ class NavDrawerMain : AppCompatActivity() {
             }
             R.id.action_open_search -> {
                 Toast.makeText(this, "Opening Search", Toast.LENGTH_SHORT).show()
-                true
-            }
-            R.id.action_view_profile -> {
-                Toast.makeText(this, "Opening Profile", Toast.LENGTH_SHORT).show()
                 true
             }
             else -> super.onOptionsItemSelected(item)

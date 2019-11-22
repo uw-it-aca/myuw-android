@@ -24,6 +24,9 @@ class CommonWebViewFragment: Fragment() {
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
             swipeRefreshLayout.isRefreshing = false
+
+            // TODO: Remove this when backed styling is done
+            webView.evaluateJavascript("document.querySelector(\"body > div:nth-child(4)\").style.display=\"none\"", null)
         }
     }
 

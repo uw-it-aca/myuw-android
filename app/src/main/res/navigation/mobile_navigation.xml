@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@id/nav_home">
 
     <fragment
         android:id="@+id/nav_home"
@@ -71,6 +71,20 @@
         <argument
             android:name="title"
             android:defaultValue="Notices"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.myuw.CommonWebViewFragment"
+        android:label="{title}">
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/profile/"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            android:defaultValue="Profile"
             app:argType="string" />
     </fragment>
 
