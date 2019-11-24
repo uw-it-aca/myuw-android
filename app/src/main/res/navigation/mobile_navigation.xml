@@ -115,4 +115,19 @@
             android:defaultValue="Resources"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_url_open"
+        android:name="com.example.myuw.CommonWebViewFragment"
+        android:label="{title}">
+        <argument
+            android:name="base_url"
+            android:defaultValue="https://my-test.s.uw.edu/"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            android:defaultValue="temp"
+            app:argType="string" />
+    </fragment>
+
 </navigation>

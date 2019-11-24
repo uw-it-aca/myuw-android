@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 
 class NavDrawerMain : AppCompatActivity() {
@@ -57,6 +58,9 @@ class NavDrawerMain : AppCompatActivity() {
             navView.setCheckedItem(R.id.nav_profile)
             drawerLayout.closeDrawer(navView)
         }
+
+        navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_username).text = UserInfoStore.name
+        navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_email).text = UserInfoStore.email
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

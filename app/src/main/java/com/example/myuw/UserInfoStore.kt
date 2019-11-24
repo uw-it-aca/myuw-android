@@ -9,17 +9,19 @@ import androidx.core.content.res.ResourcesCompat
 object UserInfoStore {
     private var menuItems = mapOf(
         "Home" to Pair(R.id.nav_home, R.drawable.ic_home_black_24dp),
-        "Academics" to Pair(R.id.nav_academics, R.drawable.ic_menu_gallery), // TODO: add proper icon
-        "Husky Experience" to Pair(R.id.nav_husky_experience, R.drawable.ic_menu_gallery), // TODO: add proper icon
-        "Accounts" to Pair(R.id.nav_accounts, R.drawable.ic_menu_gallery), // TODO: add proper icon
-        "Notice" to Pair(R.id.nav_notices, R.drawable.ic_menu_gallery), // TODO: add proper icon
+        "Academics" to Pair(R.id.nav_academics, R.drawable.ic_action_academics),
+        "Husky Experience" to Pair(R.id.nav_husky_experience, R.drawable.ic_husky_experience),
+        "Accounts" to Pair(R.id.nav_accounts, R.drawable.ic_accounts),
+        "Notices" to Pair(R.id.nav_notices, R.drawable.ic_notices),
         "Profile" to Pair(R.id.nav_profile, R.drawable.ic_account),
-        "Academic Calendar" to Pair(R.id.nav_academic_calendar, R.drawable.ic_menu_gallery), // TODO: add proper icon
-        "Resources" to Pair(R.id.nav_resources, R.drawable.ic_menu_gallery) // TODO: add proper icon
+        "Academic Calendar" to Pair(R.id.nav_academic_calendar, R.drawable.ic_calander),
+        "Resources" to Pair(R.id.nav_resources, R.drawable.ic_resources)
     )
 
     private var activeMenuItems = menuItems
 
+    var name: String = "John Average"
+    var email: String = "javerage@uw.edu"
     var netId: String = ""
     var emailForwardUrl: String = ""
     var groups: Set<String> = HashSet<String>()
