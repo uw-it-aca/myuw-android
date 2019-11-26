@@ -3,6 +3,7 @@ package com.example.myuw
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -35,15 +36,15 @@ class CommonWebViewFragment: Fragment() {
 
             (activity as AppCompatActivity).supportActionBar!!.title = webView.title.split(": ")[1]
             // TODO: Remove this when backed styling is done
-            // webView.evaluateJavascript("document.querySelector(\"body > div:nth-child(4)\").style.display=\"none\"", null)
+            webView.evaluateJavascript("document.querySelector(\"body > div:nth-child(4)\").style.display=\"none\"", null)
         }
 
         override fun shouldOverrideUrlLoading(
             view: WebView?,
             request: WebResourceRequest?
         ): Boolean {
-            if (request!!.url.toString().contains("my-test.s.uw.edu/out?u") || !request.url.toString().contains("my-test")) {
-                startActivity(Intent(Intent.ACTION_VIEW, request.url))
+            if (request!!.url.toString().contains("my-test.s.uw.edu/out?u=") || !request.url.toString().contains("my-test")) {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(request.url.toString().replace("https://my-test.s.uw.edu/out?u=", ""))))
             } else {
 
                 val bundle = Bundle()
