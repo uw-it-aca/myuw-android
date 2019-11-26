@@ -2,6 +2,7 @@ package com.example.myuw
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigator
 import androidx.navigation.fragment.findNavController
@@ -26,14 +28,14 @@ class CommonWebViewFragment: Fragment() {
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     inner class CustomWebViewClient: WebViewClient() {
-        lateinit var currentSwipeRefreshLayout: SwipeRefreshLayout
 
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
-            currentSwipeRefreshLayout.isRefreshing = false
+            swipeRefreshLayout.isRefreshing = false
 
+            (activity as AppCompatActivity).supportActionBar!!.title = webView.title.split(": ")[1]
             // TODO: Remove this when backed styling is done
-            webView.evaluateJavascript("document.querySelector(\"body > div:nth-child(4)\").style.display=\"none\"", null)
+            // webView.evaluateJavascript("document.querySelector(\"body > div:nth-child(4)\").style.display=\"none\"", null)
         }
 
         override fun shouldOverrideUrlLoading(
@@ -42,13 +44,14 @@ class CommonWebViewFragment: Fragment() {
         ): Boolean {
             if (request!!.url.toString().contains("my-test.s.uw.edu/out?u") || !request.url.toString().contains("my-test")) {
                 startActivity(Intent(Intent.ACTION_VIEW, request.url))
-                return true
+            } else {
+
+                val bundle = Bundle()
+                Log.d("shouldOverrideUrlLoading", "Url: ${request.url}")
+                bundle.putCharSequence("base_url", request.url.toString())
+                bundle.putCharSequence("title", UUID.randomUUID().toString())
+                findNavController().navigate(R.id.nav_url_open, bundle)
             }
-            val bundle = Bundle()
-            Log.d("shouldOverrideUrlLoading", "Url: ${request.url}")
-            bundle.putCharSequence("base_url", request.url.toString())
-            bundle.putCharSequence("title", "test")
-            findNavController().navigate(R.id.nav_url_open, bundle)
             return true
         }
     }
@@ -72,10 +75,10 @@ class CommonWebViewFragment: Fragment() {
             webViewMap[args.title]!!.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
             webViewMap[args.title]!!.settings.javaScriptEnabled = true
-            webViewMap[args.title]!!.webViewClient = CustomWebViewClient()
         }
 
         webView = webViewMap[args.title]!!
+        webView.webViewClient = CustomWebViewClient()
         swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh)
 
         swipeRefreshLayout.setOnRefreshListener {
@@ -84,7 +87,7 @@ class CommonWebViewFragment: Fragment() {
         webView.setOnScrollChangeListener { _, _, top, _, _ ->
             swipeRefreshLayout.isEnabled = top == 0
         }
-        (webView.webViewClient as CustomWebViewClient).currentSwipeRefreshLayout = swipeRefreshLayout
+
 
 
         (webView.parent as ViewGroup?)?.removeView(webView)
@@ -99,7 +102,8 @@ class CommonWebViewFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if (webView.url != args.baseUrl)
+        (activity as AppCompatActivity).supportActionBar!!.title = ""
+        if (webView.url == null)
             webView.loadUrl(args.baseUrl)
     }
 
@@ -110,11 +114,16 @@ class CommonWebViewFragment: Fragment() {
 
     override fun onResume() {
         webView.onResume()
+        if (webView.title.split(": ").size > 1)
+            (activity as AppCompatActivity).supportActionBar!!.title = webView.title.split(": ")[1]
         super.onResume()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        // TODO: Use this to maintain the webView's reference for each fragment
+    fun onBackPress():Boolean {
+        if (webView.canGoBack()) {
+            webView.goBack()
+            return false
+        }
+        return true
     }
 }

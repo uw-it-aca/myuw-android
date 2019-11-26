@@ -1,11 +1,7 @@
 package com.example.myuw
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -17,9 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.fragment.NavHostFragment
 
 class NavDrawerMain : AppCompatActivity() {
 
@@ -86,5 +82,11 @@ class NavDrawerMain : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onBackPressed() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val currentFragment = navHostFragment.childFragmentManager.fragments[0] as CommonWebViewFragment
+        if (currentFragment.onBackPress()) super.onBackPressed()
     }
 }

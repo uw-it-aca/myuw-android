@@ -16,6 +16,11 @@
             android:name="title"
             android:defaultValue="Home"
             app:argType="string" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_url_open"
+            app:destination="@id/nav_url_open"
+            app:enterAnim="@anim/slide_right_to_left"
+            app:exitAnim="@anim/slide_left_to_right" />
     </fragment>
 
     <fragment
@@ -30,6 +35,11 @@
             android:name="title"
             android:defaultValue="Academics"
             app:argType="string" />
+        <action
+            android:id="@+id/action_nav_academics_to_nav_url_open2"
+            app:destination="@id/nav_url_open"
+            app:enterAnim="@anim/slide_right_to_left"
+            app:exitAnim="@anim/slide_left_to_right" />
     </fragment>
 
     <fragment
@@ -128,6 +138,11 @@
             android:name="title"
             android:defaultValue="temp"
             app:argType="string" />
+        <action
+            android:id="@+id/action_nav_url_open_self"
+            app:destination="@id/nav_url_open"
+            app:enterAnim="@anim/slide_right_to_left"
+            app:exitAnim="@anim/slide_left_to_right" />
     </fragment>
 
 </navigation>
