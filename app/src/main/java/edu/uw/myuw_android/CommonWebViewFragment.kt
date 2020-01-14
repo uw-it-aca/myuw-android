@@ -1,8 +1,7 @@
-package com.example.myuw
+package edu.uw.myuw_android
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -15,10 +14,10 @@ import android.webkit.WebViewClient
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import edu.my.myuw_android.R
 import java.util.*
 
 private var webViewMap: MutableMap<String, WebView> = mutableMapOf()

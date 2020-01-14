@@ -1,4 +1,4 @@
-package com.example.myuw
+package edu.uw.myuw_android
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

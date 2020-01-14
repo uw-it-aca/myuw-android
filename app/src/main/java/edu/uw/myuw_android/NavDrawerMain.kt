@@ -1,7 +1,6 @@
-package com.example.myuw
+package edu.uw.myuw_android
 
 import android.os.Bundle
-import android.util.Log
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -16,6 +15,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment
+import edu.my.myuw_android.R
 
 class NavDrawerMain : AppCompatActivity() {
 
@@ -41,9 +41,14 @@ class NavDrawerMain : AppCompatActivity() {
         UserInfoStore.setNavigationMenu(navView.menu, resources)
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_academics, R.id.nav_husky_experience,
-                R.id.nav_accounts, R.id.nav_notices, R.id.nav_profile,
-                R.id.nav_academic_calendar, R.id.nav_resources
+                R.id.nav_home,
+                R.id.nav_academics,
+                R.id.nav_husky_experience,
+                R.id.nav_accounts,
+                R.id.nav_notices,
+                R.id.nav_profile,
+                R.id.nav_academic_calendar,
+                R.id.nav_resources
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -55,8 +60,10 @@ class NavDrawerMain : AppCompatActivity() {
             drawerLayout.closeDrawer(navView)
         }
 
-        navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_username).text = UserInfoStore.name
-        navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_email).text = UserInfoStore.email
+        navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_username).text =
+            UserInfoStore.name
+        navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_email).text =
+            UserInfoStore.email
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

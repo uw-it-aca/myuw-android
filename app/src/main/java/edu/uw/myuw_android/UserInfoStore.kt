@@ -1,21 +1,45 @@
-package com.example.myuw
+package edu.uw.myuw_android
 
 import android.content.res.Resources
 import android.view.Menu
-import android.view.MenuItem
 import android.webkit.JavascriptInterface
 import androidx.core.content.res.ResourcesCompat
+import edu.my.myuw_android.R
 
 object UserInfoStore {
     private var menuItems = mapOf(
-        "Home" to Pair(R.id.nav_home, R.drawable.ic_home_black_24dp),
-        "Academics" to Pair(R.id.nav_academics, R.drawable.ic_action_academics),
-        "Husky Experience" to Pair(R.id.nav_husky_experience, R.drawable.ic_husky_experience),
-        "Accounts" to Pair(R.id.nav_accounts, R.drawable.ic_accounts),
-        "Notices" to Pair(R.id.nav_notices, R.drawable.ic_notices),
-        "Profile" to Pair(R.id.nav_profile, R.drawable.ic_account),
-        "Academic Calendar" to Pair(R.id.nav_academic_calendar, R.drawable.ic_calander),
-        "Resources" to Pair(R.id.nav_resources, R.drawable.ic_resources)
+        "Home" to Pair(
+            R.id.nav_home,
+            R.drawable.ic_home_black_24dp
+        ),
+        "Academics" to Pair(
+            R.id.nav_academics,
+            R.drawable.ic_action_academics
+        ),
+        "Husky Experience" to Pair(
+            R.id.nav_husky_experience,
+            R.drawable.ic_husky_experience
+        ),
+        "Accounts" to Pair(
+            R.id.nav_accounts,
+            R.drawable.ic_accounts
+        ),
+        "Notices" to Pair(
+            R.id.nav_notices,
+            R.drawable.ic_notices
+        ),
+        "Profile" to Pair(
+            R.id.nav_profile,
+            R.drawable.ic_account
+        ),
+        "Academic Calendar" to Pair(
+            R.id.nav_academic_calendar,
+            R.drawable.ic_calander
+        ),
+        "Resources" to Pair(
+            R.id.nav_resources,
+            R.drawable.ic_resources
+        )
     )
 
     private var activeMenuItems = menuItems
