@@ -18,7 +18,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import edu.my.myuw_android.R
+import net.openid.appauth.AuthorizationService
 import java.util.*
+import kotlin.collections.HashMap
 
 private var webViewMap: MutableMap<String, WebView> = mutableMapOf()
 
@@ -26,6 +28,7 @@ class CommonWebViewFragment: Fragment() {
     val args: CommonWebViewFragmentArgs by navArgs()
     lateinit var webView: WebView
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    lateinit var authorizationService: AuthorizationService
 
     inner class CustomWebViewClient: WebViewClient() {
 
@@ -43,7 +46,7 @@ class CommonWebViewFragment: Fragment() {
             request: WebResourceRequest?
         ): Boolean {
             if (request!!.url.toString().contains("my-test.s.uw.edu/out?u=") || !request.url.toString().contains("my-test")) {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(request.url.toString().replace("https://my-test.s.uw.edu/out?u=", ""))))
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(request.url.toString().replace("http://curry.aca.uw.edu:8000/out?u=", ""))))
             } else {
 
                 val bundle = Bundle()
@@ -79,6 +82,8 @@ class CommonWebViewFragment: Fragment() {
 
         webView = webViewMap[args.title]!!
         webView.webViewClient = CustomWebViewClient()
+        // webView.settings.userAgentString = "MyUW_Hybrid/1.0 (Android)"
+        // Log.d("UserAgentString", webView.settings.userAgentString)
         swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh)
 
         swipeRefreshLayout.setOnRefreshListener {
@@ -87,8 +92,6 @@ class CommonWebViewFragment: Fragment() {
         webView.setOnScrollChangeListener { _, _, top, _, _ ->
             swipeRefreshLayout.isEnabled = top == 0
         }
-
-
 
         (webView.parent as ViewGroup?)?.removeView(webView)
         view.findViewById<LinearLayout>(R.id.webView_attach_point).addView(webView)
@@ -103,8 +106,20 @@ class CommonWebViewFragment: Fragment() {
     override fun onStart() {
         super.onStart()
         (activity as AppCompatActivity).supportActionBar!!.title = ""
+        authorizationService = AuthorizationService(activity!!)
         if (webView.url == null)
-            webView.loadUrl(args.baseUrl)
+            UserInfoStore.readAuthState(context!!).performActionWithFreshTokens(
+                authorizationService
+            ) { accessToken, idToken, ex ->
+                Log.d("AppAuth", "accessToken: $accessToken")
+                Log.d("AppAuth", "idToken: $idToken")
+                webView.loadUrl(args.baseUrl, hashMapOf())
+            }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        authorizationService.dispose()
     }
 
     override fun onPause() {

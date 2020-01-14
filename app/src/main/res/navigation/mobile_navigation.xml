@@ -10,7 +10,7 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/"
+            android:defaultValue="http://curry.aca.uw.edu:8000/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -29,7 +29,7 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/academics/"
+            android:defaultValue="http://curry.aca.uw.edu:8000/academics/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -48,7 +48,7 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/husky_experience/"
+            android:defaultValue="http://curry.aca.uw.edu:8000/husky_experience/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -62,7 +62,7 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/accounts/"
+            android:defaultValue="http://curry.aca.uw.edu:8000/accounts/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -76,7 +76,7 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/notices/"
+            android:defaultValue="http://curry.aca.uw.edu:8000/notices/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -90,7 +90,7 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/profile/"
+            android:defaultValue="http://curry.aca.uw.edu:8000/profile/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -104,7 +104,7 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/academic_calendar/"
+            android:defaultValue="http://curry.aca.uw.edu:8000/academic_calendar/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -118,7 +118,7 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/resources/"
+            android:defaultValue="http://curry.aca.uw.edu:8000/resources/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -132,7 +132,7 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/"
+            android:defaultValue="http://curry.aca.uw.edu:8000/"
             app:argType="string" />
         <argument
             android:name="title"

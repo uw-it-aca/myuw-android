@@ -1,10 +1,15 @@
 package edu.uw.myuw_android
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.content.res.Resources
 import android.view.Menu
 import android.webkit.JavascriptInterface
 import androidx.core.content.res.ResourcesCompat
 import edu.my.myuw_android.R
+import net.openid.appauth.AuthState
+
 
 object UserInfoStore {
     private var menuItems = mapOf(
@@ -68,5 +73,25 @@ object UserInfoStore {
         }
 
         menu.setGroupCheckable(R.id.group_nav_drawer_main, true, true)
+    }
+
+    fun readAuthState(context: Context): AuthState {
+        val authPrefs: SharedPreferences =
+            context.getSharedPreferences("auth", MODE_PRIVATE)
+        val stateJson = authPrefs.getString("stateJson", null)
+        var state: AuthState
+        return if (stateJson != null) {
+            AuthState.jsonDeserialize(stateJson)
+        } else {
+            AuthState()
+        }
+    }
+
+    fun writeAuthState(context: Context, state: AuthState) {
+        val authPrefs: SharedPreferences =
+            context.getSharedPreferences("auth", MODE_PRIVATE)
+        authPrefs.edit()
+            .putString("stateJson", state.jsonSerializeString())
+            .apply()
     }
 }

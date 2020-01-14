@@ -28,6 +28,10 @@ android {
         resValue "string", "openid_authorization_scope", "${openid_authorization_scope}"
         resValue "string", "openid_redirect_uri", "${openid_redirect_uri}"
         resValue "string", "openid_client_id", "${openid_client_id}"
+
+        manifestPlaceholders = [
+                redirect_scheme:"${openid_redirect_uri.split(':')[0]}"
+        ]
     }
     buildTypes {
         release {
