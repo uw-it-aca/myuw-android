@@ -110,7 +110,7 @@ class CommonWebViewFragment: Fragment() {
         if (webView.url == null)
             UserInfoStore.readAuthState(context!!).performActionWithFreshTokens(
                 authorizationService
-            ) { accessToken, idToken, ex ->
+            ) { accessToken, idToken, _ ->
                 Log.d("AppAuth", "accessToken: $accessToken")
                 Log.d("AppAuth", "idToken: $idToken")
                 webView.loadUrl(args.baseUrl, hashMapOf())

@@ -56,11 +56,11 @@ class LoginActivity: AppCompatActivity() {
                         UserInfoStore.writeAuthState(this, authState)
                         startMainActivity()
                     } else {
-                        Log.e("performTokenRequest", ex_new!!.localizedMessage)
+                        Log.e("performTokenRequest", ex_new!!.localizedMessage!!)
                     }
                 }
             } else {
-                Log.e("AuthorizationResponse", ex!!.localizedMessage)
+                Log.e("AuthorizationResponse", ex!!.localizedMessage!!)
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -88,7 +88,7 @@ class LoginActivity: AppCompatActivity() {
                     RC_AUTH
                 )
             } else {
-                Log.e("AuthorizationServiceConfiguration", ex!!.localizedMessage)
+                Log.e("AuthorizationServiceConfiguration", ex!!.localizedMessage!!)
             }
         }
     }

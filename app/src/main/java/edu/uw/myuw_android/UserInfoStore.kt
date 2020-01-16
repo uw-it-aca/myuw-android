@@ -79,7 +79,6 @@ object UserInfoStore {
         val authPrefs: SharedPreferences =
             context.getSharedPreferences("auth", MODE_PRIVATE)
         val stateJson = authPrefs.getString("stateJson", null)
-        var state: AuthState
         return if (stateJson != null) {
             AuthState.jsonDeserialize(stateJson)
         } else {
