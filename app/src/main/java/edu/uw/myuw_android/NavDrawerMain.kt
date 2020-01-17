@@ -15,6 +15,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import edu.my.myuw_android.R
 import net.openid.appauth.AuthState
@@ -59,10 +60,13 @@ class NavDrawerMain : AppCompatActivity() {
             drawerLayout.closeDrawer(navView)
         }
 
-        navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_username).text =
-            UserInfoStore.name
-        navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_email).text =
-            UserInfoStore.email
+        UserInfoStore.name.observe(this, Observer {
+            navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_username).text = it
+        })
+
+        UserInfoStore.email.observe(this, Observer {
+            navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_email).text = it
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -82,8 +82,8 @@ class CommonWebViewFragment: Fragment() {
 
         webView = webViewMap[args.title]!!
         webView.webViewClient = CustomWebViewClient()
-        // webView.settings.userAgentString = "MyUW_Hybrid/1.0 (Android)"
-        // Log.d("UserAgentString", webView.settings.userAgentString)
+        webView.settings.userAgentString += " MyUW_Hybrid/1.0 (Android)"
+        Log.d("UserAgentString", webView.settings.userAgentString)
         swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh)
 
         swipeRefreshLayout.setOnRefreshListener {

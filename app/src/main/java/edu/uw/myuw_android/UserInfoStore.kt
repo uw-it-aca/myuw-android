@@ -7,6 +7,7 @@ import android.content.res.Resources
 import android.view.Menu
 import android.webkit.JavascriptInterface
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.MutableLiveData
 import edu.my.myuw_android.R
 import net.openid.appauth.AuthState
 
@@ -49,20 +50,11 @@ object UserInfoStore {
 
     private var activeMenuItems = menuItems
 
-    var name: String = "John Average"
-    var email: String = "javerage@uw.edu"
-    var netId: String = ""
-    var emailForwardUrl: String = ""
-    var groups: Set<String> = HashSet<String>()
-
-    @JavascriptInterface
-    fun decodeUserStream(token: String, tokenValue: String) {
-        when {
-            tokenValue == "true" -> groups.plus(token)
-            token == "netid" -> netId = tokenValue
-            token == "email_forward_url" -> emailForwardUrl = tokenValue
-        }
-    }
+    var name: MutableLiveData<String> = MutableLiveData()
+    var email: MutableLiveData<String>  = MutableLiveData()
+    var netId: MutableLiveData<String> = MutableLiveData()
+    var emailForwardUrl: MutableLiveData<String> = MutableLiveData()
+    var groups: MutableLiveData<Set<String>> = MutableLiveData()
 
     fun setNavigationMenu(menu: Menu, resources: Resources) {
         menu.clear()

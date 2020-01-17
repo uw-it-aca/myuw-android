@@ -3,13 +3,23 @@ package edu.uw.myuw_android
 import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import edu.my.myuw_android.R
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.openid.appauth.*
+import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
+import java.net.URLConnection
+import java.nio.charset.StandardCharsets
 
 class LoginActivity: AppCompatActivity() {
 
@@ -94,6 +104,25 @@ class LoginActivity: AppCompatActivity() {
     }
 
     private fun startMainActivity() {
+        val authState = UserInfoStore.readAuthState(this)
+        authState.performActionWithFreshTokens(authorizationService) {
+                accessToken, idToken, _ ->
+            val conn = URL(authState.authorizationServiceConfiguration!!.discoveryDoc!!.userinfoEndpoint!!.toString()).openConnection()
+            conn.setRequestProperty("Authorization", "Bearer $accessToken")
+
+            GlobalScope.launch {
+                var responseJSON = ""
+                BufferedReader(InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8)).forEachLine {
+                    responseJSON += it + '\n'
+                }
+
+                var decodedRespose = JSONObject(responseJSON)
+                UserInfoStore.name.postValue(decodedRespose["name"] as String)
+                UserInfoStore.email.postValue(decodedRespose["email"] as String)
+                UserInfoStore.netId.postValue((decodedRespose["email"] as String).split('@')[0])
+            }
+        }
+
         val intent = Intent(this, NavDrawerMain::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
