@@ -27,6 +27,7 @@ private var webViewMap: MutableMap<String, WebView> = mutableMapOf()
 class CommonWebViewFragment: Fragment() {
     val args: CommonWebViewFragmentArgs by navArgs()
     lateinit var webView: WebView
+    lateinit var baseUrl: String
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var authorizationService: AuthorizationService
 
@@ -36,7 +37,7 @@ class CommonWebViewFragment: Fragment() {
             super.onPageFinished(view, url)
             swipeRefreshLayout.isRefreshing = false
 
-            (activity as AppCompatActivity).supportActionBar!!.title = webView.title.split(": ")[1]
+            (activity as AppCompatActivity).supportActionBar!!.title = webView.title.split(": ").getOrElse(1){"Invalid Title"}
             // TODO: Remove this when backed styling is done
             webView.evaluateJavascript("document.querySelector(\"body > div:nth-child(4)\").style.display=\"none\"", null)
         }
@@ -45,8 +46,8 @@ class CommonWebViewFragment: Fragment() {
             view: WebView?,
             request: WebResourceRequest?
         ): Boolean {
-            if (request!!.url.toString().contains("my-test.s.uw.edu/out?u=") || !request.url.toString().contains("my-test")) {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(request.url.toString().replace("http://curry.aca.uw.edu:8000/out?u=", ""))))
+            if (request!!.url.toString().contains("$baseUrl/out?u=") || !request.url.toString().contains("my-test")) {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(request.url.toString().replace("$baseUrl/out?u=", ""))))
             } else {
 
                 val bundle = Bundle()
@@ -72,6 +73,8 @@ class CommonWebViewFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Log.d("CommonWebViewFragment", "Title: ${args.title}")
+
+        baseUrl = resources.getString(R.string.myuw_base_url)
 
         if (!webViewMap.containsKey(args.title)) {
             webViewMap[args.title] = WebView(view.context)
@@ -113,7 +116,7 @@ class CommonWebViewFragment: Fragment() {
             ) { accessToken, idToken, _ ->
                 Log.d("AppAuth", "accessToken: $accessToken")
                 Log.d("AppAuth", "idToken: $idToken")
-                webView.loadUrl(args.baseUrl, hashMapOf())
+                webView.loadUrl(resources.getString(args.baseUrl), hashMapOf())
             }
     }
 

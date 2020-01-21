@@ -10,17 +10,12 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="http://curry.aca.uw.edu:8000/"
-            app:argType="string" />
+            android:defaultValue="@string/myuw_base_url"
+            app:argType="reference" />
         <argument
             android:name="title"
             android:defaultValue="Home"
             app:argType="string" />
-        <action
-            android:id="@+id/action_nav_home_to_nav_url_open"
-            app:destination="@id/nav_url_open"
-            app:enterAnim="@anim/slide_right_to_left"
-            app:exitAnim="@anim/slide_left_to_right" />
     </fragment>
 
     <fragment
@@ -29,8 +24,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="http://curry.aca.uw.edu:8000/academics/"
-            app:argType="string" />
+            android:defaultValue="@string/myuw_academics_url"
+            app:argType="reference" />
         <argument
             android:name="title"
             android:defaultValue="Academics"
@@ -48,8 +43,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="http://curry.aca.uw.edu:8000/husky_experience/"
-            app:argType="string" />
+            android:defaultValue="@string/myuw_husky_experience_url"
+            app:argType="reference" />
         <argument
             android:name="title"
             android:defaultValue="Husky Experience"
@@ -62,8 +57,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="http://curry.aca.uw.edu:8000/accounts/"
-            app:argType="string" />
+            android:defaultValue="@string/myuw_accounts_url"
+            app:argType="reference" />
         <argument
             android:name="title"
             android:defaultValue="Accounts"
@@ -76,8 +71,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="http://curry.aca.uw.edu:8000/notices/"
-            app:argType="string" />
+            android:defaultValue="@string/myuw_notices_url"
+            app:argType="reference" />
         <argument
             android:name="title"
             android:defaultValue="Notices"
@@ -90,8 +85,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="http://curry.aca.uw.edu:8000/profile/"
-            app:argType="string" />
+            android:defaultValue="@string/myuw_profile_url"
+            app:argType="reference" />
         <argument
             android:name="title"
             android:defaultValue="Profile"
@@ -104,8 +99,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="http://curry.aca.uw.edu:8000/academic_calendar/"
-            app:argType="string" />
+            android:defaultValue="@string/myuw_academic_calendar_url"
+            app:argType="reference" />
         <argument
             android:name="title"
             android:defaultValue="Academic Calendar"
@@ -118,8 +113,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="http://curry.aca.uw.edu:8000/resources/"
-            app:argType="string" />
+            android:defaultValue="@string/myuw_resources_url"
+            app:argType="reference" />
         <argument
             android:name="title"
             android:defaultValue="Resources"
@@ -132,8 +127,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="http://curry.aca.uw.edu:8000/"
-            app:argType="string" />
+            android:defaultValue="@string/myuw_base_url"
+            app:argType="reference" />
         <argument
             android:name="title"
             android:defaultValue="temp"

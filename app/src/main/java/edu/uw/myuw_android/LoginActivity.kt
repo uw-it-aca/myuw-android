@@ -121,6 +121,9 @@ class LoginActivity: AppCompatActivity() {
                 UserInfoStore.email.postValue(decodedRespose["email"] as String)
                 UserInfoStore.netId.postValue((decodedRespose["email"] as String).split('@')[0])
             }
+
+            Log.d("LoginActivity: startMainActivity", "accessToken: $accessToken")
+            Log.d("LoginActivity: startMainActivity", "idToken: $idToken")
         }
 
         val intent = Intent(this, NavDrawerMain::class.java)
