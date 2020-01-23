@@ -6,10 +6,4 @@
         android:icon="@drawable/ic_search"
         android:title="Search"
         app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/action_open_email"
-        android:icon="@drawable/ic_email"
-        android:title="Email"
-        app:showAsAction="ifRoom"/>
 </menu>

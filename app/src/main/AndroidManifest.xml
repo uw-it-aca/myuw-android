@@ -15,7 +15,8 @@
         <activity
             android:name="edu.uw.myuw_android.NavDrawerMain"
             android:label="@string/title_activity_nav_drawer_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
             android:name="edu.uw.myuw_android.LoginActivity"
             android:label="@string/app_name">

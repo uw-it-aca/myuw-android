@@ -105,10 +105,6 @@ class NavDrawerMain : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.d("NavDrawerMain - onOptionsItemSelected", item.toString())
         return when (item.itemId) {
-            R.id.action_open_email -> {
-                Toast.makeText(this, "Opening Email", Toast.LENGTH_SHORT).show()
-                true
-            }
             R.id.action_open_search -> {
                 Toast.makeText(this, "Opening Search", Toast.LENGTH_SHORT).show()
                 true
