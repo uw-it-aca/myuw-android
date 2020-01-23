@@ -36,6 +36,10 @@
             android:id="@+id/nav_resources"
             android:icon="@drawable/ic_menu_manage"
             android:title="Resources" />
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="Logout" />
     </group>
 
     <!--item android:title="Communicate">

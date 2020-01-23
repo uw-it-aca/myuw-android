@@ -10,8 +10,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="@string/myuw_base_url"
-            app:argType="reference" />
+            android:defaultValue="@myuw_base_url"
+            app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Home"
@@ -24,8 +24,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="@string/myuw_academics_url"
-            app:argType="reference" />
+            android:defaultValue="@myuw_academics_url"
+            app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Academics"
@@ -43,8 +43,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="@string/myuw_husky_experience_url"
-            app:argType="reference" />
+            android:defaultValue="@myuw_husky_experience_url"
+            app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Husky Experience"
@@ -57,8 +57,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="@string/myuw_accounts_url"
-            app:argType="reference" />
+            android:defaultValue="@myuw_accounts_url"
+            app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Accounts"
@@ -71,8 +71,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="@string/myuw_notices_url"
-            app:argType="reference" />
+            android:defaultValue="@myuw_notices_url"
+            app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Notices"
@@ -85,8 +85,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="@string/myuw_profile_url"
-            app:argType="reference" />
+            android:defaultValue="@myuw_profile_url"
+            app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Profile"
@@ -99,8 +99,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="@string/myuw_academic_calendar_url"
-            app:argType="reference" />
+            android:defaultValue="@myuw_academic_calendar_url"
+            app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Academic Calendar"
@@ -113,8 +113,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="@string/myuw_resources_url"
-            app:argType="reference" />
+            android:defaultValue="@myuw_resources_url"
+            app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Resources"
@@ -127,8 +127,8 @@
         android:label="{title}">
         <argument
             android:name="base_url"
-            android:defaultValue="@string/myuw_base_url"
-            app:argType="reference" />
+            android:defaultValue="@myuw_base_url"
+            app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="temp"

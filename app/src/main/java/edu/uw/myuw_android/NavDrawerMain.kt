@@ -1,26 +1,22 @@
 package edu.uw.myuw_android
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.*
+import com.google.android.material.navigation.NavigationView
 import edu.my.myuw_android.R
 import net.openid.appauth.AuthState
-import net.openid.appauth.AuthorizationException
-import net.openid.appauth.AuthorizationResponse
 
 class NavDrawerMain : AppCompatActivity() {
 
@@ -48,7 +44,8 @@ class NavDrawerMain : AppCompatActivity() {
                 R.id.nav_notices,
                 R.id.nav_profile,
                 R.id.nav_academic_calendar,
-                R.id.nav_resources
+                R.id.nav_resources,
+                R.id.logout
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -67,6 +64,31 @@ class NavDrawerMain : AppCompatActivity() {
         UserInfoStore.email.observe(this, Observer {
             navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_email).text = it
         })
+
+        navView.setNavigationItemSelectedListener {
+            Log.d("NavDrawerMain - onCreate", it.title.toString())
+            when (it.itemId) {
+                R.id.logout -> {
+                    Log.d("NavDrawerMain - logout", "logging out user")
+                    val currentState = UserInfoStore.readAuthState(this)
+                    val clearedState = AuthState(currentState.authorizationServiceConfiguration!!)
+                    if (currentState.lastRegistrationResponse != null) {
+                        clearedState.update(currentState.lastRegistrationResponse)
+                    }
+                    UserInfoStore.writeAuthState(this, clearedState)
+                    val mainIntent = Intent(this, LoginActivity::class.java)
+                    mainIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(mainIntent)
+                    finish()
+                    true
+                }
+                else -> {
+                    val handled = NavigationUI.onNavDestinationSelected(it, navController)
+                    if (handled) drawerLayout.closeDrawer(navView)
+                    handled
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -81,6 +103,7 @@ class NavDrawerMain : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d("NavDrawerMain - onOptionsItemSelected", item.toString())
         return when (item.itemId) {
             R.id.action_open_email -> {
                 Toast.makeText(this, "Opening Email", Toast.LENGTH_SHORT).show()

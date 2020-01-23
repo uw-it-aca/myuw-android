@@ -19,6 +19,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import edu.my.myuw_android.R
 import net.openid.appauth.AuthorizationService
+import java.net.URL
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -46,7 +47,7 @@ class CommonWebViewFragment: Fragment() {
             view: WebView?,
             request: WebResourceRequest?
         ): Boolean {
-            if (request!!.url.toString().contains("$baseUrl/out?u=") || !request.url.toString().contains("my-test")) {
+            if (request!!.url.toString().contains("$baseUrl/out?u=") || !request.url.toString().contains(URL(baseUrl).host)) {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(request.url.toString().replace("$baseUrl/out?u=", ""))))
             } else {
 
@@ -116,7 +117,12 @@ class CommonWebViewFragment: Fragment() {
             ) { accessToken, idToken, _ ->
                 Log.d("AppAuth", "accessToken: $accessToken")
                 Log.d("AppAuth", "idToken: $idToken")
-                webView.loadUrl(resources.getString(args.baseUrl), hashMapOf())
+                val baseURL: String = if (args.baseUrl.startsWith("@")) {
+                    resources.getString(resources.getIdentifier(args.baseUrl.substring(1), "string", context!!.packageName))
+                } else {
+                    args.baseUrl
+                }
+                webView.loadUrl(baseURL, hashMapOf())
             }
     }
 

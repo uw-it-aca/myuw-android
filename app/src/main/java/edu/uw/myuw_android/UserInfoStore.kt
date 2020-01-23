@@ -45,6 +45,10 @@ object UserInfoStore {
         "Resources" to Pair(
             R.id.nav_resources,
             R.drawable.ic_resources
+        ),
+        "Logout" to Pair(
+            R.id.logout,
+            R.drawable.ic_exit_to_app_black_24dp
         )
     )
 
