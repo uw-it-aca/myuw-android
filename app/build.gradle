@@ -41,7 +41,7 @@ android {
         resValue "string", "openid_client_id", "${openid_client_id}"
 
         manifestPlaceholders = [
-                redirect_scheme:"${openid_redirect_uri.split(':')[0]}"
+                redirect_scheme: "${openid_redirect_uri.split(':')[0]}"
         ]
     }
     buildTypes {

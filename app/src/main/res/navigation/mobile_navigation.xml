@@ -103,7 +103,7 @@
             app:argType="string" />
         <argument
             android:name="title"
-            android:defaultValue="Academic Calendar"
+            android:defaultValue="Calendar"
             app:argType="string" />
     </fragment>
 
@@ -117,7 +117,7 @@
             app:argType="string" />
         <argument
             android:name="title"
-            android:defaultValue="Resources"
+            android:defaultValue="UW Resources"
             app:argType="string" />
     </fragment>
 

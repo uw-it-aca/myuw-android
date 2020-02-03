@@ -1,12 +1,15 @@
 package edu.uw.myuw_android
 
+import android.app.SearchManager
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -94,6 +97,14 @@ class NavDrawerMain : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.nav_drawer_main, menu)
+
+        // Get the SearchView and set the searchable configuration
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        (menu.findItem(R.id.action_open_search).actionView as SearchView).apply {
+            // Assumes current activity is the searchable activity
+            setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        }
+
         return true
     }
 
@@ -106,7 +117,7 @@ class NavDrawerMain : AppCompatActivity() {
         Log.d("NavDrawerMain - onOptionsItemSelected", item.toString())
         return when (item.itemId) {
             R.id.action_open_search -> {
-                Toast.makeText(this, "Opening Search", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, SearchActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)
