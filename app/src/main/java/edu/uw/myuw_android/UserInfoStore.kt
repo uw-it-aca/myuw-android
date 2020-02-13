@@ -73,7 +73,7 @@ object UserInfoStore {
             )
         ),
         R.id.group_nav_drawer_secondary to mapOf(
-            "Signout" to Triple(
+            "Sign out" to Triple(
                 R.id.logout,
                 R.drawable.ic_exit_to_app_black_24dp,
                 { _ -> true }

@@ -117,7 +117,7 @@ class LoginActivity: AppCompatActivity() {
             }
 
             val idObject = JSONObject(String(Base64.decode(idToken!!.split(".")[1], Base64.URL_SAFE)))
-            UserInfoStore.name.postValue("javerage")
+            UserInfoStore.name.postValue(idObject["sub"] as String)
             UserInfoStore.email.postValue(idObject["email"] as String)
             UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
 
