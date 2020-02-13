@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.LinearLayout
@@ -17,8 +18,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import edu.my.myuw_android.BuildConfig
 import edu.my.myuw_android.R
 import net.openid.appauth.AuthorizationService
+import java.lang.Exception
 import java.net.URL
 import java.util.*
 import kotlin.collections.HashMap
@@ -58,6 +61,22 @@ class CommonWebViewFragment: Fragment() {
                 findNavController().navigate(R.id.nav_url_open, bundle)
             }
             return true
+        }
+
+        override fun shouldInterceptRequest(
+            view: WebView?,
+            request: WebResourceRequest?
+        ): WebResourceResponse? {
+            if (request!!.url!!.scheme == "http" && !BuildConfig.DEBUG) {
+                try {
+                    val httpsUrl = URL(request.url.toString().replace("http://", "https://"))
+                    val connection = httpsUrl.openConnection()
+                    return WebResourceResponse(connection.contentType, connection.contentEncoding, connection.getInputStream())
+                } catch (e: Exception) {
+                    throw e
+                }
+            }
+            return super.shouldInterceptRequest(view, request)
         }
     }
 

@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import edu.my.myuw_android.BuildConfig
 import edu.my.myuw_android.R
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLConnection
 import java.nio.charset.StandardCharsets
+import javax.net.ssl.HttpsURLConnection
 
 class LoginActivity: AppCompatActivity() {
 
@@ -112,6 +114,7 @@ class LoginActivity: AppCompatActivity() {
 
             GlobalScope.launch {
                 var responseJSON = ""
+                if (conn !is HttpsURLConnection && !BuildConfig.DEBUG) throw SecurityException("Connection is not secure")
                 BufferedReader(InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8)).forEachLine {
                     responseJSON += it + '\n'
                 }
