@@ -13,6 +13,7 @@ import edu.my.myuw_android.BuildConfig
 import edu.my.myuw_android.R
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import net.openid.appauth.*
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -112,7 +113,7 @@ class LoginActivity: AppCompatActivity() {
             val conn = URL(authState.authorizationServiceConfiguration!!.discoveryDoc!!.userinfoEndpoint!!.toString()).openConnection()
             conn.setRequestProperty("Authorization", "Bearer $accessToken")
 
-            GlobalScope.launch {
+            val job = GlobalScope.launch {
                 var responseJSON = ""
                 if (conn !is HttpsURLConnection && !BuildConfig.DEBUG) throw SecurityException("Connection is not secure")
                 BufferedReader(InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8)).forEachLine {
@@ -123,15 +124,20 @@ class LoginActivity: AppCompatActivity() {
                 UserInfoStore.name.postValue(decodedRespose["name"] as String)
                 UserInfoStore.email.postValue(decodedRespose["email"] as String)
                 UserInfoStore.netId.postValue((decodedRespose["email"] as String).split('@')[0])
+
+                UserInfoStore.updateAffiliations(resources, idToken!!)
+            }
+            runBlocking {
+                job.join()
             }
 
             Log.d("LoginActivity: startMainActivity", "accessToken: $accessToken")
             Log.d("LoginActivity: startMainActivity", "idToken: $idToken")
-        }
 
-        val intent = Intent(this, NavDrawerMain::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
+            val intent = Intent(this, NavDrawerMain::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+        }
     }
 }

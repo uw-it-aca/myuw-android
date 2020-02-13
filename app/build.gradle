@@ -28,6 +28,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resValue "string", "myuw_base_url", "${myuw_base_url}"
+        resValue "string", "myuw_affiliation_endpoint", "${myuw_base_url}${properties.getProperty('myuw.affiliation_endpoint')}"
         resValue "string", "myuw_academics_url", "${myuw_base_url}/academics/"
         resValue "string", "myuw_husky_experience_url", "${myuw_base_url}/husky_experience/"
         resValue "string", "myuw_accounts_url", "${myuw_base_url}/accounts/"

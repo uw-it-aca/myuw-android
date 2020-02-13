@@ -37,7 +37,7 @@ class NavDrawerMain : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
 
-        UserInfoStore.setNavigationMenu(navView.menu, resources)
+        UserInfoStore.setNavigationMenu(navView.menu, this)
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home,

@@ -29,11 +29,11 @@ import kotlin.collections.HashMap
 private var webViewMap: MutableMap<String, WebView> = mutableMapOf()
 
 class CommonWebViewFragment: Fragment() {
-    val args: CommonWebViewFragmentArgs by navArgs()
+    private val args: CommonWebViewFragmentArgs by navArgs()
     lateinit var webView: WebView
     lateinit var baseUrl: String
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    lateinit var authorizationService: AuthorizationService
+    private lateinit var authorizationService: AuthorizationService
 
     inner class CustomWebViewClient: WebViewClient() {
 
