@@ -38,7 +38,7 @@ class CommonWebViewFragment: Fragment() {
             super.onPageFinished(view, url)
             swipeRefreshLayout.isRefreshing = false
 
-            (activity as AppCompatActivity).supportActionBar!!.title = webView.title.split(": ").getOrElse(1){"Invalid Title"}
+            (activity as? AppCompatActivity)?.supportActionBar!!.title = webView.title.split(": ").getOrElse(1){"Invalid Title"}
             // TODO: Remove this when backed styling is done
             webView.evaluateJavascript("document.querySelector(\"body > div:nth-child(4)\").style.display=\"none\"", null)
         }
@@ -50,11 +50,10 @@ class CommonWebViewFragment: Fragment() {
             if (request!!.url.toString().contains("$baseUrl/out?u=") || !request.url.toString().contains(URL(baseUrl).host)) {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(request.url.toString().replace("$baseUrl/out?u=", ""))))
             } else {
-
                 val bundle = Bundle()
                 Log.d("shouldOverrideUrlLoading", "Url: ${request.url}")
                 bundle.putCharSequence("base_url", request.url.toString())
-                bundle.putCharSequence("title", UUID.randomUUID().toString())
+                bundle.putCharSequence("title", "")
                 findNavController().navigate(R.id.nav_url_open, bundle)
             }
             return true
@@ -74,6 +73,8 @@ class CommonWebViewFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Log.d("CommonWebViewFragment", "Title: ${args.title}")
+        if (args.uuid == null) args.copy(uuid = UUID.randomUUID())
+        Log.d("CommonWebViewFragment", "UUID: ${args.uuid}")
 
         baseUrl = resources.getString(R.string.myuw_base_url)
 
@@ -122,7 +123,7 @@ class CommonWebViewFragment: Fragment() {
                 } else {
                     args.baseUrl
                 }
-                webView.loadUrl(baseURL, hashMapOf())
+                webView.loadUrl(baseURL, hashMapOf("Authorization" to "Bearer $idToken"))
             }
     }
 
