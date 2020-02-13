@@ -17,10 +17,9 @@
             android:defaultValue="Home"
             app:argType="string" />
         <argument
-            android:name="uuid"
-            app:argType="java.util.UUID"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Home" />
     </fragment>
 
     <fragment
@@ -36,10 +35,9 @@
             android:defaultValue="Academics"
             app:argType="string" />
         <argument
-            android:name="uuid"
-            app:argType="java.util.UUID"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Academics" />
         <action
             android:id="@+id/action_nav_academics_to_nav_url_open2"
             app:destination="@id/nav_url_open"
@@ -60,10 +58,9 @@
             android:defaultValue="Husky Experience"
             app:argType="string" />
         <argument
-            android:name="uuid"
-            app:argType="java.util.UUID"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Husky Experience" />
     </fragment>
 
     <fragment
@@ -79,10 +76,9 @@
             android:defaultValue="Accounts"
             app:argType="string" />
         <argument
-            android:name="uuid"
-            app:argType="java.util.UUID"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Accounts" />
     </fragment>
 
     <fragment
@@ -98,10 +94,9 @@
             android:defaultValue="Notices"
             app:argType="string" />
         <argument
-            android:name="uuid"
-            app:argType="java.util.UUID"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Notices" />
     </fragment>
 
     <fragment
@@ -117,10 +112,9 @@
             android:defaultValue="Profile"
             app:argType="string" />
         <argument
-            android:name="uuid"
-            app:argType="java.util.UUID"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Profile" />
     </fragment>
 
     <fragment
@@ -136,10 +130,9 @@
             android:defaultValue="Calendar"
             app:argType="string" />
         <argument
-            android:name="uuid"
-            app:argType="java.util.UUID"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Calendar" />
     </fragment>
 
     <fragment
@@ -155,10 +148,9 @@
             android:defaultValue="UW Resources"
             app:argType="string" />
         <argument
-            android:name="uuid"
-            app:argType="java.util.UUID"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="UW Resources" />
     </fragment>
 
     <fragment
@@ -174,10 +166,9 @@
             android:defaultValue="temp"
             app:argType="string" />
         <argument
-            android:name="uuid"
-            app:argType="java.util.UUID"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="nothing" />
         <action
             android:id="@+id/action_nav_url_open_self"
             app:destination="@id/nav_url_open"

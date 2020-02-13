@@ -54,6 +54,7 @@ class CommonWebViewFragment: Fragment() {
                 Log.d("shouldOverrideUrlLoading", "Url: ${request.url}")
                 bundle.putCharSequence("base_url", request.url.toString())
                 bundle.putCharSequence("title", "")
+                bundle.putCharSequence("unique_id", UUID.randomUUID().toString())
                 findNavController().navigate(R.id.nav_url_open, bundle)
             }
             return true
@@ -73,19 +74,18 @@ class CommonWebViewFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Log.d("CommonWebViewFragment", "Title: ${args.title}")
-        if (args.uuid == null) args.copy(uuid = UUID.randomUUID())
-        Log.d("CommonWebViewFragment", "UUID: ${args.uuid}")
+        Log.d("CommonWebViewFragment", "unique_id: ${args.uniqueId}")
 
         baseUrl = resources.getString(R.string.myuw_base_url)
 
-        if (!webViewMap.containsKey(args.title)) {
-            webViewMap[args.title] = WebView(view.context)
-            webViewMap[args.title]!!.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        if (!webViewMap.containsKey(args.uniqueId)) {
+            webViewMap[args.uniqueId] = WebView(view.context)
+            webViewMap[args.uniqueId]!!.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
-            webViewMap[args.title]!!.settings.javaScriptEnabled = true
+            webViewMap[args.uniqueId]!!.settings.javaScriptEnabled = true
         }
 
-        webView = webViewMap[args.title]!!
+        webView = webViewMap[args.uniqueId]!!
         webView.webViewClient = CustomWebViewClient()
         webView.settings.userAgentString += " MyUW_Hybrid/1.0 (Android)"
         Log.d("UserAgentString", webView.settings.userAgentString)
