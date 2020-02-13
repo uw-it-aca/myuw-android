@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -110,29 +111,23 @@ class LoginActivity: AppCompatActivity() {
         val authState = UserInfoStore.readAuthState(this)
         authState.performActionWithFreshTokens(authorizationService) {
                 accessToken, idToken, _ ->
-            val conn = URL(authState.authorizationServiceConfiguration!!.discoveryDoc!!.userinfoEndpoint!!.toString()).openConnection()
-            conn.setRequestProperty("Authorization", "Bearer $accessToken")
 
             val job = GlobalScope.launch {
-                var responseJSON = ""
-                if (conn !is HttpsURLConnection && !BuildConfig.DEBUG) throw SecurityException("Connection is not secure")
-                BufferedReader(InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8)).forEachLine {
-                    responseJSON += it + '\n'
-                }
-
-                var decodedRespose = JSONObject(responseJSON)
-                UserInfoStore.name.postValue(decodedRespose["name"] as String)
-                UserInfoStore.email.postValue(decodedRespose["email"] as String)
-                UserInfoStore.netId.postValue((decodedRespose["email"] as String).split('@')[0])
-
                 UserInfoStore.updateAffiliations(resources, idToken!!)
             }
+
+            val idObject = JSONObject(String(Base64.decode(idToken!!.split(".")[1], Base64.URL_SAFE)))
+            UserInfoStore.name.postValue("javerage")
+            UserInfoStore.email.postValue(idObject["email"] as String)
+            UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
+
             runBlocking {
                 job.join()
             }
 
             Log.d("LoginActivity: startMainActivity", "accessToken: $accessToken")
             Log.d("LoginActivity: startMainActivity", "idToken: $idToken")
+            Log.d("LoginActivity: startMainActivity", "idObject: $idObject")
 
             val intent = Intent(this, NavDrawerMain::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
