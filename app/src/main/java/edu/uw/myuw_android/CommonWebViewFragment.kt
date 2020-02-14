@@ -69,22 +69,6 @@ class CommonWebViewFragment: Fragment() {
             }
             return true
         }
-
-        override fun shouldInterceptRequest(
-            view: WebView?,
-            request: WebResourceRequest?
-        ): WebResourceResponse? {
-            if (request!!.url!!.scheme == "http" && !BuildConfig.DEBUG) {
-                try {
-                    val httpsUrl = URL(request.url.toString().replace("http://", "https://"))
-                    val connection = httpsUrl.openConnection()
-                    return WebResourceResponse(connection.contentType, connection.contentEncoding, connection.getInputStream())
-                } catch (e: Exception) {
-                    throw e
-                }
-            }
-            return super.shouldInterceptRequest(view, request)
-        }
     }
 
     override fun onCreateView(

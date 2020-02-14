@@ -121,8 +121,6 @@ object UserInfoStore {
         val conn =
             URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection()
         conn.setRequestProperty("Authorization", "Bearer $idToken")
-        if (conn !is HttpsURLConnection && !BuildConfig.DEBUG) throw SecurityException("Connection is not secure")
-
         var responseJson = "";
         BufferedReader(
             InputStreamReader(
