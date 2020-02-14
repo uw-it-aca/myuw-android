@@ -23,6 +23,8 @@ import edu.my.myuw_android.R
 import net.openid.appauth.AuthorizationService
 import java.lang.Exception
 import java.net.URL
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -50,8 +52,13 @@ class CommonWebViewFragment: Fragment() {
             view: WebView?,
             request: WebResourceRequest?
         ): Boolean {
+            Log.d("shouldOverrideUrlLoading", "before processing url: ${request?.url}")
             if (request!!.url.toString().contains("$baseUrl/out?u=") || !request.url.toString().contains(URL(baseUrl).host)) {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(request.url.toString().replace("$baseUrl/out?u=", ""))))
+                val decodedUrl = URLDecoder.decode(request.url.toString().replace("$baseUrl/out?u=", ""), StandardCharsets.UTF_8.toString())
+                val uri = Uri.parse(decodedUrl).buildUpon().scheme("http").build()
+
+                Log.d("shouldOverrideUrlLoading", "Url: $uri")
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
             } else {
                 val bundle = Bundle()
                 Log.d("shouldOverrideUrlLoading", "Url: ${request.url}")
