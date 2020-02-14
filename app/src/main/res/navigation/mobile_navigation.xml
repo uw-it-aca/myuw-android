@@ -64,6 +64,24 @@
     </fragment>
 
     <fragment
+        android:id="@+id/nav_teaching"
+        android:name="edu.uw.myuw_android.CommonWebViewFragment"
+        android:label="{title}">
+        <argument
+            android:name="base_url"
+            android:defaultValue="@myuw_teaching"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            android:defaultValue="Teaching"
+            app:argType="string" />
+        <argument
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Teaching" />
+    </fragment>
+
+    <fragment
         android:id="@+id/nav_accounts"
         android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">

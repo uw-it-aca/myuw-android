@@ -42,8 +42,8 @@ object UserInfoStore {
                 { aff: List<String> -> (aff.contains("undergrad") and aff.contains("seattle")) or aff.contains("hxt_viewer") }
             ),
             "Teaching" to Triple(
-                R.id.nav_academics,
-                R.drawable.ic_action_academics,
+                R.id.nav_teaching,
+                R.drawable.ic_edit_black_24dp,
                 { aff: List<String> -> aff.contains("instructor") }
             ),
             "Accounts" to Triple(
