@@ -62,7 +62,7 @@ class CommonWebViewFragment: Fragment() {
             } else {
                 val bundle = Bundle()
                 Log.d("shouldOverrideUrlLoading", "Url: ${request.url}")
-                bundle.putCharSequence("base_url", request.url.toString())
+                bundle.putCharSequence("path", request.url.toString().replace(baseUrl, ""))
                 bundle.putCharSequence("title", "")
                 bundle.putCharSequence("unique_id", UUID.randomUUID().toString())
                 findNavController().navigate(R.id.nav_url_open, bundle)
@@ -128,12 +128,8 @@ class CommonWebViewFragment: Fragment() {
             ) { accessToken, idToken, _ ->
                 Log.d("AppAuth", "accessToken: $accessToken")
                 Log.d("AppAuth", "idToken: $idToken")
-                val baseURL: String = if (args.baseUrl.startsWith("@")) {
-                    resources.getString(resources.getIdentifier(args.baseUrl.substring(1), "string", context!!.packageName))
-                } else {
-                    args.baseUrl
-                }
-                webView.loadUrl(baseURL, hashMapOf("Authorization" to "Bearer $idToken"))
+                Log.d("AppAuth", "url: ${baseUrl + args.path}")
+                webView.loadUrl(baseUrl + args.path, hashMapOf("Authorization" to "Bearer $idToken"))
             }
     }
 

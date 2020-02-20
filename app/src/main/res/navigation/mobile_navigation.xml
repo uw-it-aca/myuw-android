@@ -9,8 +9,8 @@
         android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="@myuw_base_url"
+            android:name="path"
+            android:defaultValue="/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -27,8 +27,8 @@
         android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="@myuw_academics_url"
+            android:name="path"
+            android:defaultValue="/academics/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -38,11 +38,6 @@
             android:name="unique_id"
             app:argType="string"
             android:defaultValue="Academics" />
-        <action
-            android:id="@+id/action_nav_academics_to_nav_url_open2"
-            app:destination="@id/nav_url_open"
-            app:enterAnim="@anim/slide_right_to_left"
-            app:exitAnim="@anim/slide_left_to_right" />
     </fragment>
 
     <fragment
@@ -50,8 +45,8 @@
         android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="@myuw_husky_experience_url"
+            android:name="path"
+            android:defaultValue="/husky_experience/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -68,8 +63,8 @@
         android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="@myuw_teaching"
+            android:name="path"
+            android:defaultValue="/teaching/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -86,8 +81,8 @@
         android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="@myuw_accounts_url"
+            android:name="path"
+            android:defaultValue="/accounts/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -104,8 +99,8 @@
         android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="@myuw_notices_url"
+            android:name="path"
+            android:defaultValue="/notices/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -122,8 +117,8 @@
         android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="@myuw_profile_url"
+            android:name="path"
+            android:defaultValue="/profile/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -140,8 +135,8 @@
         android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="@myuw_academic_calendar_url"
+            android:name="path"
+            android:defaultValue="/academic_calendar/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -158,8 +153,8 @@
         android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="@myuw_resources_url"
+            android:name="path"
+            android:defaultValue="/resources/"
             app:argType="string" />
         <argument
             android:name="title"
@@ -176,8 +171,8 @@
         android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="">
         <argument
-            android:name="base_url"
-            android:defaultValue="@myuw_base_url"
+            android:name="path"
+            android:defaultValue="/"
             app:argType="string" />
         <argument
             android:name="title"
