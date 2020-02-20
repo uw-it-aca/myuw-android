@@ -149,12 +149,4 @@ class CommonWebViewFragment: Fragment() {
             (activity as AppCompatActivity).supportActionBar!!.title = webView.title.split(": ")[1]
         super.onResume()
     }
-
-    fun onBackPress():Boolean {
-        if (webView.canGoBack()) {
-            webView.goBack()
-            return false
-        }
-        return true
-    }
 }

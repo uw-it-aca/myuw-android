@@ -123,10 +123,4 @@ class NavDrawerMain : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-    override fun onBackPressed() {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val currentFragment = navHostFragment.childFragmentManager.fragments[0] as CommonWebViewFragment
-        if (currentFragment.onBackPress()) super.onBackPressed()
-    }
 }
