@@ -7,6 +7,7 @@ import android.content.res.Resources
 import android.util.Log
 import android.view.Menu
 import android.webkit.JavascriptInterface
+import androidx.annotation.IntegerRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
 import edu.my.myuw_android.BuildConfig
@@ -25,7 +26,7 @@ import javax.net.ssl.HttpsURLConnection
 
 object UserInfoStore {
     private var menuItems = mapOf(
-        R.id.group_nav_drawer_main to mapOf(
+        R.id.group_nav_drawer_main to mapOf<String, Triple<Int, Int, (List<String>) -> Boolean>>(
             "Home" to Triple(
                 R.id.nav_home,
                 R.drawable.ic_home_black_24dp,
