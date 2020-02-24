@@ -46,8 +46,6 @@ class CommonWebViewFragment: Fragment() {
             (activity as? AppCompatActivity)?.supportActionBar?.also {
                 it.title = view.title.split(": ").getOrElse(1){"Invalid Title"}
             } ?: TODO("Gracefully crash the app? webview probably finished loading after the fragment was unloaded. Could just ignore this")
-            // TODO: Remove this when backed styling is done
-            webView.evaluateJavascript("document.querySelector(\"body > div:nth-child(4)\").style.display=\"none\"", null)
         }
 
         override fun shouldOverrideUrlLoading(
