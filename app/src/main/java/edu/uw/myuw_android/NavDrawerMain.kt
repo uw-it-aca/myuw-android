@@ -101,13 +101,6 @@ class NavDrawerMain : AppCompatActivity() {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.nav_drawer_main, menu)
 
-        // Get the SearchView and set the searchable configuration
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        (menu.findItem(R.id.action_open_search).actionView as SearchView).apply {
-            // Assumes current activity is the searchable activity
-            setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        }
-
         return true
     }
 
@@ -120,8 +113,8 @@ class NavDrawerMain : AppCompatActivity() {
         Log.d("NavDrawerMain - onOptionsItemSelected", item.toString())
         return when (item.itemId) {
             R.id.action_open_search -> {
-                startActivity(Intent(this, SearchActivity::class.java))
-                true
+                // startActivity(Intent(this, SearchActivity::class.java))
+                super.onSearchRequested()
             }
             else -> super.onOptionsItemSelected(item)
         }
