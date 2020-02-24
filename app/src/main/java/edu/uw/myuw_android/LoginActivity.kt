@@ -17,13 +17,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.openid.appauth.*
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
-import java.net.URLConnection
-import java.nio.charset.StandardCharsets
-import javax.net.ssl.HttpsURLConnection
 
 class LoginActivity: AppCompatActivity() {
 
@@ -33,7 +26,6 @@ class LoginActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        supportActionBar?.hide()
 
         findViewById<Button>(R.id.button).setOnClickListener {
             tryLoginWithAppAuth()
@@ -42,11 +34,11 @@ class LoginActivity: AppCompatActivity() {
         authorizationService = AuthorizationService(this)
 
         if (UserInfoStore.readAuthState(this).isAuthorized) {
-            findViewById<TextView>(R.id.textView).text = "You are Authorized"
+            findViewById<TextView>(R.id.textView).text = "You are signed in"
             findViewById<Button>(R.id.button).isClickable = false
             startMainActivity()
         } else {
-            findViewById<TextView>(R.id.textView).text = "You are not Authorized"
+            findViewById<TextView>(R.id.textView).text = "You are not signed in"
         }
     }
 
