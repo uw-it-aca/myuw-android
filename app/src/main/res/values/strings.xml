@@ -26,4 +26,6 @@
     <string name="onReceiveError">Unable to Load Page</string>
     <string name="onReceiveErrorDesc">A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux</string>
     <string name="onReceiveErrorButton">Retry</string>
+    <string name="search_label">MyUW</string>
+    <string name="search_hint">Tuition, Transcript</string>
 </resources>
