@@ -57,25 +57,33 @@ class LoginActivity: AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_AUTH) {
-            val resp = AuthorizationResponse.fromIntent(data!!)
-            val ex = AuthorizationException.fromIntent(data)
+            data?.also {
+                val resp = AuthorizationResponse.fromIntent(it)
+                val ex = AuthorizationException.fromIntent(it)
 
-            if (resp != null) {
-                val authState = AuthState(resp, ex)
-                authorizationService.performTokenRequest(
-                    resp.createTokenExchangeRequest()
-                ) { response, ex_new ->
-                    if (response != null) {
-                        authState.update(response, ex)
-                        UserInfoStore.writeAuthState(this, authState)
-                        startMainActivity()
-                    } else {
-                        Log.e("performTokenRequest", ex_new!!.localizedMessage!!)
+                if (resp != null) {
+                    val authState = AuthState(resp, ex)
+                    authorizationService.performTokenRequest(
+                        resp.createTokenExchangeRequest()
+                    ) { response, ex_new ->
+                        if (response != null) {
+                            authState.update(response, ex)
+                            UserInfoStore.writeAuthState(this, authState)
+                            startMainActivity()
+                        } else {
+                            ex_new?.localizedMessage?.also { localizedMessage ->
+                                Log.e("performTokenRequest", localizedMessage)
+                            }
+                            TODO("Show error page if this point is reached")
+                        }
                     }
+                } else {
+                    ex?.localizedMessage?.also { localizedMessage ->
+                        Log.e("AuthorizationResponse", localizedMessage)
+                    }
+                    TODO("Show error page if this point is reached")
                 }
-            } else {
-                Log.e("AuthorizationResponse", ex!!.localizedMessage!!)
-            }
+            } ?: TODO("Error page for no response/improper from OAuth provider")
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
@@ -102,7 +110,10 @@ class LoginActivity: AppCompatActivity() {
                     RC_AUTH
                 )
             } else {
-                Log.e("AuthorizationServiceConfiguration", ex!!.localizedMessage!!)
+                ex?.localizedMessage?.also {
+                    Log.e("AuthorizationServiceConfiguration", it)
+                }
+                TODO("Show error page if this point is reached")
             }
         }
     }
@@ -112,27 +123,29 @@ class LoginActivity: AppCompatActivity() {
         authState.performActionWithFreshTokens(authorizationService) {
                 accessToken, idToken, _ ->
 
-            val job = GlobalScope.launch {
-                UserInfoStore.updateAffiliations(resources, idToken!!)
-            }
+            idToken?.also {
+                val job = GlobalScope.launch {
+                    UserInfoStore.updateAffiliations(resources, it)
+                }
 
-            val idObject = JSONObject(String(Base64.decode(idToken!!.split(".")[1], Base64.URL_SAFE)))
-            UserInfoStore.name.postValue(idObject["sub"] as String)
-            UserInfoStore.email.postValue(idObject["email"] as String)
-            UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
+                val idObject = JSONObject(String(Base64.decode(it.split(".")[1], Base64.URL_SAFE)))
+                UserInfoStore.name.postValue(idObject["sub"] as String)
+                UserInfoStore.email.postValue(idObject["email"] as String)
+                UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
 
-            runBlocking {
-                job.join()
-            }
+                runBlocking {
+                    job.join()
+                }
 
-            Log.d("LoginActivity: startMainActivity", "accessToken: $accessToken")
-            Log.d("LoginActivity: startMainActivity", "idToken: $idToken")
-            Log.d("LoginActivity: startMainActivity", "idObject: $idObject")
+                Log.d("LoginActivity: startMainActivity", "accessToken: $accessToken")
+                Log.d("LoginActivity: startMainActivity", "idToken: $idToken")
+                Log.d("LoginActivity: startMainActivity", "idObject: $idObject")
 
-            val intent = Intent(this, NavDrawerMain::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
+                val intent = Intent(this, NavDrawerMain::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+            } ?: TODO("Show the error page here with some info about the id token not existing")
         }
     }
 }

@@ -74,15 +74,17 @@ class NavDrawerMain : AppCompatActivity() {
                 R.id.logout -> {
                     Log.d("NavDrawerMain - logout", "logging out user")
                     val currentState = UserInfoStore.readAuthState(this)
-                    val clearedState = AuthState(currentState.authorizationServiceConfiguration!!)
-                    if (currentState.lastRegistrationResponse != null) {
-                        clearedState.update(currentState.lastRegistrationResponse)
-                    }
-                    UserInfoStore.writeAuthState(this, clearedState)
-                    val mainIntent = Intent(this, LoginActivity::class.java)
-                    mainIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    startActivity(mainIntent)
-                    finish()
+                    currentState.authorizationServiceConfiguration?.also { authorizationServiceConfiguration ->
+                        val clearedState = AuthState(authorizationServiceConfiguration)
+                        if (currentState.lastRegistrationResponse != null) {
+                            clearedState.update(currentState.lastRegistrationResponse)
+                        }
+                        UserInfoStore.writeAuthState(this, clearedState)
+                        val mainIntent = Intent(this, LoginActivity::class.java)
+                        mainIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        startActivity(mainIntent)
+                        finish()
+                    } ?: TODO("Show error page about error in reading old server configuration")
                     true
                 }
                 else -> {

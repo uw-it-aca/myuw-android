@@ -39,21 +39,23 @@ class CommonWebViewFragment: Fragment() {
 
     inner class CustomWebViewClient: WebViewClient() {
 
-        override fun onPageFinished(view: WebView?, url: String?) {
+        override fun onPageFinished(view: WebView, url: String) {
             super.onPageFinished(view, url)
             swipeRefreshLayout.isRefreshing = false
 
-            (activity as? AppCompatActivity)?.supportActionBar!!.title = webView.title.split(": ").getOrElse(1){"Invalid Title"}
+            (activity as? AppCompatActivity)?.supportActionBar?.also {
+                it.title = view.title.split(": ").getOrElse(1){"Invalid Title"}
+            } ?: TODO("Gracefully crash the app? webview probably finished loading after the fragment was unloaded. Could just ignore this")
             // TODO: Remove this when backed styling is done
             webView.evaluateJavascript("document.querySelector(\"body > div:nth-child(4)\").style.display=\"none\"", null)
         }
 
         override fun shouldOverrideUrlLoading(
-            view: WebView?,
-            request: WebResourceRequest?
+            view: WebView,
+            request: WebResourceRequest
         ): Boolean {
-            Log.d("shouldOverrideUrlLoading", "before processing url: ${request?.url}")
-            if (request!!.url.toString().contains("$baseUrl/out?u=") || !request.url.toString().contains(URL(baseUrl).host)) {
+            Log.d("shouldOverrideUrlLoading", "before processing url: ${request.url}")
+            if (request.url.toString().contains("$baseUrl/out?u=") || !request.url.toString().contains(URL(baseUrl).host)) {
                 val decodedUrl = URLDecoder.decode(request.url.toString().replace("$baseUrl/out?u=", ""), StandardCharsets.UTF_8.toString())
                 val uri = Uri.parse(decodedUrl).buildUpon().scheme("http").build()
 
@@ -90,26 +92,29 @@ class CommonWebViewFragment: Fragment() {
 
         if (!webViewMap.containsKey(args.uniqueId)) {
             webViewMap[args.uniqueId] = WebView(view.context)
-            webViewMap[args.uniqueId]!!.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-
-            webViewMap[args.uniqueId]!!.settings.javaScriptEnabled = true
+            webViewMap[args.uniqueId]?.also {
+                it.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                it.settings.javaScriptEnabled = true
+            } ?: TODO("Gracefully crash the app")
         }
 
-        webView = webViewMap[args.uniqueId]!!
-        webView.webViewClient = CustomWebViewClient()
-        webView.settings.userAgentString += " MyUW_Hybrid/1.0 (Android)"
-        Log.d("UserAgentString", webView.settings.userAgentString)
-        swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh)
+        webViewMap[args.uniqueId]?.also {
+            webView = it
+            webView.webViewClient = CustomWebViewClient()
+            webView.settings.userAgentString += " MyUW_Hybrid/1.0 (Android)"
+            Log.d("UserAgentString", webView.settings.userAgentString)
+            swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh)
 
-        swipeRefreshLayout.setOnRefreshListener {
-            webView.reload()
-        }
-        webView.setOnScrollChangeListener { _, _, top, _, _ ->
-            swipeRefreshLayout.isEnabled = top == 0
-        }
+            swipeRefreshLayout.setOnRefreshListener {
+                webView.reload()
+            }
+            webView.setOnScrollChangeListener { _, _, top, _, _ ->
+                swipeRefreshLayout.isEnabled = top == 0
+            }
 
-        (webView.parent as ViewGroup?)?.removeView(webView)
-        view.findViewById<LinearLayout>(R.id.webView_attach_point).addView(webView)
+            (webView.parent as ViewGroup?)?.removeView(webView)
+            view.findViewById<LinearLayout>(R.id.webView_attach_point).addView(webView)
+        } ?: TODO("Gracefully crash the app")
     }
 
     override fun onDestroyView() {
@@ -120,17 +125,24 @@ class CommonWebViewFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-        (activity as AppCompatActivity).supportActionBar!!.title = ""
-        authorizationService = AuthorizationService(activity!!)
-        if (webView.url == null)
-            UserInfoStore.readAuthState(context!!).performActionWithFreshTokens(
-                authorizationService
-            ) { accessToken, idToken, _ ->
-                Log.d("AppAuth", "accessToken: $accessToken")
-                Log.d("AppAuth", "idToken: $idToken")
-                Log.d("AppAuth", "url: ${baseUrl + args.path}")
-                webView.loadUrl(baseUrl + args.path, hashMapOf("Authorization" to "Bearer $idToken"))
-            }
+        (activity as AppCompatActivity).supportActionBar?.also {
+            it.title = ""
+        } ?: TODO("Gracefully crash the app?")
+        activity?.also {
+            authorizationService = AuthorizationService(it)
+            if (webView.url == null)
+                UserInfoStore.readAuthState(it).performActionWithFreshTokens(
+                    authorizationService
+                ) { accessToken, idToken, _ ->
+                    Log.d("AppAuth", "accessToken: $accessToken")
+                    Log.d("AppAuth", "idToken: $idToken")
+                    Log.d("AppAuth", "url: ${baseUrl + args.path}")
+                    webView.loadUrl(
+                        baseUrl + args.path,
+                        hashMapOf("Authorization" to "Bearer $idToken")
+                    )
+                }
+        } ?: TODO("Crash the app gracefully as the fragment is not attached to the any activity")
     }
 
     override fun onStop() {
@@ -146,7 +158,9 @@ class CommonWebViewFragment: Fragment() {
     override fun onResume() {
         webView.onResume()
         if (webView.title.split(": ").size > 1)
-            (activity as AppCompatActivity).supportActionBar!!.title = webView.title.split(": ")[1]
+            (activity as AppCompatActivity).supportActionBar?.also {
+                it.title = webView.title.split(": ")[1]
+            } ?: TODO("Gracefully crash the app?")
         super.onResume()
     }
 }
