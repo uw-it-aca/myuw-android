@@ -19,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
 import com.google.android.material.navigation.NavigationView
 import edu.my.myuw_android.R
+import kotlinx.android.synthetic.main.activity_nav_drawer_main.*
 import net.openid.appauth.AuthState
 
 class NavDrawerMain : AppCompatActivity() {
@@ -123,6 +124,14 @@ class NavDrawerMain : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onBackPressed() {
+        if (drawer_layout.isDrawerOpen(nav_view)) {
+            drawer_layout.closeDrawer(nav_view)
+        } else {
+            super.onBackPressed()
         }
     }
 }
