@@ -75,6 +75,14 @@ class CommonWebViewFragment: Fragment() {
             request: WebResourceRequest?,
             error: WebResourceError?
         ) {
+            if (activity != null)
+                ErrorActivity.showError(
+                    "Unable to Load Page",
+                    "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
+                    "Retry",
+                    ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                    activity!!
+                )
             super.onReceivedError(view, request, error)
         }
 
@@ -83,6 +91,14 @@ class CommonWebViewFragment: Fragment() {
             request: WebResourceRequest?,
             errorResponse: WebResourceResponse?
         ) {
+            if (activity != null)
+                ErrorActivity.showError(
+                    "Unable to Load Page",
+                    "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
+                    "Retry",
+                    ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                    activity!!
+                )
             super.onReceivedHttpError(view, request, errorResponse)
         }
     }

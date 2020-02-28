@@ -50,7 +50,7 @@ class ErrorActivity : AppCompatActivity() {
     }
 
     private fun reloadPage() {
-
+        retryLogin()
     }
 
     companion object {
