@@ -7,24 +7,16 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
 import android.view.Menu
-import android.webkit.JavascriptInterface
-import androidx.annotation.IntegerRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
-import edu.my.myuw_android.BuildConfig
 import edu.my.myuw_android.R
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import net.openid.appauth.AuthState
-import net.openid.appauth.AuthorizationException
-import net.openid.appauth.AuthorizationService
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.Exception
 import java.net.URL
 import java.nio.charset.StandardCharsets
-import javax.net.ssl.HttpsURLConnection
 
 object UserInfoStore {
     private var menuItems = mapOf(
@@ -135,9 +127,9 @@ object UserInfoStore {
                 responseJson += it + '\n'
             }
 
-            val decodedRespose = JSONObject(responseJson)
-            decodedRespose.keys().forEach {
-                if (decodedRespose[it] is Boolean && (decodedRespose[it] as Boolean)) {
+            val decodedResponse = JSONObject(responseJson)
+            decodedResponse.keys().forEach {
+                if (decodedResponse[it] is Boolean && (decodedResponse[it] as Boolean)) {
                     affiliations.add(it)
                 }
             }
