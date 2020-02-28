@@ -59,7 +59,7 @@ object UserInfoStore {
             "Calendar" to Triple(
                 R.id.nav_academic_calendar,
                 R.drawable.ic_calander,
-                { aff: List<String> -> true }
+                { _: List<String> -> true }
             ),
             "UW Resources" to Triple(
                 R.id.nav_resources,
@@ -117,7 +117,7 @@ object UserInfoStore {
             val conn =
                 URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection()
             conn.setRequestProperty("Authorization", "Bearer $idToken")
-            var responseJson = "";
+            var responseJson = ""
             BufferedReader(
                 InputStreamReader(
                     conn.getInputStream(),
@@ -143,7 +143,7 @@ object UserInfoStore {
                 "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
                 "Retry",
                 ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
-                activity!!
+                activity
             )
         }
     }

@@ -74,32 +74,22 @@ class CommonWebViewFragment: Fragment() {
             request: WebResourceRequest?,
             error: WebResourceError?
         ) {
-            if (activity != null)
-                ErrorActivity.showError(
-                    getString(R.string.onReceiveError),
-                    getString(R.string.onReceiveErrorDesc),
-                    getString(R.string.onReceiveErrorButton),
-                    ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
-                    activity!!
-                )
+            Log.e("CustomWebViewClient - onReceivedError", error.toString())
+            InternetCheck {
+                if (it) raiseUnableToConnect() else raiseNoInternet()
+            }
             super.onReceivedError(view, request, error)
         }
 
-//        override fun onReceivedHttpError(
-//            view: WebView?,
-//            request: WebResourceRequest?,
-//            errorResponse: WebResourceResponse?
-//        ) {
-//            if (activity != null)
-//                ErrorActivity.showError(
-//                    getString(R.string.onReceiveError),
-//                    getString(R.string.onReceiveErrorDesc),
-//                    getString(R.string.onReceiveErrorButton),
-//                    ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
-//                    activity!!
-//                )
-//            super.onReceivedHttpError(view, request, errorResponse)
-//        }
+        override fun onReceivedHttpError(
+            view: WebView?,
+            request: WebResourceRequest?,
+            errorResponse: WebResourceResponse?
+        ) {
+            Log.e("CustomWebViewClient - onReceivedHttpError", errorResponse.toString())
+            raiseUnableToConnect()
+            super.onReceivedHttpError(view, request, errorResponse)
+        }
     }
 
     override fun onCreateView(
@@ -164,16 +154,20 @@ class CommonWebViewFragment: Fragment() {
         activity?.let {
             authorizationService = AuthorizationService(it)
             if (webView.url == null)
-                UserInfoStore.readAuthState(it).performActionWithFreshTokens(
-                    authorizationService
-                ) { accessToken, idToken, _ ->
-                    Log.d("AppAuth", "accessToken: $accessToken")
-                    Log.d("AppAuth", "idToken: $idToken")
-                    Log.d("AppAuth", "url: ${baseUrl + args.path}")
-                    webView.loadUrl(
-                        baseUrl + args.path,
-                        hashMapOf("Authorization" to "Bearer $idToken")
-                    )
+                InternetCheck { internet ->
+                    if (internet) {
+                        UserInfoStore.readAuthState(it).performActionWithFreshTokens(
+                            authorizationService
+                        ) { accessToken, idToken, _ ->
+                            Log.d("AppAuth", "accessToken: $accessToken")
+                            Log.d("AppAuth", "idToken: $idToken")
+                            Log.d("AppAuth", "url: ${baseUrl + args.path}")
+                            webView.loadUrl(
+                                baseUrl + args.path,
+                                hashMapOf("Authorization" to "Bearer $idToken")
+                            )
+                        }
+                    } else raiseNoInternet()
                 }
         }
     }
@@ -196,5 +190,29 @@ class CommonWebViewFragment: Fragment() {
                 it.title = webView.title.split(": ")[1]
             }
         super.onResume()
+    }
+
+    private fun raiseNoInternet() {
+        activity?.let {
+            ErrorActivity.showError(
+                "No Internet Connection",
+                "Please connect to internet. This message needs to be updated by ux",
+                "Retry",
+                ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                it
+            )
+        }
+    }
+
+    private fun raiseUnableToConnect() {
+        activity?.let {
+            ErrorActivity.showError(
+                "Unable to Load Page",
+                "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
+                "Retry",
+                ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                it
+            )
+        }
     }
 }
