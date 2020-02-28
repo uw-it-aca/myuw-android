@@ -114,7 +114,7 @@ class LoginActivity: AppCompatActivity() {
 
             idToken?.also {
                 val job = GlobalScope.launch {
-                    UserInfoStore.updateAffiliations(resources, it)
+                    UserInfoStore.updateAffiliations(this@LoginActivity, resources, it)
                 }
 
                 val idObject = JSONObject(String(Base64.decode(it.split(".")[1], Base64.URL_SAFE)))

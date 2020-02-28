@@ -1,5 +1,6 @@
 package edu.uw.myuw_android
 
+import android.app.Activity
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
@@ -20,6 +21,7 @@ import net.openid.appauth.AuthorizationService
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.lang.Exception
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import javax.net.ssl.HttpsURLConnection
@@ -118,28 +120,40 @@ object UserInfoStore {
         }
     }
 
-    fun updateAffiliations(resources: Resources, idToken: String) {
-        val conn =
-            URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection()
-        conn.setRequestProperty("Authorization", "Bearer $idToken")
-        var responseJson = "";
-        BufferedReader(
-            InputStreamReader(
-                conn.getInputStream(),
-                StandardCharsets.UTF_8
-            )
-        ).forEachLine {
-            responseJson += it + '\n'
-        }
-
-        val decodedRespose = JSONObject(responseJson)
-        decodedRespose.keys().forEach {
-            if (decodedRespose[it] is Boolean && (decodedRespose[it] as Boolean)) {
-                affiliations.add(it)
+    fun updateAffiliations(activity: Activity, resources: Resources, idToken: String) {
+        try {
+            val conn =
+                URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection()
+            conn.setRequestProperty("Authorization", "Bearer $idToken")
+            var responseJson = "";
+            BufferedReader(
+                InputStreamReader(
+                    conn.getInputStream(),
+                    StandardCharsets.UTF_8
+                )
+            ).forEachLine {
+                responseJson += it + '\n'
             }
+
+            val decodedRespose = JSONObject(responseJson)
+            decodedRespose.keys().forEach {
+                if (decodedRespose[it] is Boolean && (decodedRespose[it] as Boolean)) {
+                    affiliations.add(it)
+                }
+            }
+            Log.d("updateAffiliations - decodedRespose: ", responseJson)
+            Log.d("updateAffiliations - affiliations: ", affiliations.toString())
         }
-        Log.d("updateAffiliations - decodedRespose: ", responseJson)
-        Log.d("updateAffiliations - affiliations: ", affiliations.toString())
+        catch (e: Exception) {
+            Log.e("updateAffiliations - http error", e.toString())
+            ErrorActivity.showError(
+                "Unable to Load Page",
+                "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
+                "Retry",
+                ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                activity!!
+            )
+        }
     }
 
     fun readAuthState(context: Context): AuthState {
