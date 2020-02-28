@@ -63,28 +63,16 @@ class LoginActivity: AppCompatActivity() {
                             ex_new?.localizedMessage?.also { localizedMessage ->
                                 Log.e("performTokenRequest", localizedMessage)
                             }
-                            ErrorActivity.showError(
-                                "Unable to Sign In",
-                                "There was an error while trying to get auth tokens",
-                                "Retry",
-                                ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
-                                this
-                            )
+                            showAuthenticationError()
                         }
                     }
                 } else {
                     ex?.localizedMessage?.also { localizedMessage ->
                         Log.e("AuthorizationResponse", localizedMessage)
                     }
-                    ErrorActivity.showError(
-                        "Unable to Sign In",
-                        "There was an error while trying to get auth tokens",
-                        "Retry",
-                        ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
-                        this
-                    )
+                    showAuthenticationError()
                 }
-            } ?: TODO("Error page for no response/improper from OAuth provider")
+            } ?: showAuthenticationError()
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
@@ -114,7 +102,7 @@ class LoginActivity: AppCompatActivity() {
                 ex?.localizedMessage?.also {
                     Log.e("AuthorizationServiceConfiguration", it)
                 }
-                TODO("Show error page if this point is reached")
+                showAuthenticationError()
             }
         }
     }
@@ -146,7 +134,17 @@ class LoginActivity: AppCompatActivity() {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
-            } ?: TODO("Show the error page here with some info about the id token not existing")
+            } ?: showAuthenticationError()
         }
+    }
+
+    private fun showAuthenticationError() {
+        ErrorActivity.showError(
+            "Unable to Sign In",
+            "There was an error while trying to get auth tokens. This message needs to be updated by ux",
+            "Retry",
+            ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
+            this
+        )
     }
 }
