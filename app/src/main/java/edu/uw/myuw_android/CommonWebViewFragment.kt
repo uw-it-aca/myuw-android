@@ -40,9 +40,10 @@ class CommonWebViewFragment: Fragment() {
             super.onPageFinished(view, url)
             swipeRefreshLayout.isRefreshing = false
 
-            (activity as? AppCompatActivity)?.supportActionBar?.also {
+            // A null here can be safely ignored because the this means the fragment was detached before page load was finished
+            (activity as? AppCompatActivity)?.supportActionBar?.let {
                 it.title = view.title.split(": ").getOrElse(1){"Invalid Title"}
-            } ?: TODO("Gracefully crash the app? webview probably finished loading after the fragment was unloaded. Could just ignore this")
+            }
             // TODO: Remove this when backed styling is done
             webView.evaluateJavascript("document.querySelector(\"body > div:nth-child(4)\").style.display=\"none\"", null)
         }
@@ -105,13 +106,15 @@ class CommonWebViewFragment: Fragment() {
 
         if (!webViewMap.containsKey(args.uniqueId)) {
             webViewMap[args.uniqueId] = WebView(view.context)
-            webViewMap[args.uniqueId]?.also {
+            // No way to gracefully handle this
+            webViewMap[args.uniqueId]!!.let {
                 it.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 it.settings.javaScriptEnabled = true
-            } ?: TODO("Gracefully crash the app")
+            }
         }
 
-        webViewMap[args.uniqueId]?.also {
+        // No way to gracefully handle this
+        webViewMap[args.uniqueId]!!.also {
             webView = it
             webView.webViewClient = CustomWebViewClient()
             webView.settings.userAgentString += " MyUW_Hybrid/1.0 (Android)"
@@ -127,7 +130,7 @@ class CommonWebViewFragment: Fragment() {
 
             (webView.parent as ViewGroup?)?.removeView(webView)
             view.findViewById<LinearLayout>(R.id.webView_attach_point).addView(webView)
-        } ?: TODO("Gracefully crash the app")
+        }
     }
 
     override fun onDestroyView() {
@@ -138,10 +141,12 @@ class CommonWebViewFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-        (activity as AppCompatActivity).supportActionBar?.also {
+        // A null here can be safely ignored because the this means the fragment was detached
+        (activity as AppCompatActivity).supportActionBar?.let {
             it.title = ""
-        } ?: TODO("Gracefully crash the app?")
-        activity?.also {
+        }
+        // A null here can be safely ignored because the this means the fragment was detached
+        activity?.let {
             authorizationService = AuthorizationService(it)
             if (webView.url == null)
                 UserInfoStore.readAuthState(it).performActionWithFreshTokens(
@@ -155,7 +160,7 @@ class CommonWebViewFragment: Fragment() {
                         hashMapOf("Authorization" to "Bearer $idToken")
                     )
                 }
-        } ?: TODO("Crash the app gracefully as the fragment is not attached to the any activity")
+        }
     }
 
     override fun onStop() {
@@ -171,9 +176,10 @@ class CommonWebViewFragment: Fragment() {
     override fun onResume() {
         webView.onResume()
         if (webView.title.split(": ").size > 1)
-            (activity as AppCompatActivity).supportActionBar?.also {
+            // A null here can be safely ignored because the this means the fragment was detached
+            (activity as AppCompatActivity).supportActionBar?.let {
                 it.title = webView.title.split(": ")[1]
-            } ?: TODO("Gracefully crash the app?")
+            }
         super.onResume()
     }
 }
