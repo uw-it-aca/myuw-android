@@ -6,138 +6,182 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.myuw.CommonWebViewFragment"
+        android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/"
+            android:name="path"
+            android:defaultValue="/"
             app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Home"
             app:argType="string" />
-        <action
-            android:id="@+id/action_nav_home_to_nav_url_open"
-            app:destination="@id/nav_url_open"
-            app:enterAnim="@anim/slide_right_to_left"
-            app:exitAnim="@anim/slide_left_to_right" />
+        <argument
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Home" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_academics"
-        android:name="com.example.myuw.CommonWebViewFragment"
+        android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/academics/"
+            android:name="path"
+            android:defaultValue="/academics/"
             app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Academics"
             app:argType="string" />
-        <action
-            android:id="@+id/action_nav_academics_to_nav_url_open2"
-            app:destination="@id/nav_url_open"
-            app:enterAnim="@anim/slide_right_to_left"
-            app:exitAnim="@anim/slide_left_to_right" />
+        <argument
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Academics" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_husky_experience"
-        android:name="com.example.myuw.CommonWebViewFragment"
+        android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/husky_experience/"
+            android:name="path"
+            android:defaultValue="/husky_experience/"
             app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Husky Experience"
             app:argType="string" />
+        <argument
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Husky Experience" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_teaching"
+        android:name="edu.uw.myuw_android.CommonWebViewFragment"
+        android:label="{title}">
+        <argument
+            android:name="path"
+            android:defaultValue="/teaching/"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            android:defaultValue="Teaching"
+            app:argType="string" />
+        <argument
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Teaching" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_accounts"
-        android:name="com.example.myuw.CommonWebViewFragment"
+        android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/accounts/"
+            android:name="path"
+            android:defaultValue="/accounts/"
             app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Accounts"
             app:argType="string" />
+        <argument
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Accounts" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_notices"
-        android:name="com.example.myuw.CommonWebViewFragment"
+        android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/notices/"
+            android:name="path"
+            android:defaultValue="/notices/"
             app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Notices"
             app:argType="string" />
+        <argument
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Notices" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.example.myuw.CommonWebViewFragment"
+        android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/profile/"
+            android:name="path"
+            android:defaultValue="/profile/"
             app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="Profile"
             app:argType="string" />
+        <argument
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Profile" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_academic_calendar"
-        android:name="com.example.myuw.CommonWebViewFragment"
+        android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/academic_calendar/"
+            android:name="path"
+            android:defaultValue="/academic_calendar/"
             app:argType="string" />
         <argument
             android:name="title"
-            android:defaultValue="Academic Calendar"
+            android:defaultValue="Calendar"
             app:argType="string" />
+        <argument
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Calendar" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_resources"
-        android:name="com.example.myuw.CommonWebViewFragment"
+        android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="{title}">
         <argument
-            android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/resources/"
+            android:name="path"
+            android:defaultValue="/resources/"
             app:argType="string" />
         <argument
             android:name="title"
-            android:defaultValue="Resources"
+            android:defaultValue="UW Resources"
             app:argType="string" />
+        <argument
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="UW Resources" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_url_open"
-        android:name="com.example.myuw.CommonWebViewFragment"
-        android:label="{title}">
+        android:name="edu.uw.myuw_android.CommonWebViewFragment"
+        android:label="">
         <argument
-            android:name="base_url"
-            android:defaultValue="https://my-test.s.uw.edu/"
+            android:name="path"
+            android:defaultValue="/"
             app:argType="string" />
         <argument
             android:name="title"
             android:defaultValue="temp"
             app:argType="string" />
+        <argument
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="nothing" />
         <action
             android:id="@+id/action_nav_url_open_self"
             app:destination="@id/nav_url_open"

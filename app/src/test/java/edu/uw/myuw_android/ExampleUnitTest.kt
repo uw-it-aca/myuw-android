@@ -1,4 +1,4 @@
-package com.example.myuw
+package edu.uw.myuw_android
 
 import org.junit.Test
 
