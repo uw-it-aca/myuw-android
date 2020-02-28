@@ -1,16 +1,13 @@
 package edu.uw.myuw_android
 
-import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import edu.my.myuw_android.BuildConfig
 import edu.my.myuw_android.R
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -66,14 +63,26 @@ class LoginActivity: AppCompatActivity() {
                             ex_new?.localizedMessage?.also { localizedMessage ->
                                 Log.e("performTokenRequest", localizedMessage)
                             }
-                            TODO("Show error page if this point is reached")
+                            ErrorActivity.showError(
+                                "Unable to Sign In",
+                                "There was an error while trying to get auth tokens",
+                                "Retry",
+                                ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
+                                this
+                            )
                         }
                     }
                 } else {
                     ex?.localizedMessage?.also { localizedMessage ->
                         Log.e("AuthorizationResponse", localizedMessage)
                     }
-                    TODO("Show error page if this point is reached")
+                    ErrorActivity.showError(
+                        "Unable to Sign In",
+                        "There was an error while trying to get auth tokens",
+                        "Retry",
+                        ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
+                        this
+                    )
                 }
             } ?: TODO("Error page for no response/improper from OAuth provider")
         } else {
