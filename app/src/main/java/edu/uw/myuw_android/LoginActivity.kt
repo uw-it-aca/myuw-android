@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import edu.my.myuw_android.R
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -24,7 +25,7 @@ class LoginActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        findViewById<Button>(R.id.button).setOnClickListener {
+        loginButton.setOnClickListener {
             tryLoginWithAppAuth()
         }
 
@@ -32,7 +33,7 @@ class LoginActivity: AppCompatActivity() {
 
         if (UserInfoStore.readAuthState(this).isAuthorized) {
             findViewById<TextView>(R.id.textView).text = "You are signed in"
-            findViewById<Button>(R.id.button).isClickable = false
+            loginButton.isClickable = false
             startMainActivity()
         } else {
             findViewById<TextView>(R.id.textView).text = "You are not signed in"
