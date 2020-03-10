@@ -17,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import edu.my.myuw_android.BuildConfig
 import edu.my.myuw_android.R
+import kotlinx.android.synthetic.main.webview_fragment.view.*
 import net.openid.appauth.AuthorizationService
 import java.lang.Exception
 import java.net.URL
@@ -135,7 +136,7 @@ class CommonWebViewFragment: Fragment() {
             webView.webViewClient = CustomWebViewClient()
             webView.settings.userAgentString += " MyUW_Hybrid/1.0 (Android)"
             Log.d("UserAgentString", webView.settings.userAgentString)
-            swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh)
+            swipeRefreshLayout = view.swipe_to_refresh
 
             swipeRefreshLayout.setOnRefreshListener {
                 webView.reload()
@@ -145,14 +146,14 @@ class CommonWebViewFragment: Fragment() {
             }
 
             (webView.parent as ViewGroup?)?.removeView(webView)
-            view.findViewById<LinearLayout>(R.id.webView_attach_point).addView(webView)
+            view.webView_attach_point.addView(webView)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
 
-        swipeRefreshLayout.findViewById<LinearLayout>(R.id.webView_attach_point).removeView(webView)
+        swipeRefreshLayout.webView_attach_point.removeView(webView)
     }
 
     override fun onStart() {
