@@ -7,7 +7,7 @@
     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
     android:layout_marginVertical="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context=".ErrorActivity">
+    tools:context="edu.uw.myuw_android.ErrorActivity">
 
     <TextView
         android:id="@+id/errorTextHeading"
@@ -16,7 +16,7 @@
         android:layout_marginBottom="16dp"
         android:text="TextView"
         android:textColor="#000000"
-        android:textSize="26sp"
+        android:textSize="@dimen/errorHeading"
         android:textStyle="bold" />
 
     <TextView
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textSize="18sp" />
+        android:textSize="@dimen/errorTextView" />
 
     <Button
         android:id="@+id/errorButton"
