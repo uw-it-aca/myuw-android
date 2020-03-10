@@ -78,9 +78,9 @@ class CommonWebViewFragment: Fragment() {
         ) {
             if (activity != null)
                 ErrorActivity.showError(
-                    "Unable to Load Page",
-                    "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
-                    "Retry",
+                    getString(R.string.onReceiveError),
+                    getString(R.string.onReceiveErrorDesc),
+                    getString(R.string.onReceiveErrorButton),
                     ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
                     activity!!
                 )
@@ -94,9 +94,9 @@ class CommonWebViewFragment: Fragment() {
         ) {
             if (activity != null)
                 ErrorActivity.showError(
-                    "Unable to Load Page",
-                    "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
-                    "Retry",
+                    getString(R.string.onReceiveError),
+                    getString(R.string.onReceiveErrorDesc),
+                    getString(R.string.onReceiveErrorButton),
                     ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
                     activity!!
                 )
