@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:text="TextView"
-        android:textColor="#000000"
-        android:textSize="@dimen/errorHeading"
+        android:textColor="@color/black"
+        android:textSize="@dimen/heading"
         android:textStyle="bold" />
 
     <TextView
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textSize="@dimen/errorTextView" />
+        android:textSize="@dimen/description" />
 
     <Button
         android:id="@+id/errorButton"
