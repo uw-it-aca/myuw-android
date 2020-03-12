@@ -87,21 +87,21 @@ class CommonWebViewFragment: Fragment() {
             super.onReceivedError(view, request, error)
         }
 
-        override fun onReceivedHttpError(
-            view: WebView?,
-            request: WebResourceRequest?,
-            errorResponse: WebResourceResponse?
-        ) {
-            if (activity != null)
-                ErrorActivity.showError(
-                    getString(R.string.onReceiveError),
-                    getString(R.string.onReceiveErrorDesc),
-                    getString(R.string.onReceiveErrorButton),
-                    ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
-                    activity!!
-                )
-            super.onReceivedHttpError(view, request, errorResponse)
-        }
+//        override fun onReceivedHttpError(
+//            view: WebView?,
+//            request: WebResourceRequest?,
+//            errorResponse: WebResourceResponse?
+//        ) {
+//            if (activity != null)
+//                ErrorActivity.showError(
+//                    getString(R.string.onReceiveError),
+//                    getString(R.string.onReceiveErrorDesc),
+//                    getString(R.string.onReceiveErrorButton),
+//                    ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+//                    activity!!
+//                )
+//            super.onReceivedHttpError(view, request, errorResponse)
+//        }
     }
 
     override fun onCreateView(
