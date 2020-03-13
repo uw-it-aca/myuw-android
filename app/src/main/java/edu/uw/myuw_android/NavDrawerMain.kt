@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -85,7 +86,7 @@ class NavDrawerMain : AppCompatActivity() {
                         mainIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                         startActivity(mainIntent)
                         finish()
-                    } ?: TODO("Show error page about error in reading old server configuration")
+                    } ?: showAuthenticationError()
                     true
                 }
                 else -> {
@@ -133,5 +134,16 @@ class NavDrawerMain : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    private fun showAuthenticationError() {
+        // Show error page about error in reading old server configuration
+        ErrorActivity.showError(
+            "Unable to Load Sign-In Info",
+            "There was an error reading the last login statue. Please clean the app storage and launch again. This message needs to be updated by ux",
+            "Retry",
+            ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
+            this
+        )
     }
 }

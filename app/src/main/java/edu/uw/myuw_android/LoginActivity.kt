@@ -1,29 +1,19 @@
 package edu.uw.myuw_android
 
-import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
-import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import edu.my.myuw_android.BuildConfig
 import edu.my.myuw_android.R
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.openid.appauth.*
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
-import java.net.URLConnection
-import java.nio.charset.StandardCharsets
-import javax.net.ssl.HttpsURLConnection
 
 class LoginActivity: AppCompatActivity() {
 
@@ -33,20 +23,19 @@ class LoginActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        supportActionBar?.hide()
 
-        findViewById<Button>(R.id.button).setOnClickListener {
+        loginButton.setOnClickListener {
             tryLoginWithAppAuth()
         }
 
         authorizationService = AuthorizationService(this)
 
         if (UserInfoStore.readAuthState(this).isAuthorized) {
-            findViewById<TextView>(R.id.textView).text = "You are Authorized"
-            findViewById<Button>(R.id.button).isClickable = false
+            signed_status.text = getString(R.string.signed_in)
+            loginButton.isClickable = false
             startMainActivity()
         } else {
-            findViewById<TextView>(R.id.textView).text = "You are not Authorized"
+            signed_status.text = getString(R.string.not_signed_in)
         }
     }
 
@@ -74,16 +63,16 @@ class LoginActivity: AppCompatActivity() {
                             ex_new?.localizedMessage?.also { localizedMessage ->
                                 Log.e("performTokenRequest", localizedMessage)
                             }
-                            TODO("Show error page if this point is reached")
+                            showAuthenticationError()
                         }
                     }
                 } else {
                     ex?.localizedMessage?.also { localizedMessage ->
                         Log.e("AuthorizationResponse", localizedMessage)
                     }
-                    TODO("Show error page if this point is reached")
+                    showAuthenticationError()
                 }
-            } ?: TODO("Error page for no response/improper from OAuth provider")
+            } ?: showAuthenticationError()
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
@@ -113,7 +102,7 @@ class LoginActivity: AppCompatActivity() {
                 ex?.localizedMessage?.also {
                     Log.e("AuthorizationServiceConfiguration", it)
                 }
-                TODO("Show error page if this point is reached")
+                showAuthenticationError()
             }
         }
     }
@@ -145,7 +134,17 @@ class LoginActivity: AppCompatActivity() {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
-            } ?: TODO("Show the error page here with some info about the id token not existing")
+            } ?: showAuthenticationError()
         }
+    }
+
+    private fun showAuthenticationError() {
+        ErrorActivity.showError(
+            "Unable to Sign In",
+            "There was an error while trying to get auth tokens. This message needs to be updated by ux",
+            "Retry",
+            ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
+            this
+        )
     }
 }
