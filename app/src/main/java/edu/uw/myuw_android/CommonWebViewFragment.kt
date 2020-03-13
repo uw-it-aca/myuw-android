@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -20,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import edu.my.myuw_android.BuildConfig
 import edu.my.myuw_android.R
+import kotlinx.android.synthetic.main.webview_fragment.view.*
 import net.openid.appauth.AuthorizationService
 import java.lang.Exception
 import java.net.URL
@@ -43,7 +41,8 @@ class CommonWebViewFragment: Fragment() {
             super.onPageFinished(view, url)
             swipeRefreshLayout.isRefreshing = false
 
-            (activity as? AppCompatActivity)?.supportActionBar?.also {
+            // A null here can be safely ignored because the this means the fragment was detached before page load was finished
+            (activity as? AppCompatActivity)?.supportActionBar?.let {
                 it.title = view.title.split(": ").getOrElse(1){"Invalid Title"}
             } ?: TODO("Gracefully crash the app? webview probably finished loading after the fragment was unloaded. Could just ignore this")
         }
@@ -69,6 +68,38 @@ class CommonWebViewFragment: Fragment() {
             }
             return true
         }
+
+        override fun onReceivedError(
+            view: WebView?,
+            request: WebResourceRequest?,
+            error: WebResourceError?
+        ) {
+            if (activity != null)
+                ErrorActivity.showError(
+                    getString(R.string.onReceiveError),
+                    getString(R.string.onReceiveErrorDesc),
+                    getString(R.string.onReceiveErrorButton),
+                    ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                    activity!!
+                )
+            super.onReceivedError(view, request, error)
+        }
+
+//        override fun onReceivedHttpError(
+//            view: WebView?,
+//            request: WebResourceRequest?,
+//            errorResponse: WebResourceResponse?
+//        ) {
+//            if (activity != null)
+//                ErrorActivity.showError(
+//                    getString(R.string.onReceiveError),
+//                    getString(R.string.onReceiveErrorDesc),
+//                    getString(R.string.onReceiveErrorButton),
+//                    ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+//                    activity!!
+//                )
+//            super.onReceivedHttpError(view, request, errorResponse)
+//        }
     }
 
     override fun onCreateView(
@@ -90,18 +121,20 @@ class CommonWebViewFragment: Fragment() {
 
         if (!webViewMap.containsKey(args.uniqueId)) {
             webViewMap[args.uniqueId] = WebView(view.context)
-            webViewMap[args.uniqueId]?.also {
+            // No way to gracefully handle this
+            webViewMap[args.uniqueId]!!.let {
                 it.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 it.settings.javaScriptEnabled = true
-            } ?: TODO("Gracefully crash the app")
+            }
         }
 
-        webViewMap[args.uniqueId]?.also {
+        // No way to gracefully handle this
+        webViewMap[args.uniqueId]!!.also {
             webView = it
             webView.webViewClient = CustomWebViewClient()
             webView.settings.userAgentString += " MyUW_Hybrid/1.0 (Android)"
             Log.d("UserAgentString", webView.settings.userAgentString)
-            swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh)
+            swipeRefreshLayout = view.swipe_to_refresh
 
             swipeRefreshLayout.setOnRefreshListener {
                 webView.reload()
@@ -111,22 +144,24 @@ class CommonWebViewFragment: Fragment() {
             }
 
             (webView.parent as ViewGroup?)?.removeView(webView)
-            view.findViewById<LinearLayout>(R.id.webView_attach_point).addView(webView)
-        } ?: TODO("Gracefully crash the app")
+            view.webView_attach_point.addView(webView)
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
 
-        swipeRefreshLayout.findViewById<LinearLayout>(R.id.webView_attach_point).removeView(webView)
+        swipeRefreshLayout.webView_attach_point.removeView(webView)
     }
 
     override fun onStart() {
         super.onStart()
-        (activity as AppCompatActivity).supportActionBar?.also {
+        // A null here can be safely ignored because the this means the fragment was detached
+        (activity as AppCompatActivity).supportActionBar?.let {
             it.title = ""
-        } ?: TODO("Gracefully crash the app?")
-        activity?.also {
+        }
+        // A null here can be safely ignored because the this means the fragment was detached
+        activity?.let {
             authorizationService = AuthorizationService(it)
             if (webView.url == null)
                 UserInfoStore.readAuthState(it).performActionWithFreshTokens(
@@ -140,7 +175,7 @@ class CommonWebViewFragment: Fragment() {
                         hashMapOf("Authorization" to "Bearer $idToken")
                     )
                 }
-        } ?: TODO("Crash the app gracefully as the fragment is not attached to the any activity")
+        }
     }
 
     override fun onStop() {
@@ -156,9 +191,10 @@ class CommonWebViewFragment: Fragment() {
     override fun onResume() {
         webView.onResume()
         if (webView.title.split(": ").size > 1)
-            (activity as AppCompatActivity).supportActionBar?.also {
+            // A null here can be safely ignored because the this means the fragment was detached
+            (activity as AppCompatActivity).supportActionBar?.let {
                 it.title = webView.title.split(": ")[1]
-            } ?: TODO("Gracefully crash the app?")
+            }
         super.onResume()
     }
 }

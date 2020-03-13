@@ -9,6 +9,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import edu.my.myuw_android.R
+import kotlinx.android.synthetic.main.activity_search.*
 import java.io.InputStream
 
 
@@ -60,12 +61,10 @@ class SearchActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onStart() {
         title = "Search the UW"
-        val webView = findViewById<WebView>(R.id.search_webview)
+        search_webview.settings.javaScriptEnabled = true
+        search_webview.webViewClient = CustomWebViewClient()
 
-        webView.settings.javaScriptEnabled = true
-        webView.webViewClient = CustomWebViewClient()
-
-        webView.loadUrl("https://www.washington.edu/search/?q=$query")
+        search_webview.loadUrl("https://www.washington.edu/search/?q=$query")
         super.onStart()
     }
 
