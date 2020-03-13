@@ -1,0 +1,9 @@
+/* override uw search styling for native */
+.uw-thinstrip, #dawgdrops, .uw-hero-image, #mobile-relative, .uw-site-title, .uw-breadcrumbs, #sidebar, #quicklinks, .uw-footer { display: none !important; }
+.uw-body.container { background: #fff !important; }
+body, .myuw-body { background: #fff !important; }
+.myuw-thin-bar { display: none !important; }
+.myuw-navigation { display: none !important; }
+#app_footer { display: none !important; }
+#searchform { display: none !important;  }
+#uw-container { border: solid 0px lime !important; }
