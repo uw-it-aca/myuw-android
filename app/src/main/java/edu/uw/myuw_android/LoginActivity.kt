@@ -79,62 +79,70 @@ class LoginActivity: AppCompatActivity() {
     }
 
     private fun tryLoginWithAppAuth() {
-        AuthorizationServiceConfiguration.fetchFromUrl(
-            Uri.parse(resources.getString(R.string.openid_discovery_uri))
-        ) { serviceConfiguration, ex ->
-            if (serviceConfiguration != null) {
-                val authRequestBuilder = AuthorizationRequest.Builder(
-                    serviceConfiguration,
-                    resources.getString(R.string.openid_client_id),
-                    ResponseTypeValues.CODE,
-                    Uri.parse(resources.getString(R.string.openid_redirect_uri))
-                )
+        InternetCheck {
+            if (it) {
+                AuthorizationServiceConfiguration.fetchFromUrl(
+                    Uri.parse(resources.getString(R.string.openid_discovery_uri))
+                ) { serviceConfiguration, ex ->
+                    if (serviceConfiguration != null) {
+                        val authRequestBuilder = AuthorizationRequest.Builder(
+                            serviceConfiguration,
+                            resources.getString(R.string.openid_client_id),
+                            ResponseTypeValues.CODE,
+                            Uri.parse(resources.getString(R.string.openid_redirect_uri))
+                        )
 
-                val authRequest = authRequestBuilder
-                    .setScope(resources.getString(R.string.openid_authorization_scope))
-                    .build()
+                        val authRequest = authRequestBuilder
+                            .setScope(resources.getString(R.string.openid_authorization_scope))
+                            .build()
 
-                startActivityForResult(
-                    authorizationService.getAuthorizationRequestIntent(authRequest),
-                    RC_AUTH
-                )
-            } else {
-                ex?.localizedMessage?.also {
-                    Log.e("AuthorizationServiceConfiguration", it)
+                        startActivityForResult(
+                            authorizationService.getAuthorizationRequestIntent(authRequest),
+                            RC_AUTH
+                        )
+                    } else {
+                        ex?.localizedMessage?.also {
+                            Log.e("AuthorizationServiceConfiguration", ex.toString())
+                        }
+                        showAuthenticationError()
+                    }
                 }
-                showAuthenticationError()
-            }
+            } else raiseNoInternet()
         }
     }
 
     private fun startMainActivity() {
         val authState = UserInfoStore.readAuthState(this)
-        authState.performActionWithFreshTokens(authorizationService) {
-                accessToken, idToken, _ ->
+        InternetCheck {
+            if (it) {
+                authState.performActionWithFreshTokens(authorizationService) {
+                        accessToken, idToken, _ ->
 
-            idToken?.also {
-                val job = GlobalScope.launch {
-                    UserInfoStore.updateAffiliations(this@LoginActivity, resources, it)
+                    idToken?.also { id ->
+                        val job = GlobalScope.launch {
+                            UserInfoStore.updateAffiliations(this@LoginActivity, resources, id)
+                        }
+
+                        val idObject = JSONObject(String(Base64.decode(id.split(".")[1], Base64.URL_SAFE)))
+                        UserInfoStore.name.postValue(idObject["sub"] as String)
+                        UserInfoStore.email.postValue(idObject["email"] as String)
+                        UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
+
+                        runBlocking {
+                            job.join()
+                        }
+
+                        Log.d("LoginActivity: startMainActivity", "accessToken: $accessToken")
+                        Log.d("LoginActivity: startMainActivity", "idToken: $id")
+                        Log.d("LoginActivity: startMainActivity", "idObject: $idObject")
+
+                        val intent = Intent(this, NavDrawerMain::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    } ?: showAuthenticationError()
                 }
-
-                val idObject = JSONObject(String(Base64.decode(it.split(".")[1], Base64.URL_SAFE)))
-                UserInfoStore.name.postValue(idObject["sub"] as String)
-                UserInfoStore.email.postValue(idObject["email"] as String)
-                UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
-
-                runBlocking {
-                    job.join()
-                }
-
-                Log.d("LoginActivity: startMainActivity", "accessToken: $accessToken")
-                Log.d("LoginActivity: startMainActivity", "idToken: $idToken")
-                Log.d("LoginActivity: startMainActivity", "idObject: $idObject")
-
-                val intent = Intent(this, NavDrawerMain::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-            } ?: showAuthenticationError()
+            } else raiseNoInternet()
         }
     }
 
@@ -144,6 +152,16 @@ class LoginActivity: AppCompatActivity() {
             "There was an error while trying to get auth tokens. This message needs to be updated by ux",
             "Retry",
             ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
+            this
+        )
+    }
+
+    private fun raiseNoInternet() {
+        ErrorActivity.showError(
+            "No Internet Connection",
+            "Please connect to internet. This message needs to be updated by ux",
+            "Retry",
+            ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
             this
         )
     }

@@ -138,13 +138,26 @@ object UserInfoStore {
         }
         catch (e: Exception) {
             Log.e("updateAffiliations - http error", e.toString())
-            ErrorActivity.showError(
-                "Unable to Load Page",
-                "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
-                "Retry",
-                ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
-                activity
-            )
+            InternetCheck {
+                if (it) {
+                    ErrorActivity.showError(
+                        "Unable to Load Page",
+                        "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
+                        "Retry",
+                        ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                        activity
+                    )
+                } else {
+                    ErrorActivity.showError(
+                        "No Internet Connection",
+                        "Please connect to internet. This message needs to be updated by ux",
+                        "Retry",
+                        ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                        activity
+                    )
+                }
+            }
+
         }
     }
 
