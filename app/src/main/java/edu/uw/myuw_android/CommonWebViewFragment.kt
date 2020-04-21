@@ -195,11 +195,11 @@ class CommonWebViewFragment: Fragment() {
     private fun raiseNoInternet() {
         activity?.let {
             ErrorActivity.showError(
-                "No Internet Connection",
-                "Please connect to internet. This message needs to be updated by ux",
-                "Retry",
+                resources.getString(R.string.no_internet),
+                resources.getString(R.string.no_internet_desc),
+                resources.getString(R.string.onReceiveErrorButton),
                 ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
-                it
+                this
             )
         }
     }
@@ -207,9 +207,9 @@ class CommonWebViewFragment: Fragment() {
     private fun raiseUnableToConnect() {
         activity?.let {
             ErrorActivity.showError(
-                "Unable to Load Page",
-                "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
-                "Retry",
+                resources.getString(R.string.onReceiveError),
+                resources.getString(R.string.onReceiveErrorDesc),
+                resources.getString(R.string.onReceiveErrorButton),
                 ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
                 it
             )

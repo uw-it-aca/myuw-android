@@ -148,9 +148,9 @@ class LoginActivity: AppCompatActivity() {
 
     private fun showAuthenticationError() {
         ErrorActivity.showError(
-            "Unable to Sign In",
-            "There was an error while trying to get auth tokens. This message needs to be updated by ux",
-            "Retry",
+            resources.getString(R.string.sign_in_error),
+            resources.getString(R.string.sign_in_error_desc),
+            resources.getString(R.string.onReceiveErrorButton),
             ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
             this
         )
@@ -158,9 +158,9 @@ class LoginActivity: AppCompatActivity() {
 
     private fun raiseNoInternet() {
         ErrorActivity.showError(
-            "No Internet Connection",
-            "Please connect to internet. This message needs to be updated by ux",
-            "Retry",
+            resources.getString(R.string.no_internet),
+            resources.getString(R.string.no_internet_desc),
+            resources.getString(R.string.onReceiveErrorButton),
             ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
             this
         )

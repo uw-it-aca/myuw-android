@@ -132,9 +132,9 @@ class NavDrawerMain : AppCompatActivity() {
     private fun showAuthenticationError() {
         // Show error page about error in reading old server configuration
         ErrorActivity.showError(
-            "Unable to Load Sign-In Info",
-            "There was an error reading the last login statue. Please clean the app storage and launch again. This message needs to be updated by ux",
-            "Retry",
+            resources.getString(R.string.sign_in_error),
+            resources.getString(R.string.sign_in_error_desc),
+            resources.getString(R.string.onReceiveErrorButton),
             ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
             this
         )
