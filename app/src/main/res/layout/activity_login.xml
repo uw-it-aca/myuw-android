@@ -10,20 +10,33 @@
         android:id="@+id/signed_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/heading"
+        android:text="@string/not_signed_in"
         android:textColor="@color/black"
-        android:textStyle="bold"
-        android:text="@string/you_are_not_signed_in" />
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/description"
-        android:text="@string/login_info" />
+        android:paddingHorizontal="5dp"
+        android:text="@string/login_info"
+        android:textColor="@color/black"
+        android:textSize="@dimen/description" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/sign_in" />
+        android:layout_height="58dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="@string/sign_in"
+        android:textColor="@color/design_default_color_on_primary"
+        android:textSize="18sp" />
 </LinearLayout>

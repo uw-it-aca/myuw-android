@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-    android:layout_marginVertical="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context="edu.uw.myuw_android.ErrorActivity">
+    android:layout_marginVertical="@dimen/activity_vertical_margin">
 
     <TextView
         android:id="@+id/errorTextHeading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="TextView"
         android:textColor="@color/black"
-        android:textSize="@dimen/heading"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15dp" />
+
     <TextView
-        android:id="@+id/errorTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:id="@+id/errorTextView"
+        android:paddingHorizontal="5dp"
+        android:textColor="@color/black"
         android:textSize="@dimen/description" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
 
     <Button
         android:id="@+id/errorButton"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="9dp"
-        android:text="Button" />
-
+        android:layout_height="58dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/design_default_color_on_primary"
+        android:textSize="18sp" />
 </LinearLayout>
