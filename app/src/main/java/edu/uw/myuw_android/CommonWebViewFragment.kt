@@ -199,7 +199,7 @@ class CommonWebViewFragment: Fragment() {
                 resources.getString(R.string.no_internet_desc),
                 resources.getString(R.string.onReceiveErrorButton),
                 ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
-                this
+                it
             )
         }
     }
