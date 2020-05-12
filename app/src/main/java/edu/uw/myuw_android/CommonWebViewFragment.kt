@@ -33,7 +33,7 @@ class CommonWebViewFragment: Fragment() {
     lateinit var webView: WebView
     lateinit var baseUrl: String
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var authorizationService: AuthorizationService
+    private lateinit var authService: AppAuthWrapper
 
     inner class CustomWebViewClient: WebViewClient() {
 
@@ -86,8 +86,21 @@ class CommonWebViewFragment: Fragment() {
             request: WebResourceRequest?,
             errorResponse: WebResourceResponse?
         ) {
-            Log.e("CustomWebViewClient - onReceivedHttpError", errorResponse.toString())
-            raiseUnableToConnect()
+            if (errorResponse?.statusCode == 401) {
+                InternetCheck {
+                    if (it) {
+                        authService.performActionWithFreshTokens({ accessToken, idToken ->
+                            Log.d("AppAuth", "accessToken: $accessToken")
+                            Log.d("AppAuth", "idToken: $idToken")
+                        }, { ex ->
+                            ex?.localizedMessage?.also {
+                                Log.e("AuthorizationServiceConfiguration", ex.toString())
+                            }
+                            showAuthenticationError()
+                        })
+                    } else raiseNoInternet()
+                }
+            }
             super.onReceivedHttpError(view, request, errorResponse)
         }
     }
@@ -152,29 +165,18 @@ class CommonWebViewFragment: Fragment() {
         }
         // A null here can be safely ignored because the this means the fragment was detached
         activity?.let {
-            authorizationService = AuthorizationService(it)
+            authService = AppAuthWrapper(it)
             if (webView.url == null)
-                InternetCheck { internet ->
-                    if (internet) {
-                        UserInfoStore.readAuthState(it).performActionWithFreshTokens(
-                            authorizationService
-                        ) { accessToken, idToken, _ ->
-                            Log.d("AppAuth", "accessToken: $accessToken")
-                            Log.d("AppAuth", "idToken: $idToken")
-                            Log.d("AppAuth", "url: ${baseUrl + args.path}")
-                            webView.loadUrl(
-                                baseUrl + args.path,
-                                hashMapOf("Authorization" to "Bearer $idToken")
-                            )
-                        }
-                    } else raiseNoInternet()
-                }
+                webView.loadUrl(
+                    baseUrl + args.path,
+                    hashMapOf("Authorization" to "Bearer ${authService.authState.idToken}")
+                )
         }
     }
 
     override fun onStop() {
         super.onStop()
-        authorizationService.dispose()
+        authService.onDestroy()
     }
 
     override fun onPause() {
@@ -211,6 +213,18 @@ class CommonWebViewFragment: Fragment() {
                 resources.getString(R.string.onReceiveErrorDesc),
                 resources.getString(R.string.onReceiveErrorButton),
                 ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                it
+            )
+        }
+    }
+
+    private fun showAuthenticationError() {
+        activity?.let {
+            ErrorActivity.showError(
+                resources.getString(R.string.sign_in_error),
+                resources.getString(R.string.sign_in_error_desc),
+                resources.getString(R.string.onReceiveErrorButton),
+                ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
                 it
             )
         }

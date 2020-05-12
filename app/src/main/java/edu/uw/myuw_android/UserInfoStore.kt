@@ -127,6 +127,7 @@ object UserInfoStore {
                 responseJson += it + '\n'
             }
 
+            Log.d("updateAffiliations - responseJson: ", responseJson)
             val decodedResponse = JSONObject(responseJson)
             decodedResponse.keys().forEach {
                 if (decodedResponse[it] is Boolean && (decodedResponse[it] as Boolean)) {
@@ -141,7 +142,7 @@ object UserInfoStore {
             InternetCheck {
                 if (it) {
                     ErrorActivity.showError(
-                        "Unable to Load Page",
+                        "Unable to Update Affiliations",
                         "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
                         "Retry",
                         ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,

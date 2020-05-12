@@ -56,6 +56,9 @@ class ErrorActivity : AppCompatActivity() {
     companion object {
         fun showError(msgHeading:String, msg: String, buttonText: String, errorHandler: ErrorHandlerEnum, activity: Activity) {
             Log.e("ErrorActivity - showError", activity.localClassName)
+            Log.e("ErrorActivity - showError", msgHeading)
+            Log.e("ErrorActivity - showError", msg)
+            Log.e("ErrorActivity - showError", buttonText)
 
             val intent = Intent(activity, ErrorActivity::class.java).apply {
                 putExtra(EXTRA_ERROR_MESSAGE_HEADING, msgHeading)

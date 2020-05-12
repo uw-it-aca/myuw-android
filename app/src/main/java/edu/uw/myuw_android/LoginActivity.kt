@@ -18,7 +18,7 @@ import org.json.JSONObject
 class LoginActivity: AppCompatActivity() {
 
     val RC_AUTH = 132
-    lateinit var authorizationService: AuthorizationService
+    lateinit var authService: AppAuthWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,9 +28,9 @@ class LoginActivity: AppCompatActivity() {
             tryLoginWithAppAuth()
         }
 
-        authorizationService = AuthorizationService(this)
+        authService = AppAuthWrapper(this)
 
-        if (UserInfoStore.readAuthState(this).isAuthorized) {
+        if (authService.isAuthorized) {
             signed_status.text = getString(R.string.signed_in)
             loginButton.isClickable = false
             startMainActivity()
@@ -41,36 +41,21 @@ class LoginActivity: AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        authorizationService.dispose()
+        authService.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_AUTH) {
-            data?.also {
-                val resp = AuthorizationResponse.fromIntent(it)
-                val ex = AuthorizationException.fromIntent(it)
-
-                if (resp != null) {
-                    val authState = AuthState(resp, ex)
-                    authorizationService.performTokenRequest(
-                        resp.createTokenExchangeRequest()
-                    ) { response, ex_new ->
-                        if (response != null) {
-                            authState.update(response, ex)
-                            UserInfoStore.writeAuthState(this, authState)
-                            startMainActivity()
-                        } else {
-                            ex_new?.localizedMessage?.also { localizedMessage ->
-                                Log.e("performTokenRequest", localizedMessage)
-                            }
-                            showAuthenticationError()
+            data?.also { it ->
+                authService.updateAuthWithIntent(it) { ex ->
+                    if (ex == null) {
+                        startMainActivity()
+                    } else {
+                        ex.localizedMessage?.also { localizedMessage ->
+                            Log.e("AuthorizationResponse", localizedMessage)
                         }
+                        showAuthenticationError()
                     }
-                } else {
-                    ex?.localizedMessage?.also { localizedMessage ->
-                        Log.e("AuthorizationResponse", localizedMessage)
-                    }
-                    showAuthenticationError()
                 }
             } ?: showAuthenticationError()
         } else {
@@ -97,7 +82,7 @@ class LoginActivity: AppCompatActivity() {
                             .build()
 
                         startActivityForResult(
-                            authorizationService.getAuthorizationRequestIntent(authRequest),
+                            authService.getAuthorizationRequestIntent(authRequest),
                             RC_AUTH
                         )
                     } else {
@@ -112,36 +97,37 @@ class LoginActivity: AppCompatActivity() {
     }
 
     private fun startMainActivity() {
-        val authState = UserInfoStore.readAuthState(this)
         InternetCheck {
             if (it) {
-                authState.performActionWithFreshTokens(authorizationService) {
-                        accessToken, idToken, _ ->
+                authService.performActionWithFreshTokens({ accessToken, idToken ->
+                    val job = GlobalScope.launch {
+                        UserInfoStore.updateAffiliations(this@LoginActivity, resources, idToken)
+                    }
 
-                    idToken?.also { id ->
-                        val job = GlobalScope.launch {
-                            UserInfoStore.updateAffiliations(this@LoginActivity, resources, id)
-                        }
+                    val idObject = JSONObject(String(Base64.decode(idToken.split(".")[1], Base64.URL_SAFE)))
+                    UserInfoStore.name.postValue(idObject["sub"] as String)
+                    // TODO: Fix this
+                    // UserInfoStore.email.postValue(idObject["email"] as String)
+                    // UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
 
-                        val idObject = JSONObject(String(Base64.decode(id.split(".")[1], Base64.URL_SAFE)))
-                        UserInfoStore.name.postValue(idObject["sub"] as String)
-                        UserInfoStore.email.postValue(idObject["email"] as String)
-                        UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
+                    runBlocking {
+                        job.join()
+                    }
 
-                        runBlocking {
-                            job.join()
-                        }
+                    Log.d("LoginActivity: startMainActivity", "accessToken: $accessToken")
+                    Log.d("LoginActivity: startMainActivity", "idToken: $idToken")
+                    Log.d("LoginActivity: startMainActivity", "idObject: $idObject")
 
-                        Log.d("LoginActivity: startMainActivity", "accessToken: $accessToken")
-                        Log.d("LoginActivity: startMainActivity", "idToken: $id")
-                        Log.d("LoginActivity: startMainActivity", "idObject: $idObject")
-
-                        val intent = Intent(this, NavDrawerMain::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        finish()
-                    } ?: showAuthenticationError()
-                }
+                    val intent = Intent(this, NavDrawerMain::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                }, { ex ->
+                    ex?.localizedMessage?.also {
+                        Log.e("AuthorizationServiceConfiguration", ex.toString())
+                    }
+                    showAuthenticationError()
+                })
             } else raiseNoInternet()
         }
     }
