@@ -105,7 +105,7 @@ class CommonWebViewFragment: Fragment() {
                                 ex?.localizedMessage?.also {
                                     Log.e("AuthorizationServiceConfiguration", ex.toString())
                                 }
-                                showAuthenticationError()
+                                authService.showAuthenticationError()
                             })
                         } else raiseNoInternet()
                     }
@@ -222,18 +222,6 @@ class CommonWebViewFragment: Fragment() {
                 resources.getString(R.string.onReceiveErrorDesc),
                 resources.getString(R.string.onReceiveErrorButton),
                 ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
-                it
-            )
-        }
-    }
-
-    private fun showAuthenticationError() {
-        activity?.let {
-            ErrorActivity.showError(
-                resources.getString(R.string.sign_in_error),
-                resources.getString(R.string.sign_in_error_desc),
-                resources.getString(R.string.onReceiveErrorButton),
-                ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
                 it
             )
         }

@@ -122,15 +122,4 @@ class NavDrawerMain : AppCompatActivity() {
             super.onBackPressed()
         }
     }
-
-    private fun showAuthenticationError() {
-        // Show error page about error in reading old server configuration
-        ErrorActivity.showError(
-            resources.getString(R.string.sign_in_error),
-            resources.getString(R.string.sign_in_error_desc),
-            resources.getString(R.string.onReceiveErrorButton),
-            ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
-            this
-        )
-    }
 }
