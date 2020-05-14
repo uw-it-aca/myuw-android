@@ -1,5 +1,6 @@
 package edu.uw.myuw_android
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,9 +10,11 @@ import android.util.Log
 import edu.my.myuw_android.R
 import net.openid.appauth.*
 
-class AppAuthWrapper(context: Context) {
+class AppAuthWrapper(private val activity: Activity) {
     private val authSharedPreferences: SharedPreferences =
-        context.getSharedPreferences("auth", Context.MODE_PRIVATE)
+        activity.getSharedPreferences("auth", Context.MODE_PRIVATE)
+    private val resources: Resources = activity.resources
+
     companion object {
         private var instanceCount = 0
         private lateinit var authorizationService: AuthorizationService
@@ -19,7 +22,7 @@ class AppAuthWrapper(context: Context) {
 
     init {
         if (instanceCount == 0)
-            authorizationService = AuthorizationService(context)
+            authorizationService = AuthorizationService(activity)
         instanceCount++
     }
 
@@ -36,6 +39,7 @@ class AppAuthWrapper(context: Context) {
                     .putString("stateJson", newAuthState.jsonSerializeString())
                     .apply()
             } else {
+                activity.getSharedPreferences("affiliations", Context.MODE_PRIVATE).edit().remove("affiliations_array").apply()
                 authSharedPreferences.edit().remove("stateJson").apply()
             }
         }
@@ -105,5 +109,15 @@ class AppAuthWrapper(context: Context) {
         if (instanceCount == 1)
             authorizationService.dispose()
         instanceCount--
+    }
+
+    fun showAuthenticationError() {
+        ErrorActivity.showError(
+            resources.getString(R.string.sign_in_error),
+            resources.getString(R.string.sign_in_error_desc),
+            resources.getString(R.string.onReceiveErrorButton),
+            ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
+            activity
+        )
     }
 }

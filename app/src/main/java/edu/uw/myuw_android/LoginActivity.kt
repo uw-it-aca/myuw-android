@@ -54,10 +54,10 @@ class LoginActivity: AppCompatActivity() {
                         ex.localizedMessage?.also { localizedMessage ->
                             Log.e("AuthorizationResponse", localizedMessage)
                         }
-                        showAuthenticationError()
+                        authService.showAuthenticationError()
                     }
                 }
-            } ?: showAuthenticationError()
+            } ?: authService.showAuthenticationError()
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
@@ -89,7 +89,7 @@ class LoginActivity: AppCompatActivity() {
                         ex?.localizedMessage?.also {
                             Log.e("AuthorizationServiceConfiguration", ex.toString())
                         }
-                        showAuthenticationError()
+                        authService.showAuthenticationError()
                     }
                 }
             } else raiseNoInternet()
@@ -99,48 +99,30 @@ class LoginActivity: AppCompatActivity() {
     private fun startMainActivity() {
         InternetCheck {
             if (it) {
-                authService.performActionWithFreshTokens({ accessToken, idToken ->
-                    val job = GlobalScope.launch {
-                        // TODO: this can return a 401 now. refresh tokens when that happens
-                        UserInfoStore.updateAffiliations(this@LoginActivity, resources, idToken)
-                    }
+                val job = GlobalScope.launch {
+                    UserInfoStore.updateAffiliations(this@LoginActivity, resources, authService)
+                }
 
-                    val idObject = JSONObject(String(Base64.decode(idToken.split(".")[1], Base64.URL_SAFE)))
-                    UserInfoStore.name.postValue(idObject["sub"] as String)
-                    // TODO: Fix this
-                    // UserInfoStore.email.postValue(idObject["email"] as String)
-                    // UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
+                val idObject = JSONObject(String(Base64.decode(authService.authState!!.idToken!!.split(".")[1], Base64.URL_SAFE)))
+                UserInfoStore.name.postValue(idObject["sub"] as String)
+                // TODO: Fix this
+                // UserInfoStore.email.postValue(idObject["email"] as String)
+                // UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
 
-                    runBlocking {
-                        job.join()
-                    }
+                runBlocking {
+                    job.join()
+                }
 
-                    Log.d("LoginActivity: startMainActivity", "accessToken: $accessToken")
-                    Log.d("LoginActivity: startMainActivity", "idToken: $idToken")
-                    Log.d("LoginActivity: startMainActivity", "idObject: $idObject")
+                Log.d("LoginActivity: startMainActivity", "accessToken: ${authService.authState!!.accessToken}")
+                Log.d("LoginActivity: startMainActivity", "idToken: ${authService.authState!!.idToken}")
+                Log.d("LoginActivity: startMainActivity", "idObject: $idObject")
 
-                    val intent = Intent(this, NavDrawerMain::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    finish()
-                }, { ex ->
-                    ex?.localizedMessage?.also {
-                        Log.e("AuthorizationServiceConfiguration", ex.toString())
-                    }
-                    showAuthenticationError()
-                })
+                val intent = Intent(this, NavDrawerMain::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
             } else raiseNoInternet()
         }
-    }
-
-    private fun showAuthenticationError() {
-        ErrorActivity.showError(
-            resources.getString(R.string.sign_in_error),
-            resources.getString(R.string.sign_in_error_desc),
-            resources.getString(R.string.onReceiveErrorButton),
-            ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
-            this
-        )
     }
 
     private fun raiseNoInternet() {

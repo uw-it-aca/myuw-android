@@ -15,12 +15,13 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.Exception
+import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.StandardCharsets
 
 object UserInfoStore {
     private var menuItems = mapOf(
-        R.id.group_nav_drawer_main to mapOf<String, Triple<Int, Int, (List<String>) -> Boolean>>(
+        R.id.group_nav_drawer_main to mapOf<String, Triple<Int, Int, (Set<String>) -> Boolean>>(
             "Home" to Triple(
                 R.id.nav_home,
                 R.drawable.ic_home_black_24dp,
@@ -29,17 +30,17 @@ object UserInfoStore {
             "Academics" to Triple(
                 R.id.nav_academics,
                 R.drawable.ic_action_academics,
-                { aff: List<String> -> aff.contains("student") or aff.contains("applicant") }
+                { aff: Set<String> -> aff.contains("student") or aff.contains("applicant") }
             ),
             "Husky Experience" to Triple(
                 R.id.nav_husky_experience,
                 R.drawable.ic_husky_experience,
-                { aff: List<String> -> (aff.contains("undergrad") and aff.contains("seattle")) or aff.contains("hxt_viewer") }
+                { aff: Set<String> -> (aff.contains("undergrad") and aff.contains("seattle")) or aff.contains("hxt_viewer") }
             ),
             "Teaching" to Triple(
                 R.id.nav_teaching,
                 R.drawable.ic_edit_black_24dp,
-                { aff: List<String> -> aff.contains("instructor") }
+                { aff: Set<String> -> aff.contains("instructor") }
             ),
             "Accounts" to Triple(
                 R.id.nav_accounts,
@@ -49,7 +50,7 @@ object UserInfoStore {
             "Notices" to Triple(
                 R.id.nav_notices,
                 R.drawable.ic_notices,
-                { aff: List<String> -> aff.contains("student") }
+                { aff: Set<String> -> aff.contains("student") }
             ),
             "Profile" to Triple(
                 R.id.nav_profile,
@@ -59,7 +60,7 @@ object UserInfoStore {
             "Calendar" to Triple(
                 R.id.nav_academic_calendar,
                 R.drawable.ic_calander,
-                { _: List<String> -> true }
+                { _ -> true }
             ),
             "UW Resources" to Triple(
                 R.id.nav_resources,
@@ -77,7 +78,7 @@ object UserInfoStore {
     )
 
     private var activeMenuItems = menuItems
-    private var affiliations = mutableListOf<String>()
+    private var affiliations = mutableSetOf<String>()
 
     var name: MutableLiveData<String> = MutableLiveData()
     var email: MutableLiveData<String>  = MutableLiveData()
@@ -112,53 +113,76 @@ object UserInfoStore {
         }
     }
 
-    fun updateAffiliations(activity: Activity, resources: Resources, idToken: String) {
-        try {
-            val conn =
-                URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection()
-            conn.setRequestProperty("Authorization", "Bearer $idToken")
-            var responseJson = ""
-            BufferedReader(
-                InputStreamReader(
-                    conn.getInputStream(),
-                    StandardCharsets.UTF_8
+    fun updateAffiliations(activity: Activity, resources: Resources, authService: AppAuthWrapper) {
+        val affiliationsSharedPreferences = activity.getSharedPreferences("affiliations", Context.MODE_PRIVATE)
+        if (affiliationsSharedPreferences.contains("affiliations_array")) {
+            affiliations = affiliationsSharedPreferences.getStringSet("affiliations_array", null)!!
+        } else {
+            try {
+                var conn =
+                    URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection() as HttpURLConnection
+                conn.setRequestProperty(
+                    "Authorization",
+                    "Bearer ${authService.authState!!.idToken}"
                 )
-            ).forEachLine {
-                responseJson += it + '\n'
-            }
+                conn.requestMethod = "GET"
+                conn.connect()
 
-            Log.d("updateAffiliations - responseJson: ", responseJson)
-            val decodedResponse = JSONObject(responseJson)
-            decodedResponse.keys().forEach {
-                if (decodedResponse[it] is Boolean && (decodedResponse[it] as Boolean)) {
-                    affiliations.add(it)
+                if (conn.responseCode == 401)
+                    authService.performActionWithFreshTokens({ _, idToken ->
+                        conn =
+                            URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection() as HttpURLConnection
+                        conn.setRequestProperty("Authorization", "Bearer $idToken")
+                        conn.requestMethod = "GET"
+                        conn.connect()
+                    }, {
+                        authService.showAuthenticationError()
+                    })
+
+                var responseJson = ""
+
+                BufferedReader(
+                    InputStreamReader(
+                        conn.inputStream,
+                        StandardCharsets.UTF_8
+                    )
+                ).forEachLine {
+                    responseJson += it + '\n'
+                }
+
+                Log.d("updateAffiliations - responseJson: ", responseJson)
+                val decodedResponse = JSONObject(responseJson)
+                decodedResponse.keys().forEach {
+                    if (decodedResponse[it] is Boolean && (decodedResponse[it] as Boolean)) {
+                        affiliations.add(it)
+                    }
+                }
+                affiliationsSharedPreferences.edit()
+                    .putStringSet("affiliations_array", affiliations).apply()
+                Log.d("updateAffiliations - decodedRespose: ", responseJson)
+                Log.d("updateAffiliations - affiliations: ", affiliations.toString())
+            } catch (e: Exception) {
+                Log.e("updateAffiliations - http error", e.toString())
+                InternetCheck {
+                    if (it) {
+                        ErrorActivity.showError(
+                            "Unable to Update Affiliations",
+                            "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
+                            "Retry",
+                            ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                            activity
+                        )
+                    } else {
+                        ErrorActivity.showError(
+                            "No Internet Connection",
+                            "Please connect to internet. This message needs to be updated by ux",
+                            "Retry",
+                            ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                            activity
+                        )
+                    }
                 }
             }
-            Log.d("updateAffiliations - decodedRespose: ", responseJson)
-            Log.d("updateAffiliations - affiliations: ", affiliations.toString())
-        }
-        catch (e: Exception) {
-            Log.e("updateAffiliations - http error", e.toString())
-            InternetCheck {
-                if (it) {
-                    ErrorActivity.showError(
-                        "Unable to Update Affiliations",
-                        "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
-                        "Retry",
-                        ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
-                        activity
-                    )
-                } else {
-                    ErrorActivity.showError(
-                        "No Internet Connection",
-                        "Please connect to internet. This message needs to be updated by ux",
-                        "Retry",
-                        ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
-                        activity
-                    )
-                }
-            }
-
         }
     }
 }
