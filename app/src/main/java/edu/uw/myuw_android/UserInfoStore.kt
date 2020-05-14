@@ -161,23 +161,4 @@ object UserInfoStore {
 
         }
     }
-
-    fun readAuthState(context: Context): AuthState {
-        val authPrefs: SharedPreferences =
-            context.getSharedPreferences("auth", MODE_PRIVATE)
-        val stateJson = authPrefs.getString("stateJson", null)
-        return if (stateJson != null) {
-            AuthState.jsonDeserialize(stateJson)
-        } else {
-            AuthState()
-        }
-    }
-
-    fun writeAuthState(context: Context, state: AuthState) {
-        val authPrefs: SharedPreferences =
-            context.getSharedPreferences("auth", MODE_PRIVATE)
-        authPrefs.edit()
-            .putString("stateJson", state.jsonSerializeString())
-            .apply()
-    }
 }
