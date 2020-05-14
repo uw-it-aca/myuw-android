@@ -30,7 +30,7 @@ class LoginActivity: AppCompatActivity() {
 
         authService = AppAuthWrapper(this)
 
-        if (authService.isAuthorized) {
+        if (authService.couldBeAuthorized) {
             signed_status.text = getString(R.string.signed_in)
             loginButton.isClickable = false
             startMainActivity()
@@ -101,6 +101,7 @@ class LoginActivity: AppCompatActivity() {
             if (it) {
                 authService.performActionWithFreshTokens({ accessToken, idToken ->
                     val job = GlobalScope.launch {
+                        // TODO: this can return a 401 now. refresh tokens when that happens
                         UserInfoStore.updateAffiliations(this@LoginActivity, resources, idToken)
                     }
 

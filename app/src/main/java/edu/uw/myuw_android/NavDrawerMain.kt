@@ -70,24 +70,18 @@ class NavDrawerMain : AppCompatActivity() {
             navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_email).text = it
         })
 
-        navView.setNavigationItemSelectedListener {
+        /*navView.setNavigationItemSelectedListener {
             Log.d("NavDrawerMain - onCreate", it.title.toString())
             when (it.itemId) {
                 R.id.logout -> {
                     Log.d("NavDrawerMain - logout", "logging out user")
-                    val currentState = UserInfoStore.readAuthState(this)
-                    currentState.authorizationServiceConfiguration?.also { authorizationServiceConfiguration ->
-                        val clearedState = AuthState(authorizationServiceConfiguration)
-                        if (currentState.lastRegistrationResponse != null) {
-                            clearedState.update(currentState.lastRegistrationResponse)
-                        }
-                        UserInfoStore.writeAuthState(this, clearedState)
-                        val mainIntent = Intent(this, LoginActivity::class.java)
-                        mainIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        startActivity(mainIntent)
-                        finish()
+                    val authService = AppAuthWrapper(this)
+                    authService.authState.authorizationServiceConfiguration?.also { authorizationServiceConfiguration ->
+                        authService.deleteAuth(authorizationServiceConfiguration)
                     } ?: showAuthenticationError()
-                    true
+                    val handled = NavigationUI.onNavDestinationSelected(it, navController)
+                    if (handled) drawerLayout.closeDrawer(navView)
+                    handled
                 }
                 else -> {
                     val handled = NavigationUI.onNavDestinationSelected(it, navController)
@@ -95,7 +89,7 @@ class NavDrawerMain : AppCompatActivity() {
                     handled
                 }
             }
-        }
+        }*/
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
