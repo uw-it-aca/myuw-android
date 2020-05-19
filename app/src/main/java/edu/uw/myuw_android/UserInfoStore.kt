@@ -166,17 +166,17 @@ object UserInfoStore {
                 InternetCheck {
                     if (it) {
                         ErrorActivity.showError(
-                            "Unable to Update Affiliations",
-                            "A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux",
-                            "Retry",
+                            resources.getString(R.string.error_affiliations_update),
+                            resources.getString(R.string.error_affilications_update_desc),
+                            resources.getString(R.string.onReceiveErrorButton),
                             ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
                             activity
                         )
                     } else {
                         ErrorActivity.showError(
-                            "No Internet Connection",
-                            "Please connect to internet. This message needs to be updated by ux",
-                            "Retry",
+                            resources.getString(R.string.no_internet),
+                            resources.getString(R.string.no_internet_desc),
+                            resources.getString(R.string.onReceiveErrorButton),
                             ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
                             activity
                         )

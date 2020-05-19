@@ -32,4 +32,6 @@
     <string name="onReceiveErrorButton">Retry</string>
     <string name="search_label">MyUW</string>
     <string name="search_hint">Tuition, Transcript</string>
+    <string name="error_affiliations_update">Unable to Update Affiliations</string>
+    <string name="error_affilications_update_desc">A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux</string>
 </resources>
