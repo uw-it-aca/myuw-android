@@ -45,7 +45,7 @@ class CommonWebViewFragment: Fragment() {
             } else {
                 // A null here can be safely ignored because the this means the fragment was detached before page load was finished
                 (activity as? AppCompatActivity)?.supportActionBar?.let {
-                    it.title = view.title.split(": ").getOrElse(1) { "Invalid Title" }
+                    it.title = view.title.split(": ").getOrElse(1) { "" }
                 }
             }
         }
@@ -195,6 +195,7 @@ class CommonWebViewFragment: Fragment() {
 
     override fun onResume() {
         webView.onResume()
+        webView.reload()
         super.onResume()
     }
 

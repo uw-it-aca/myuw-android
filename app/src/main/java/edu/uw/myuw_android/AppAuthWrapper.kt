@@ -23,9 +23,9 @@ class AppAuthWrapper(private val activity: Activity) {
     }
 
     init {
-        if (instanceCount == 0)
-            authorizationService = AuthorizationService(activity)
         instanceCount++
+        if (instanceCount == 1)
+            authorizationService = AuthorizationService(activity)
     }
 
     var authState: AuthState?
