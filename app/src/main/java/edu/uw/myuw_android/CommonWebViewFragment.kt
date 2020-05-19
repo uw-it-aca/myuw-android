@@ -195,11 +195,6 @@ class CommonWebViewFragment: Fragment() {
 
     override fun onResume() {
         webView.onResume()
-        if (webView.title.split(": ").size > 1)
-            // A null here can be safely ignored because the this means the fragment was detached
-            (activity as AppCompatActivity).supportActionBar?.let {
-                it.title = webView.title.split(": ")[1]
-            }
         super.onResume()
     }
 

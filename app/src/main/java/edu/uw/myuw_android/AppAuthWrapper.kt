@@ -13,6 +13,8 @@ import net.openid.appauth.*
 class AppAuthWrapper(private val activity: Activity) {
     private val authSharedPreferences: SharedPreferences =
         activity.getSharedPreferences("auth", Context.MODE_PRIVATE)
+    private val affiliationsSharedPreferences =
+        activity.getSharedPreferences("affiliations", Context.MODE_PRIVATE)
     private val resources: Resources = activity.resources
 
     companion object {
@@ -102,6 +104,9 @@ class AppAuthWrapper(private val activity: Activity) {
 
     fun deleteAuth(): AppAuthWrapper {
         authState = null
+        if (affiliationsSharedPreferences.contains("affiliations_array")) {
+            affiliationsSharedPreferences.edit().remove("affiliations_array").apply()
+        }
         return this
     }
 
