@@ -16,17 +16,7 @@ class AppAuthWrapper(private val activity: Activity) {
     private val affiliationsSharedPreferences =
         activity.getSharedPreferences("affiliations", Context.MODE_PRIVATE)
     private val resources: Resources = activity.resources
-
-    companion object {
-        private var instanceCount = 0
-        private lateinit var authorizationService: AuthorizationService
-    }
-
-    init {
-        instanceCount++
-        if (instanceCount == 1)
-            authorizationService = AuthorizationService(activity)
-    }
+    private var authorizationService: AuthorizationService = AuthorizationService(activity)
 
     var authState: AuthState?
         get() {
@@ -111,9 +101,7 @@ class AppAuthWrapper(private val activity: Activity) {
     }
 
     fun onDestroy() {
-        if (instanceCount == 1)
-            authorizationService.dispose()
-        instanceCount--
+        authorizationService.dispose()
     }
 
     fun showAuthenticationError() {

@@ -96,6 +96,7 @@ class CommonWebViewFragment: Fragment() {
                     InternetCheck {
                         if (it) {
                             authService.performActionWithFreshTokens({ accessToken, idToken ->
+                                Log.d("AppAuth", "got 401")
                                 Log.d("AppAuth", "accessToken: $accessToken")
                                 Log.d("AppAuth", "idToken: $idToken")
 
