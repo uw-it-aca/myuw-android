@@ -170,7 +170,7 @@ class CommonWebViewFragment: Fragment() {
     override fun onStart() {
         super.onStart()
         // A null here can be safely ignored because the this means the fragment was detached
-        (activity as AppCompatActivity).supportActionBar?.let {
+        (activity as? AppCompatActivity)?.supportActionBar?.let {
             it.title = ""
         }
         // A null here can be safely ignored because the this means the fragment was detached
