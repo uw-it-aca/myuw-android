@@ -94,6 +94,12 @@ class NavDrawerMain : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment);
+        (navHostFragment?.childFragmentManager?.fragments?.get(0) as? CommonWebViewFragment)?.webView?.reload()
+    }
+
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(nav_view)) {
             drawer_layout.closeDrawer(nav_view)

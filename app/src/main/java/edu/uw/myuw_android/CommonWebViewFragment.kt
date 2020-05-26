@@ -196,7 +196,6 @@ class CommonWebViewFragment: Fragment() {
 
     override fun onResume() {
         webView.onResume()
-        webView.reload()
         super.onResume()
     }
 
