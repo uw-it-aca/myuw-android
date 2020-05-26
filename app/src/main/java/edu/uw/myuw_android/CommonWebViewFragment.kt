@@ -201,6 +201,7 @@ class CommonWebViewFragment: Fragment() {
 
     private fun raiseNoInternet() {
         activity?.let {
+            authService.onDestroy()
             ErrorActivity.showError(
                 resources.getString(R.string.no_internet),
                 resources.getString(R.string.no_internet_desc),
@@ -213,6 +214,7 @@ class CommonWebViewFragment: Fragment() {
 
     private fun raiseUnableToConnect() {
         activity?.let {
+            authService.onDestroy()
             ErrorActivity.showError(
                 resources.getString(R.string.onReceiveError),
                 resources.getString(R.string.onReceiveErrorDesc),

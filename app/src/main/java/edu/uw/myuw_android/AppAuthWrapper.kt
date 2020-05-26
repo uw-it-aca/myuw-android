@@ -105,6 +105,7 @@ class AppAuthWrapper(private val activity: Activity) {
     }
 
     fun showAuthenticationError() {
+        onDestroy()
         ErrorActivity.showError(
             resources.getString(R.string.sign_in_error),
             resources.getString(R.string.sign_in_error_desc),

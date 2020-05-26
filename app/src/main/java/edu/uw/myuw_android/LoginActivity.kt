@@ -127,6 +127,7 @@ class LoginActivity: AppCompatActivity() {
     }
 
     private fun raiseNoInternet() {
+        authService.onDestroy()
         ErrorActivity.showError(
             resources.getString(R.string.no_internet),
             resources.getString(R.string.no_internet_desc),
