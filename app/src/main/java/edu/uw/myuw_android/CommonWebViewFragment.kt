@@ -21,7 +21,7 @@ import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.util.*
 
-private var webViewMap: MutableMap<String, WebView> = mutableMapOf()
+
 
 class CommonWebViewFragment: Fragment() {
     private val args: CommonWebViewFragmentArgs by navArgs()
@@ -30,6 +30,10 @@ class CommonWebViewFragment: Fragment() {
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var authService: AppAuthWrapper
 
+    companion object {
+        var webViewMap: MutableMap<String, WebView> = mutableMapOf()
+    }
+
     inner class CustomWebViewClient: WebViewClient() {
 
         override fun onPageFinished(view: WebView, url: String) {
@@ -37,6 +41,7 @@ class CommonWebViewFragment: Fragment() {
             swipeRefreshLayout.isRefreshing = false
 
             if (url.endsWith("/logout")) {
+                Log.d("onPageFinished", "Logging out")
                 authService.deleteAuth()
                 val intent = Intent(activity, LoginActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -176,11 +181,14 @@ class CommonWebViewFragment: Fragment() {
         // A null here can be safely ignored because the this means the fragment was detached
         activity?.let {
             authService = AppAuthWrapper(it)
-            if (webView.url == null)
+            if (webView.url == null) {
+                Log.d("onStart", "Loading url: ${baseUrl + args.path}")
+                Log.d("onStart", "With IdToken: ${authService.authState!!.idToken}")
                 webView.loadUrl(
                     baseUrl + args.path,
                     hashMapOf("Authorization" to "Bearer ${authService.authState!!.idToken}")
                 )
+            }
         }
     }
 

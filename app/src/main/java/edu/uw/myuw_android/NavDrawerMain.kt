@@ -100,6 +100,11 @@ class NavDrawerMain : AppCompatActivity() {
         (navHostFragment?.childFragmentManager?.fragments?.get(0) as? CommonWebViewFragment)?.webView?.reload()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        CommonWebViewFragment.webViewMap.clear()
+    }
+
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(nav_view)) {
             drawer_layout.closeDrawer(nav_view)
