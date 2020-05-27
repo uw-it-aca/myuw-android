@@ -68,6 +68,7 @@ class LoginActivity: AppCompatActivity() {
     }
 
     private fun tryLoginWithAppAuth() {
+        loginButton.isEnabled = false
         InternetCheck {
             if (it) {
                 AuthorizationServiceConfiguration.fetchFromUrl(
@@ -130,7 +131,6 @@ class LoginActivity: AppCompatActivity() {
     }
 
     private fun raiseNoInternet() {
-        authService.onDestroy()
         ErrorActivity.showError(
             resources.getString(R.string.no_internet),
             resources.getString(R.string.no_internet_desc),
