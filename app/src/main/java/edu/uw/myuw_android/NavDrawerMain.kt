@@ -69,33 +69,6 @@ class NavDrawerMain : AppCompatActivity() {
         UserInfoStore.email.observe(this, Observer {
             navView.getHeaderView(0).findViewById<TextView>(R.id.drawer_email).text = it
         })
-
-        navView.setNavigationItemSelectedListener {
-            Log.d("NavDrawerMain - onCreate", it.title.toString())
-            when (it.itemId) {
-                R.id.logout -> {
-                    Log.d("NavDrawerMain - logout", "logging out user")
-                    val currentState = UserInfoStore.readAuthState(this)
-                    currentState.authorizationServiceConfiguration?.also { authorizationServiceConfiguration ->
-                        val clearedState = AuthState(authorizationServiceConfiguration)
-                        if (currentState.lastRegistrationResponse != null) {
-                            clearedState.update(currentState.lastRegistrationResponse)
-                        }
-                        UserInfoStore.writeAuthState(this, clearedState)
-                        val mainIntent = Intent(this, LoginActivity::class.java)
-                        mainIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        startActivity(mainIntent)
-                        finish()
-                    } ?: showAuthenticationError()
-                    true
-                }
-                else -> {
-                    val handled = NavigationUI.onNavDestinationSelected(it, navController)
-                    if (handled) drawerLayout.closeDrawer(navView)
-                    handled
-                }
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -121,22 +94,22 @@ class NavDrawerMain : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment);
+        (navHostFragment?.childFragmentManager?.fragments?.get(0) as? CommonWebViewFragment)?.webView?.reload()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        CommonWebViewFragment.webViewMap.clear()
+    }
+
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(nav_view)) {
             drawer_layout.closeDrawer(nav_view)
         } else {
             super.onBackPressed()
         }
-    }
-
-    private fun showAuthenticationError() {
-        // Show error page about error in reading old server configuration
-        ErrorActivity.showError(
-            "Unable to Load Sign-In Info",
-            "There was an error reading the last login statue. Please clean the app storage and launch again. This message needs to be updated by ux",
-            "Retry",
-            ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
-            this
-        )
     }
 }

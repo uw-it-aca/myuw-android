@@ -9,31 +9,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import edu.my.myuw_android.BuildConfig
 import edu.my.myuw_android.R
 import kotlinx.android.synthetic.main.webview_fragment.view.*
-import net.openid.appauth.AuthorizationService
-import java.lang.Exception
 import java.net.URL
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.util.*
-import kotlin.collections.HashMap
 
-private var webViewMap: MutableMap<String, WebView> = mutableMapOf()
+
 
 class CommonWebViewFragment: Fragment() {
     private val args: CommonWebViewFragmentArgs by navArgs()
     lateinit var webView: WebView
     lateinit var baseUrl: String
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var authorizationService: AuthorizationService
+    private lateinit var authService: AppAuthWrapper
+
+    companion object {
+        var webViewMap: MutableMap<String, WebView> = mutableMapOf()
+    }
 
     inner class CustomWebViewClient: WebViewClient() {
 
@@ -41,10 +40,19 @@ class CommonWebViewFragment: Fragment() {
             super.onPageFinished(view, url)
             swipeRefreshLayout.isRefreshing = false
 
-            // A null here can be safely ignored because the this means the fragment was detached before page load was finished
-            (activity as? AppCompatActivity)?.supportActionBar?.let {
-                it.title = view.title.split(": ").getOrElse(1){"Invalid Title"}
-            } ?: TODO("Gracefully crash the app? webview probably finished loading after the fragment was unloaded. Could just ignore this")
+            if (url.endsWith("/logout")) {
+                Log.d("onPageFinished", "Logging out")
+                authService.deleteAuth()
+                val intent = Intent(activity, LoginActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                activity?.finish()
+            } else {
+                // A null here can be safely ignored because the this means the fragment was detached before page load was finished
+                (activity as? AppCompatActivity)?.supportActionBar?.let {
+                    it.title = view.title.split(": ").getOrElse(1) { "" }
+                }
+            }
         }
 
         override fun shouldOverrideUrlLoading(
@@ -74,32 +82,42 @@ class CommonWebViewFragment: Fragment() {
             request: WebResourceRequest?,
             error: WebResourceError?
         ) {
-            if (activity != null)
-                ErrorActivity.showError(
-                    getString(R.string.onReceiveError),
-                    getString(R.string.onReceiveErrorDesc),
-                    getString(R.string.onReceiveErrorButton),
-                    ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
-                    activity!!
-                )
+            Log.e("CustomWebViewClient - onReceivedError", error.toString())
+            InternetCheck {
+                if (it) raiseUnableToConnect() else raiseNoInternet()
+            }
             super.onReceivedError(view, request, error)
         }
 
-//        override fun onReceivedHttpError(
-//            view: WebView?,
-//            request: WebResourceRequest?,
-//            errorResponse: WebResourceResponse?
-//        ) {
-//            if (activity != null)
-//                ErrorActivity.showError(
-//                    getString(R.string.onReceiveError),
-//                    getString(R.string.onReceiveErrorDesc),
-//                    getString(R.string.onReceiveErrorButton),
-//                    ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
-//                    activity!!
-//                )
-//            super.onReceivedHttpError(view, request, errorResponse)
-//        }
+        override fun onReceivedHttpError(
+            view: WebView?,
+            request: WebResourceRequest?,
+            errorResponse: WebResourceResponse?
+        ) {
+            if (errorResponse?.statusCode == 401) {
+                if (view?.url?.endsWith("/logout") == true) {
+                    authService.deleteAuth()
+                } else {
+                    InternetCheck {
+                        if (it) {
+                            authService.performActionWithFreshTokens({ accessToken, idToken ->
+                                Log.d("AppAuth", "got 401")
+                                Log.d("AppAuth", "accessToken: $accessToken")
+                                Log.d("AppAuth", "idToken: $idToken")
+
+                                webView.loadUrl(baseUrl + args.path,
+                                    hashMapOf("Authorization" to "Bearer ${authService.authState!!.idToken}"))
+                            }, { ex ->
+                                ex?.localizedMessage?.also {
+                                    Log.e("AuthorizationServiceConfiguration", ex.toString())
+                                }
+                                authService.showAuthenticationError()
+                            })
+                        } else raiseNoInternet()
+                    }
+                }
+            } else super.onReceivedHttpError(view, request, errorResponse)
+        }
     }
 
     override fun onCreateView(
@@ -157,30 +175,26 @@ class CommonWebViewFragment: Fragment() {
     override fun onStart() {
         super.onStart()
         // A null here can be safely ignored because the this means the fragment was detached
-        (activity as AppCompatActivity).supportActionBar?.let {
+        (activity as? AppCompatActivity)?.supportActionBar?.let {
             it.title = ""
         }
         // A null here can be safely ignored because the this means the fragment was detached
         activity?.let {
-            authorizationService = AuthorizationService(it)
-            if (webView.url == null)
-                UserInfoStore.readAuthState(it).performActionWithFreshTokens(
-                    authorizationService
-                ) { accessToken, idToken, _ ->
-                    Log.d("AppAuth", "accessToken: $accessToken")
-                    Log.d("AppAuth", "idToken: $idToken")
-                    Log.d("AppAuth", "url: ${baseUrl + args.path}")
-                    webView.loadUrl(
-                        baseUrl + args.path,
-                        hashMapOf("Authorization" to "Bearer $idToken")
-                    )
-                }
+            authService = AppAuthWrapper(it)
+            if (webView.url == null) {
+                Log.d("onStart", "Loading url: ${baseUrl + args.path}")
+                Log.d("onStart", "With IdToken: ${authService.authState!!.idToken}")
+                webView.loadUrl(
+                    baseUrl + args.path,
+                    hashMapOf("Authorization" to "Bearer ${authService.authState!!.idToken}")
+                )
+            }
         }
     }
 
     override fun onStop() {
         super.onStop()
-        authorizationService.dispose()
+        authService.onDestroy()
     }
 
     override fun onPause() {
@@ -190,11 +204,32 @@ class CommonWebViewFragment: Fragment() {
 
     override fun onResume() {
         webView.onResume()
-        if (webView.title.split(": ").size > 1)
-            // A null here can be safely ignored because the this means the fragment was detached
-            (activity as AppCompatActivity).supportActionBar?.let {
-                it.title = webView.title.split(": ")[1]
-            }
         super.onResume()
+    }
+
+    private fun raiseNoInternet() {
+        activity?.let {
+            authService.onDestroy()
+            ErrorActivity.showError(
+                resources.getString(R.string.no_internet),
+                resources.getString(R.string.no_internet_desc),
+                resources.getString(R.string.onReceiveErrorButton),
+                ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                it
+            )
+        }
+    }
+
+    private fun raiseUnableToConnect() {
+        activity?.let {
+            authService.onDestroy()
+            ErrorActivity.showError(
+                resources.getString(R.string.onReceiveError),
+                resources.getString(R.string.onReceiveErrorDesc),
+                resources.getString(R.string.onReceiveErrorButton),
+                ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                it
+            )
+        }
     }
 }

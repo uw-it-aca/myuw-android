@@ -167,6 +167,24 @@
     </fragment>
 
     <fragment
+        android:id="@+id/logout"
+        android:name="edu.uw.myuw_android.CommonWebViewFragment"
+        android:label="{title}">
+        <argument
+            android:name="path"
+            android:defaultValue="/logout"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            android:defaultValue="Logout"
+            app:argType="string" />
+        <argument
+            android:name="unique_id"
+            app:argType="string"
+            android:defaultValue="Logout" />
+    </fragment>
+
+    <fragment
         android:id="@+id/nav_url_open"
         android:name="edu.uw.myuw_android.CommonWebViewFragment"
         android:label="">

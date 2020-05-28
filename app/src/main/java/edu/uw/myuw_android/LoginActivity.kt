@@ -18,19 +18,23 @@ import org.json.JSONObject
 class LoginActivity: AppCompatActivity() {
 
     val RC_AUTH = 132
-    lateinit var authorizationService: AuthorizationService
+    lateinit var authService: AppAuthWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+    }
+
+    override fun onStart() {
+        super.onStart()
 
         loginButton.setOnClickListener {
             tryLoginWithAppAuth()
         }
 
-        authorizationService = AuthorizationService(this)
+        authService = AppAuthWrapper(this)
 
-        if (UserInfoStore.readAuthState(this).isAuthorized) {
+        if (authService.couldBeAuthorized) {
             signed_status.text = getString(R.string.signed_in)
             loginButton.isClickable = false
             startMainActivity()
@@ -39,111 +43,99 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        authorizationService.dispose()
+    override fun onStop() {
+        super.onStop()
+        authService.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_AUTH) {
-            data?.also {
-                val resp = AuthorizationResponse.fromIntent(it)
-                val ex = AuthorizationException.fromIntent(it)
-
-                if (resp != null) {
-                    val authState = AuthState(resp, ex)
-                    authorizationService.performTokenRequest(
-                        resp.createTokenExchangeRequest()
-                    ) { response, ex_new ->
-                        if (response != null) {
-                            authState.update(response, ex)
-                            UserInfoStore.writeAuthState(this, authState)
-                            startMainActivity()
-                        } else {
-                            ex_new?.localizedMessage?.also { localizedMessage ->
-                                Log.e("performTokenRequest", localizedMessage)
-                            }
-                            showAuthenticationError()
+            data?.also { it ->
+                authService.updateAuthWithIntent(it) { ex ->
+                    if (ex == null) {
+                        startMainActivity()
+                    } else {
+                        ex.localizedMessage?.also { localizedMessage ->
+                            Log.e("AuthorizationResponse", localizedMessage)
                         }
+                        authService.showAuthenticationError()
                     }
-                } else {
-                    ex?.localizedMessage?.also { localizedMessage ->
-                        Log.e("AuthorizationResponse", localizedMessage)
-                    }
-                    showAuthenticationError()
                 }
-            } ?: showAuthenticationError()
+            } ?: authService.showAuthenticationError()
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
     private fun tryLoginWithAppAuth() {
-        AuthorizationServiceConfiguration.fetchFromUrl(
-            Uri.parse(resources.getString(R.string.openid_discovery_uri))
-        ) { serviceConfiguration, ex ->
-            if (serviceConfiguration != null) {
-                val authRequestBuilder = AuthorizationRequest.Builder(
-                    serviceConfiguration,
-                    resources.getString(R.string.openid_client_id),
-                    ResponseTypeValues.CODE,
-                    Uri.parse(resources.getString(R.string.openid_redirect_uri))
-                )
+        loginButton.isEnabled = false
+        InternetCheck {
+            if (it) {
+                AuthorizationServiceConfiguration.fetchFromUrl(
+                    Uri.parse(resources.getString(R.string.openid_discovery_uri))
+                ) { serviceConfiguration, ex ->
+                    if (serviceConfiguration != null) {
+                        val authRequestBuilder = AuthorizationRequest.Builder(
+                            serviceConfiguration,
+                            resources.getString(R.string.openid_client_id),
+                            ResponseTypeValues.CODE,
+                            Uri.parse(resources.getString(R.string.openid_redirect_uri))
+                        )
 
-                val authRequest = authRequestBuilder
-                    .setScope(resources.getString(R.string.openid_authorization_scope))
-                    .build()
+                        val authRequest = authRequestBuilder
+                            .setScope(resources.getString(R.string.openid_authorization_scope))
+                            .build()
 
-                startActivityForResult(
-                    authorizationService.getAuthorizationRequestIntent(authRequest),
-                    RC_AUTH
-                )
-            } else {
-                ex?.localizedMessage?.also {
-                    Log.e("AuthorizationServiceConfiguration", it)
+                        startActivityForResult(
+                            authService.getAuthorizationRequestIntent(authRequest),
+                            RC_AUTH
+                        )
+                    } else {
+                        ex?.localizedMessage?.also {
+                            Log.e("AuthorizationServiceConfiguration", ex.toString())
+                        }
+                        authService.showAuthenticationError()
+                    }
                 }
-                showAuthenticationError()
-            }
+            } else raiseNoInternet()
         }
     }
 
     private fun startMainActivity() {
-        val authState = UserInfoStore.readAuthState(this)
-        authState.performActionWithFreshTokens(authorizationService) {
-                accessToken, idToken, _ ->
-
-            idToken?.also {
+        InternetCheck {
+            if (it) {
                 val job = GlobalScope.launch {
-                    UserInfoStore.updateAffiliations(resources, it)
+                    UserInfoStore.updateAffiliations(this@LoginActivity, resources, authService)
                 }
 
-                val idObject = JSONObject(String(Base64.decode(it.split(".")[1], Base64.URL_SAFE)))
+                val idObject = JSONObject(String(Base64.decode(authService.authState!!.idToken!!.split(".")[1], Base64.URL_SAFE)))
                 UserInfoStore.name.postValue(idObject["sub"] as String)
-                UserInfoStore.email.postValue(idObject["email"] as String)
-                UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
+                // TODO: Fix this
+                // UserInfoStore.email.postValue(idObject["email"] as String)
+                // UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
 
                 runBlocking {
                     job.join()
                 }
 
-                Log.d("LoginActivity: startMainActivity", "accessToken: $accessToken")
-                Log.d("LoginActivity: startMainActivity", "idToken: $idToken")
+                Log.d("LoginActivity: startMainActivity", "accessToken: ${authService.authState!!.accessToken}")
+                Log.d("LoginActivity: startMainActivity", "idToken: ${authService.authState!!.idToken}")
                 Log.d("LoginActivity: startMainActivity", "idObject: $idObject")
 
                 val intent = Intent(this, NavDrawerMain::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
-            } ?: showAuthenticationError()
+            } else raiseNoInternet()
         }
     }
 
-    private fun showAuthenticationError() {
+    private fun raiseNoInternet() {
         ErrorActivity.showError(
-            "Unable to Sign In",
-            "There was an error while trying to get auth tokens. This message needs to be updated by ux",
-            "Retry",
-            ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
+            resources.getString(R.string.no_internet),
+            resources.getString(R.string.no_internet_desc),
+            resources.getString(R.string.onReceiveErrorButton),
+            ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
             this
         )
     }

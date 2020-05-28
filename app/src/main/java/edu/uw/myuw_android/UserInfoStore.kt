@@ -1,32 +1,27 @@
 package edu.uw.myuw_android
 
+import android.app.Activity
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
 import android.view.Menu
-import android.webkit.JavascriptInterface
-import androidx.annotation.IntegerRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
-import edu.my.myuw_android.BuildConfig
 import edu.my.myuw_android.R
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import net.openid.appauth.AuthState
-import net.openid.appauth.AuthorizationException
-import net.openid.appauth.AuthorizationService
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.lang.Exception
+import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.StandardCharsets
-import javax.net.ssl.HttpsURLConnection
 
 object UserInfoStore {
     private var menuItems = mapOf(
-        R.id.group_nav_drawer_main to mapOf<String, Triple<Int, Int, (List<String>) -> Boolean>>(
+        R.id.group_nav_drawer_main to mapOf<String, Triple<Int, Int, (Set<String>) -> Boolean>>(
             "Home" to Triple(
                 R.id.nav_home,
                 R.drawable.ic_home_black_24dp,
@@ -35,17 +30,17 @@ object UserInfoStore {
             "Academics" to Triple(
                 R.id.nav_academics,
                 R.drawable.ic_action_academics,
-                { aff: List<String> -> aff.contains("student") or aff.contains("applicant") }
+                { aff: Set<String> -> aff.contains("student") or aff.contains("applicant") }
             ),
             "Husky Experience" to Triple(
                 R.id.nav_husky_experience,
                 R.drawable.ic_husky_experience,
-                { aff: List<String> -> (aff.contains("undergrad") and aff.contains("seattle")) or aff.contains("hxt_viewer") }
+                { aff: Set<String> -> (aff.contains("undergrad") and aff.contains("seattle")) or aff.contains("hxt_viewer") }
             ),
             "Teaching" to Triple(
                 R.id.nav_teaching,
                 R.drawable.ic_edit_black_24dp,
-                { aff: List<String> -> aff.contains("instructor") }
+                { aff: Set<String> -> aff.contains("instructor") }
             ),
             "Accounts" to Triple(
                 R.id.nav_accounts,
@@ -55,7 +50,7 @@ object UserInfoStore {
             "Notices" to Triple(
                 R.id.nav_notices,
                 R.drawable.ic_notices,
-                { aff: List<String> -> aff.contains("student") }
+                { aff: Set<String> -> aff.contains("student") }
             ),
             "Profile" to Triple(
                 R.id.nav_profile,
@@ -65,7 +60,7 @@ object UserInfoStore {
             "Calendar" to Triple(
                 R.id.nav_academic_calendar,
                 R.drawable.ic_calander,
-                { aff: List<String> -> true }
+                { _ -> true }
             ),
             "UW Resources" to Triple(
                 R.id.nav_resources,
@@ -83,7 +78,7 @@ object UserInfoStore {
     )
 
     private var activeMenuItems = menuItems
-    private var affiliations = mutableListOf<String>()
+    private var affiliations = mutableSetOf<String>()
 
     var name: MutableLiveData<String> = MutableLiveData()
     var email: MutableLiveData<String>  = MutableLiveData()
@@ -118,46 +113,78 @@ object UserInfoStore {
         }
     }
 
-    fun updateAffiliations(resources: Resources, idToken: String) {
-        val conn =
-            URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection()
-        conn.setRequestProperty("Authorization", "Bearer $idToken")
-        var responseJson = "";
-        BufferedReader(
-            InputStreamReader(
-                conn.getInputStream(),
-                StandardCharsets.UTF_8
-            )
-        ).forEachLine {
-            responseJson += it + '\n'
-        }
+    fun updateAffiliations(activity: Activity, resources: Resources, authService: AppAuthWrapper) {
+        val affiliationsSharedPreferences = activity.getSharedPreferences("affiliations", Context.MODE_PRIVATE)
+        if (affiliationsSharedPreferences.contains("affiliations_array")) {
+            affiliations = affiliationsSharedPreferences.getStringSet("affiliations_array", null)!!
+        } else {
+            try {
+                var conn =
+                    URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection() as HttpURLConnection
+                conn.setRequestProperty(
+                    "Authorization",
+                    "Bearer ${authService.authState!!.idToken}"
+                )
+                conn.requestMethod = "GET"
+                conn.connect()
 
-        val decodedRespose = JSONObject(responseJson)
-        decodedRespose.keys().forEach {
-            if (decodedRespose[it] is Boolean && (decodedRespose[it] as Boolean)) {
-                affiliations.add(it)
+                if (conn.responseCode == 401)
+                    authService.performActionWithFreshTokens({ _, idToken ->
+                        conn =
+                            URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection() as HttpURLConnection
+                        conn.setRequestProperty("Authorization", "Bearer $idToken")
+                        conn.requestMethod = "GET"
+                        conn.connect()
+                    }, {
+                        authService.showAuthenticationError()
+                    })
+
+                var responseJson = ""
+
+                BufferedReader(
+                    InputStreamReader(
+                        conn.inputStream,
+                        StandardCharsets.UTF_8
+                    )
+                ).forEachLine {
+                    responseJson += it + '\n'
+                }
+
+                Log.d("updateAffiliations - responseJson: ", responseJson)
+                val decodedResponse = JSONObject(responseJson)
+                decodedResponse.keys().forEach {
+                    if (decodedResponse[it] is Boolean && (decodedResponse[it] as Boolean)) {
+                        affiliations.add(it)
+                    }
+                }
+                affiliationsSharedPreferences.edit()
+                    .putStringSet("affiliations_array", affiliations).apply()
+                Log.d("updateAffiliations - decodedRespose: ", responseJson)
+                Log.d("updateAffiliations - affiliations: ", affiliations.toString())
+            } catch (e: Exception) {
+                Log.e("updateAffiliations - http error", e.toString())
+                InternetCheck {
+                    if (it) {
+                        authService.onDestroy()
+                        ErrorActivity.showError(
+                            resources.getString(R.string.error_affiliations_update),
+                            resources.getString(R.string.error_affilications_update_desc),
+                            resources.getString(R.string.onReceiveErrorButton),
+                            ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                            activity
+                        )
+                    } else {
+                        authService.onDestroy()
+                        ErrorActivity.showError(
+                            resources.getString(R.string.no_internet),
+                            resources.getString(R.string.no_internet_desc),
+                            resources.getString(R.string.onReceiveErrorButton),
+                            ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                            activity
+                        )
+                    }
+                }
             }
         }
-        Log.d("updateAffiliations - decodedRespose: ", responseJson)
-        Log.d("updateAffiliations - affiliations: ", affiliations.toString())
-    }
-
-    fun readAuthState(context: Context): AuthState {
-        val authPrefs: SharedPreferences =
-            context.getSharedPreferences("auth", MODE_PRIVATE)
-        val stateJson = authPrefs.getString("stateJson", null)
-        return if (stateJson != null) {
-            AuthState.jsonDeserialize(stateJson)
-        } else {
-            AuthState()
-        }
-    }
-
-    fun writeAuthState(context: Context, state: AuthState) {
-        val authPrefs: SharedPreferences =
-            context.getSharedPreferences("auth", MODE_PRIVATE)
-        authPrefs.edit()
-            .putString("stateJson", state.jsonSerializeString())
-            .apply()
     }
 }
