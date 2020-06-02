@@ -21,17 +21,17 @@
     <string name="signed_in">You are signed in</string>
     <string name="not_signed_in">Welcome</string>
     <string name="sign_in">Sign in</string>
-    <string name="you_are_not_signed_in">You are not signed in</string>
-    <string name="sign_in_error">Unable to Load Sign-In Info</string>
-    <string name="sign_in_error_desc">There was an error reading the last login statue. Please clean the app storage and launch again. This message needs to be updated by ux</string>
-    <string name="no_internet">No Internet</string>
-    <string name="no_internet_desc">No Internet</string>
+    <string name="you_are_not_signed_in">Please sign in to continue.</string>
+    <string name="sign_in_error">Signed Out</string>
+    <string name="sign_in_error_desc">You have been signed out, likely due to an application error or prolonged inactivity.\nSign in to continue.</string>
+    <string name="no_internet">No Internet Connection</string>
+    <string name="no_internet_desc">It looks like you’re offline. Connect to the internet and retry to access MyUW.</string>
     <string name="login_info">Please sign in to continue.</string>
     <string name="onReceiveError">Unable to Load Page</string>
-    <string name="onReceiveErrorDesc">A server error has occurred. We are aware of the issue and are working to resolve it.\n Please try again in a few minutes.</string>
+    <string name="onReceiveErrorDesc">A server error has occurred. We are aware of the issue and are working to resolve it.\nPlease try again in a few minutes.</string>
     <string name="onReceiveErrorButton">Retry</string>
     <string name="search_label">MyUW</string>
     <string name="search_hint">Tuition, Transcript</string>
-    <string name="error_affiliations_update">Unable to Update Affiliations</string>
-    <string name="error_affilications_update_desc">A server error has occurred. We are aware of this issue and are working on it. Please try again in a few minutes. This message needs to be updated by ux</string>
+    <string name="error_affiliations_update">Signed Out</string>
+    <string name="error_affilications_update_desc">You have been signed out, likely due to an application error or prolonged inactivity.\nSign in to continue.</string>
 </resources>
