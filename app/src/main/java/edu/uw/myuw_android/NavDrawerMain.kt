@@ -26,6 +26,7 @@ import net.openid.appauth.AuthState
 class NavDrawerMain : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private var currentMenuItemId = R.id.nav_home
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +61,16 @@ class NavDrawerMain : AppCompatActivity() {
             navController.navigate(R.id.nav_profile)
             navView.setCheckedItem(R.id.nav_profile)
             drawerLayout.closeDrawer(navView)
+        }
+
+        navView.setNavigationItemSelectedListener {
+            if (currentMenuItemId != it.itemId) {
+                navController.navigate(it.itemId)
+                navView.setCheckedItem(it.itemId)
+                currentMenuItemId = it.itemId
+            }
+            drawerLayout.closeDrawer(navView)
+            return@setNavigationItemSelectedListener false
         }
 
         UserInfoStore.name.observe(this, Observer {
