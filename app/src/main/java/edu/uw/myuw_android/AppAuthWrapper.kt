@@ -63,10 +63,10 @@ class AppAuthWrapper(private val activity: Activity) {
         } ?: callback(null)
     }
 
-    fun performActionWithFreshTokens(callback: (String, String) -> Unit, errorCallback: (AuthorizationException?) -> Unit) {
+    fun performActionWithFreshTokens(callback: (String, String) -> Unit, errorCallback: (AuthorizationException?) -> Unit, force: Boolean = false) {
         authState?.let{
             when {
-                it.needsTokenRefresh -> {
+                it.needsTokenRefresh || force -> {
                     val refreshRequest = it.createTokenRefreshRequest()
                     authorizationService.performTokenRequest(refreshRequest) { response, ex ->
                         if (response != null) {

@@ -112,7 +112,7 @@ class CommonWebViewFragment: Fragment() {
                                     Log.e("AuthorizationServiceConfiguration", ex.toString())
                                 }
                                 authService.showAuthenticationError()
-                            })
+                            }, true)
                         } else raiseNoInternet()
                     }
                 }
