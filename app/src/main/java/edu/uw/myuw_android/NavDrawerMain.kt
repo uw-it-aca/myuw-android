@@ -70,7 +70,7 @@ class NavDrawerMain : AppCompatActivity() {
                 currentMenuItemId = it.itemId
             }
             drawerLayout.closeDrawer(navView)
-            return@setNavigationItemSelectedListener false
+            false
         }
 
         UserInfoStore.name.observe(this, Observer {
