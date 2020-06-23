@@ -39,6 +39,8 @@ class CommonWebViewFragment: Fragment() {
         override fun onPageFinished(view: WebView, url: String) {
             super.onPageFinished(view, url)
             swipeRefreshLayout.isRefreshing = false
+            swipeRefreshLayout.beforeWebViewLoad.visibility = View.GONE
+            view.visibility = View.VISIBLE
 
             if (url.endsWith("/logout")) {
                 Log.d("onPageFinished", "Logging out")
@@ -143,8 +145,10 @@ class CommonWebViewFragment: Fragment() {
             webViewMap[args.uniqueId]!!.let {
                 it.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 it.settings.javaScriptEnabled = true
+                it.visibility = View.INVISIBLE
             }
         }
+        else view.beforeWebViewLoad.visibility = View.GONE
 
         // No way to gracefully handle this
         webViewMap[args.uniqueId]!!.also {
@@ -205,6 +209,11 @@ class CommonWebViewFragment: Fragment() {
     override fun onResume() {
         webView.onResume()
         super.onResume()
+
+        (activity as? AppCompatActivity)?.supportActionBar?.let {
+            it.title = webView.title.split(": ").getOrElse(1) { "" }
+        }
+
     }
 
     private fun raiseNoInternet() {
