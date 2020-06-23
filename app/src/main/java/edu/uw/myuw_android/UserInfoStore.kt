@@ -137,7 +137,7 @@ object UserInfoStore {
                         conn.connect()
                     }, {
                         authService.showAuthenticationError()
-                    })
+                    }, true)
 
                 var responseJson = ""
 
