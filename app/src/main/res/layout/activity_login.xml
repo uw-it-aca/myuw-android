@@ -6,37 +6,60 @@
     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
     android:layout_marginVertical="@dimen/activity_vertical_margin">
 
-    <TextView
-        android:id="@+id/signed_status"
+    <LinearLayout
+        android:id="@+id/beforeLogin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/not_signed_in"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="15dp" />
+        <TextView
+            android:id="@+id/signed_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/not_signed_in"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="5dp"
-        android:text="@string/login_info"
-        android:textColor="@color/black"
-        android:textSize="@dimen/description" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="5dp"
+            android:text="@string/login_info"
+            android:textColor="@color/black"
+            android:textSize="@dimen/description" />
 
-    <Button
-        android:id="@+id/loginButton"
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="@string/sign_in"
+            android:textColor="@color/design_default_color_on_primary"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/afterLogin"
         android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="@string/sign_in"
-        android:textColor="@color/design_default_color_on_primary"
-        android:textSize="18sp" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleX="0.2"
+            android:scaleY="0.2" />
+
+    </LinearLayout>
 </LinearLayout>

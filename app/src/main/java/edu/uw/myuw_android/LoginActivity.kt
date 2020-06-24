@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import edu.my.myuw_android.R
@@ -37,6 +38,8 @@ class LoginActivity: AppCompatActivity() {
         if (authService.couldBeAuthorized) {
             signed_status.text = getString(R.string.signed_in)
             loginButton.isClickable = false
+            beforeLogin.visibility = ViewGroup.GONE
+            afterLogin.visibility = ViewGroup.VISIBLE
             startMainActivity()
         } else {
             signed_status.text = getString(R.string.not_signed_in)
@@ -86,6 +89,8 @@ class LoginActivity: AppCompatActivity() {
                             .setScope(resources.getString(R.string.openid_authorization_scope))
                             .build()
 
+                        beforeLogin.visibility = ViewGroup.GONE
+                        afterLogin.visibility = ViewGroup.VISIBLE
                         startActivityForResult(
                             authService.getAuthorizationRequestIntent(authRequest),
                             RC_AUTH
