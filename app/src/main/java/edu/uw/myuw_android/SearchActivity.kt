@@ -5,9 +5,11 @@ import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
+import android.view.MenuItem
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NavUtils
 import edu.my.myuw_android.R
 import kotlinx.android.synthetic.main.activity_search.*
 import java.io.InputStream
@@ -49,6 +51,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         handleIntent(intent)
     }
 
@@ -78,5 +81,17 @@ class SearchActivity : AppCompatActivity() {
 
     private fun doSearch(query: String) {
         this.query = query
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                NavUtils.navigateUpFromSameTask(this)
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
     }
 }
