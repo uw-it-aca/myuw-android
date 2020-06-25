@@ -155,6 +155,7 @@ object UserInfoStore {
                 }
 
                 conn.disconnect()
+                affiliations.clear()
 
                 Log.d("updateAffiliations - responseJson: ", responseJson)
                 val decodedResponse = JSONObject(responseJson)
