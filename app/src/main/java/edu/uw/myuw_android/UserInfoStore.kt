@@ -15,6 +15,8 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.Exception
+import java.net.CookieHandler
+import java.net.CookiePolicy
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.StandardCharsets
@@ -119,22 +121,24 @@ object UserInfoStore {
             affiliations = affiliationsSharedPreferences.getStringSet("affiliations_array", null)!!
         } else {
             try {
-                var conn =
-                    URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection() as HttpURLConnection
-                conn.setRequestProperty(
-                    "Authorization",
-                    "Bearer ${authService.authState!!.idToken}"
-                )
-                conn.requestMethod = "GET"
-                conn.connect()
+                val makeRequest: (idToken: String?) -> HttpURLConnection = { idToken ->
+                    (URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection() as HttpURLConnection).let {
+                        it.setRequestProperty(
+                            "Authorization",
+                            "Bearer $idToken"
+                        )
+                        it.requestMethod = "GET"
+                        it.useCaches = false
+                        it.connect()
+                        it
+                    }
+                }
+
+                var conn = makeRequest(authService.authState!!.idToken)
 
                 if (conn.responseCode == 401)
                     authService.performActionWithFreshTokens({ _, idToken ->
-                        conn =
-                            URL(resources.getString(R.string.myuw_affiliation_endpoint)).openConnection() as HttpURLConnection
-                        conn.setRequestProperty("Authorization", "Bearer $idToken")
-                        conn.requestMethod = "GET"
-                        conn.connect()
+                        conn = makeRequest(idToken)
                     }, {
                         authService.showAuthenticationError()
                     }, true)
@@ -149,6 +153,8 @@ object UserInfoStore {
                 ).forEachLine {
                     responseJson += it + '\n'
                 }
+
+                conn.disconnect()
 
                 Log.d("updateAffiliations - responseJson: ", responseJson)
                 val decodedResponse = JSONObject(responseJson)
