@@ -87,6 +87,7 @@ class LoginActivity: AppCompatActivity() {
 
                         val authRequest = authRequestBuilder
                             .setScope(resources.getString(R.string.openid_authorization_scope))
+                            .setPrompt("login")
                             .build()
 
                         beforeLogin.visibility = ViewGroup.GONE
