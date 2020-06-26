@@ -15,6 +15,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.openid.appauth.*
 import org.json.JSONObject
+import java.net.CookieHandler
+import java.net.CookieManager
+import java.net.CookiePolicy
 
 class LoginActivity: AppCompatActivity() {
 
@@ -28,6 +31,8 @@ class LoginActivity: AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        CookieHandler.setDefault(CookieManager(null, CookiePolicy.ACCEPT_NONE))
 
         loginButton.setOnClickListener {
             tryLoginWithAppAuth()
