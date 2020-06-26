@@ -134,7 +134,7 @@ object UserInfoStore {
                     }
                 }
 
-                var conn = makeRequest(authService.authState!!.idToken)
+                var conn = makeRequest(authService.idToken)
 
                 if (conn.responseCode == 401)
                     authService.performActionWithFreshTokens({ _, idToken ->

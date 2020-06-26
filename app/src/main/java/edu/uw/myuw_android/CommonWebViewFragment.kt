@@ -108,7 +108,7 @@ class CommonWebViewFragment: Fragment() {
                                 Log.d("AppAuth", "idToken: $idToken")
 
                                 webView.loadUrl(baseUrl + args.path,
-                                    hashMapOf("Authorization" to "Bearer ${authService.authState!!.idToken}"))
+                                    hashMapOf("Authorization" to "Bearer ${authService.idToken}"))
                             }, { ex ->
                                 ex?.localizedMessage?.also {
                                     Log.e("AuthorizationServiceConfiguration", ex.toString())
@@ -187,10 +187,10 @@ class CommonWebViewFragment: Fragment() {
             authService = AppAuthWrapper(it)
             if (webView.url == null) {
                 Log.d("onStart", "Loading url: ${baseUrl + args.path}")
-                Log.d("onStart", "With IdToken: ${authService.authState!!.idToken}")
+                Log.d("onStart", "With IdToken: ${authService.idToken}")
                 webView.loadUrl(
                     baseUrl + args.path,
-                    hashMapOf("Authorization" to "Bearer ${authService.authState!!.idToken}")
+                    hashMapOf("Authorization" to "Bearer ${authService.idToken}")
                 )
             }
         }

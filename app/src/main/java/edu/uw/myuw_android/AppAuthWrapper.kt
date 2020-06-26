@@ -18,60 +18,70 @@ class AppAuthWrapper(private val activity: Activity) {
     private val resources: Resources = activity.resources
     private var authorizationService: AuthorizationService = AuthorizationService(activity)
 
-    var authState: AuthState?
+    private fun AuthState.update(authResp: AuthorizationResponse?, authEx: AuthorizationException?, ctx: Context) {
+        update(authResp, authEx)
+        ctx.getSharedPreferences("auth", Context.MODE_PRIVATE).edit()
+            .putString("stateJson", jsonSerializeString()).apply()
+    }
+
+    private fun AuthState.update(tokenResp: TokenResponse?, authEx: AuthorizationException?, ctx: Context) {
+        update(tokenResp, authEx)
+        ctx.getSharedPreferences("auth", Context.MODE_PRIVATE).edit()
+            .putString("stateJson", jsonSerializeString()).apply()
+    }
+
+    private fun AuthState.update(regResp: RegistrationResponse, ctx: Context) {
+        update(regResp)
+        ctx.getSharedPreferences("auth", Context.MODE_PRIVATE).edit()
+            .putString("stateJson", jsonSerializeString()).apply()
+    }
+
+    private val authState: AuthState
         get() {
             val stateJson = authSharedPreferences.getString("stateJson", null)
             return if (stateJson != null) {
                 AuthState.jsonDeserialize(stateJson)
-            } else null
-        }
-        private set(newAuthState) {
-            if (newAuthState != null) {
-                authSharedPreferences.edit()
-                    .putString("stateJson", newAuthState.jsonSerializeString())
-                    .apply()
-            } else {
-                activity.getSharedPreferences("affiliations", Context.MODE_PRIVATE).edit().remove("affiliations_array").apply()
-                authSharedPreferences.edit().remove("stateJson").apply()
-            }
+            } else AuthState()
         }
 
+    val idToken: String?
+        get() = authState.idToken
+
+    val accessToken: String?
+        get() = authState.accessToken
+
     val couldBeAuthorized: Boolean
-        get() = authState != null
+        get() = authState.lastTokenResponse != null
 
     fun updateAuthWithIntent(intent: Intent, callback: (AuthorizationException?) -> Unit) {
         val resp = AuthorizationResponse.fromIntent(intent)
         val ex = AuthorizationException.fromIntent(intent)
 
-        authState = AuthState()
-
-        authState?.let {
+        authState.let {
             if (resp != null) {
-                it.update(resp, ex)
+                it.update(resp, ex, activity)
                 authorizationService.performTokenRequest(
                     resp.createTokenExchangeRequest()
                 ) { response, ex_new ->
                     if (response != null) {
-                        it.update(response, ex_new)
-                        authState = it
+                        it.update(response, ex_new, activity)
                     }
                     callback(ex_new)
                 }
             } else {
                 callback(ex)
             }
-        } ?: callback(null)
+        }
     }
 
     fun performActionWithFreshTokens(callback: (String, String) -> Unit, errorCallback: (AuthorizationException?) -> Unit, force: Boolean = false) {
-        authState?.let{
+        authState.let{
             when {
                 it.needsTokenRefresh || force -> {
                     val refreshRequest = it.createTokenRefreshRequest()
                     authorizationService.performTokenRequest(refreshRequest) { response, ex ->
                         if (response != null) {
-                            it.update(response, ex)
-                            authState = it
+                            it.update(response, ex, activity)
                             callback(it.accessToken!!, it.idToken!!)
                         } else {
                             errorCallback(ex)
@@ -85,7 +95,7 @@ class AppAuthWrapper(private val activity: Activity) {
                     errorCallback(null)
                 }
             }
-        } ?: errorCallback(null)
+        }
     }
 
     fun getAuthorizationRequestIntent(request: AuthorizationRequest): Intent {
@@ -93,7 +103,8 @@ class AppAuthWrapper(private val activity: Activity) {
     }
 
     fun deleteAuth(): AppAuthWrapper {
-        authState = null
+        authSharedPreferences.edit().remove("stateJson").apply()
+
         if (affiliationsSharedPreferences.contains("affiliations_array")) {
             affiliationsSharedPreferences.edit().remove("affiliations_array").apply()
         }

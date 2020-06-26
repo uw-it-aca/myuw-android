@@ -119,7 +119,7 @@ class LoginActivity: AppCompatActivity() {
                     UserInfoStore.updateAffiliations(this@LoginActivity, resources, authService)
                 }
 
-                val idObject = JSONObject(String(Base64.decode(authService.authState!!.idToken!!.split(".")[1], Base64.URL_SAFE)))
+                val idObject = JSONObject(String(Base64.decode(authService.idToken!!.split(".")[1], Base64.URL_SAFE)))
                 UserInfoStore.name.postValue(idObject["sub"] as String)
                 // TODO: Fix this
                 // UserInfoStore.email.postValue(idObject["email"] as String)
@@ -129,8 +129,8 @@ class LoginActivity: AppCompatActivity() {
                     job.join()
                 }
 
-                Log.d("LoginActivity: startMainActivity", "accessToken: ${authService.authState!!.accessToken}")
-                Log.d("LoginActivity: startMainActivity", "idToken: ${authService.authState!!.idToken}")
+                Log.d("LoginActivity: startMainActivity", "accessToken: ${authService.accessToken}")
+                Log.d("LoginActivity: startMainActivity", "idToken: ${authService.idToken}")
                 Log.d("LoginActivity: startMainActivity", "idObject: $idObject")
 
                 val intent = Intent(this, NavDrawerMain::class.java)
