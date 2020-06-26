@@ -18,18 +18,30 @@ class AuthStateWrapper(private val activity: Activity) {
     private val resources: Resources = activity.resources
     private var authorizationService: AuthorizationService = AuthorizationService(activity)
 
+    /*
+    Extends AuthState class to update the shared preferences when an update is made
+    with AuthorizationResponse
+     */
     private fun AuthState.update(authResp: AuthorizationResponse?, authEx: AuthorizationException?, ctx: Context) {
         update(authResp, authEx)
         ctx.getSharedPreferences("auth", Context.MODE_PRIVATE).edit()
             .putString("stateJson", jsonSerializeString()).apply()
     }
 
+    /*
+    Extends AuthState class to update the shared preferences when an update is made
+    with TokenResponse
+     */
     private fun AuthState.update(tokenResp: TokenResponse?, authEx: AuthorizationException?, ctx: Context) {
         update(tokenResp, authEx)
         ctx.getSharedPreferences("auth", Context.MODE_PRIVATE).edit()
             .putString("stateJson", jsonSerializeString()).apply()
     }
 
+    /*
+    Extends AuthState class to update the shared preferences when an update is made
+    with RegistrationResponse
+     */
     private fun AuthState.update(regResp: RegistrationResponse, ctx: Context) {
         update(regResp)
         ctx.getSharedPreferences("auth", Context.MODE_PRIVATE).edit()
