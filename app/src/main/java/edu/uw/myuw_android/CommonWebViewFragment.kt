@@ -28,7 +28,7 @@ class CommonWebViewFragment: Fragment() {
     lateinit var webView: WebView
     lateinit var baseUrl: String
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var authService: AppAuthWrapper
+    private lateinit var authState: AuthStateWrapper
 
     companion object {
         var webViewMap: MutableMap<String, WebView> = mutableMapOf()
@@ -44,7 +44,7 @@ class CommonWebViewFragment: Fragment() {
 
             if (url.endsWith("/logout")) {
                 Log.d("onPageFinished", "Logging out")
-                authService.deleteAuth()
+                authState.deleteAuth()
                 val intent = Intent(activity, LoginActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
@@ -98,22 +98,22 @@ class CommonWebViewFragment: Fragment() {
         ) {
             if (errorResponse?.statusCode == 401) {
                 if (view?.url?.endsWith("/logout") == true) {
-                    authService.deleteAuth()
+                    authState.deleteAuth()
                 } else {
                     InternetCheck {
                         if (it) {
-                            authService.performActionWithFreshTokens({ accessToken, idToken ->
+                            authState.performActionWithFreshTokens({ accessToken, idToken ->
                                 Log.d("AppAuth", "got 401")
                                 Log.d("AppAuth", "accessToken: $accessToken")
                                 Log.d("AppAuth", "idToken: $idToken")
 
                                 webView.loadUrl(baseUrl + args.path,
-                                    hashMapOf("Authorization" to "Bearer ${authService.authState!!.idToken}"))
+                                    hashMapOf("Authorization" to "Bearer ${authState.idToken}"))
                             }, { ex ->
                                 ex?.localizedMessage?.also {
                                     Log.e("AuthorizationServiceConfiguration", ex.toString())
                                 }
-                                authService.showAuthenticationError()
+                                authState.showAuthenticationError()
                             }, true)
                         } else raiseNoInternet()
                     }
@@ -184,13 +184,13 @@ class CommonWebViewFragment: Fragment() {
         }
         // A null here can be safely ignored because the this means the fragment was detached
         activity?.let {
-            authService = AppAuthWrapper(it)
+            authState = AuthStateWrapper(it)
             if (webView.url == null) {
                 Log.d("onStart", "Loading url: ${baseUrl + args.path}")
-                Log.d("onStart", "With IdToken: ${authService.authState!!.idToken}")
+                Log.d("onStart", "With IdToken: ${authState.idToken}")
                 webView.loadUrl(
                     baseUrl + args.path,
-                    hashMapOf("Authorization" to "Bearer ${authService.authState!!.idToken}")
+                    hashMapOf("Authorization" to "Bearer ${authState.idToken}")
                 )
             }
         }
@@ -198,7 +198,7 @@ class CommonWebViewFragment: Fragment() {
 
     override fun onStop() {
         super.onStop()
-        authService.onDestroy()
+        authState.onDestroy()
     }
 
     override fun onPause() {
@@ -218,7 +218,7 @@ class CommonWebViewFragment: Fragment() {
 
     private fun raiseNoInternet() {
         activity?.let {
-            authService.onDestroy()
+            authState.onDestroy()
             ErrorActivity.showError(
                 resources.getString(R.string.no_internet),
                 resources.getString(R.string.no_internet_desc),
@@ -231,7 +231,7 @@ class CommonWebViewFragment: Fragment() {
 
     private fun raiseUnableToConnect() {
         activity?.let {
-            authService.onDestroy()
+            authState.onDestroy()
             ErrorActivity.showError(
                 resources.getString(R.string.onReceiveError),
                 resources.getString(R.string.onReceiveErrorDesc),
