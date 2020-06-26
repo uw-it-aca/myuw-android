@@ -54,7 +54,7 @@ object UserInfoStore {
             ),
             "Profile" to Triple(
                 R.id.nav_profile,
-                R.drawable.ic_account,
+                R.drawable.ic_baseline_person_24,
                 { _ -> true }
             ),
             "Calendar" to Triple(
