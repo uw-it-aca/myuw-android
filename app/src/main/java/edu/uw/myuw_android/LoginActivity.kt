@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import edu.my.myuw_android.R
 import kotlinx.android.synthetic.main.activity_login.*
@@ -22,7 +21,7 @@ import java.net.CookiePolicy
 class LoginActivity: AppCompatActivity() {
 
     val RC_AUTH = 132
-    lateinit var authService: AppAuthWrapper
+    lateinit var authState: AuthStateWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +37,9 @@ class LoginActivity: AppCompatActivity() {
             tryLoginWithAppAuth()
         }
 
-        authService = AppAuthWrapper(this)
+        authState = AuthStateWrapper(this)
 
-        if (authService.couldBeAuthorized) {
+        if (authState.couldBeAuthorized) {
             signed_status.text = getString(R.string.signed_in)
             loginButton.isClickable = false
             beforeLogin.visibility = ViewGroup.GONE
@@ -53,23 +52,23 @@ class LoginActivity: AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        authService.onDestroy()
+        authState.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_AUTH) {
             data?.also { it ->
-                authService.updateAuthWithIntent(it) { ex ->
+                authState.updateAuthWithIntent(it) { ex ->
                     if (ex == null) {
                         startMainActivity()
                     } else {
                         ex.localizedMessage?.also { localizedMessage ->
                             Log.e("AuthorizationResponse", localizedMessage)
                         }
-                        authService.showAuthenticationError()
+                        authState.showAuthenticationError()
                     }
                 }
-            } ?: authService.showAuthenticationError()
+            } ?: authState.showAuthenticationError()
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
@@ -98,14 +97,14 @@ class LoginActivity: AppCompatActivity() {
                         beforeLogin.visibility = ViewGroup.GONE
                         afterLogin.visibility = ViewGroup.VISIBLE
                         startActivityForResult(
-                            authService.getAuthorizationRequestIntent(authRequest),
+                            authState.getAuthorizationRequestIntent(authRequest),
                             RC_AUTH
                         )
                     } else {
                         ex?.localizedMessage?.also {
                             Log.e("AuthorizationServiceConfiguration", ex.toString())
                         }
-                        authService.showAuthenticationError()
+                        authState.showAuthenticationError()
                     }
                 }
             } else raiseNoInternet()
@@ -116,10 +115,10 @@ class LoginActivity: AppCompatActivity() {
         InternetCheck {
             if (it) {
                 val job = GlobalScope.launch {
-                    UserInfoStore.updateAffiliations(this@LoginActivity, resources, authService)
+                    UserInfoStore.updateAffiliations(this@LoginActivity, resources, authState)
                 }
 
-                val idObject = JSONObject(String(Base64.decode(authService.idToken!!.split(".")[1], Base64.URL_SAFE)))
+                val idObject = JSONObject(String(Base64.decode(authState.idToken!!.split(".")[1], Base64.URL_SAFE)))
                 UserInfoStore.name.postValue(idObject["sub"] as String)
                 // TODO: Fix this
                 // UserInfoStore.email.postValue(idObject["email"] as String)
@@ -129,8 +128,8 @@ class LoginActivity: AppCompatActivity() {
                     job.join()
                 }
 
-                Log.d("LoginActivity: startMainActivity", "accessToken: ${authService.accessToken}")
-                Log.d("LoginActivity: startMainActivity", "idToken: ${authService.idToken}")
+                Log.d("LoginActivity: startMainActivity", "accessToken: ${authState.accessToken}")
+                Log.d("LoginActivity: startMainActivity", "idToken: ${authState.idToken}")
                 Log.d("LoginActivity: startMainActivity", "idObject: $idObject")
 
                 val intent = Intent(this, NavDrawerMain::class.java)

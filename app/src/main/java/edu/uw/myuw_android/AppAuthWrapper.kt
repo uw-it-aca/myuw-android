@@ -10,7 +10,7 @@ import android.util.Log
 import edu.my.myuw_android.R
 import net.openid.appauth.*
 
-class AppAuthWrapper(private val activity: Activity) {
+class AuthStateWrapper(private val activity: Activity) {
     private val authSharedPreferences: SharedPreferences =
         activity.getSharedPreferences("auth", Context.MODE_PRIVATE)
     private val affiliationsSharedPreferences =
@@ -102,7 +102,7 @@ class AppAuthWrapper(private val activity: Activity) {
         return authorizationService.getAuthorizationRequestIntent(request)
     }
 
-    fun deleteAuth(): AppAuthWrapper {
+    fun deleteAuth(): AuthStateWrapper {
         authSharedPreferences.edit().remove("stateJson").apply()
 
         if (affiliationsSharedPreferences.contains("affiliations_array")) {

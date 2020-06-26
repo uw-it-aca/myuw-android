@@ -115,7 +115,7 @@ object UserInfoStore {
         }
     }
 
-    fun updateAffiliations(activity: Activity, resources: Resources, authService: AppAuthWrapper) {
+    fun updateAffiliations(activity: Activity, resources: Resources, authState: AuthStateWrapper) {
         val affiliationsSharedPreferences = activity.getSharedPreferences("affiliations", Context.MODE_PRIVATE)
         if (affiliationsSharedPreferences.contains("affiliations_array")) {
             affiliations = affiliationsSharedPreferences.getStringSet("affiliations_array", null)!!
@@ -134,13 +134,13 @@ object UserInfoStore {
                     }
                 }
 
-                var conn = makeRequest(authService.idToken)
+                var conn = makeRequest(authState.idToken)
 
                 if (conn.responseCode == 401)
-                    authService.performActionWithFreshTokens({ _, idToken ->
+                    authState.performActionWithFreshTokens({ _, idToken ->
                         conn = makeRequest(idToken)
                     }, {
-                        authService.showAuthenticationError()
+                        authState.showAuthenticationError()
                     }, true)
 
                 var responseJson = ""
@@ -172,7 +172,7 @@ object UserInfoStore {
                 Log.e("updateAffiliations - http error", e.toString())
                 InternetCheck {
                     if (it) {
-                        authService.onDestroy()
+                        authState.onDestroy()
                         ErrorActivity.showError(
                             resources.getString(R.string.error_affiliations_update),
                             resources.getString(R.string.error_affilications_update_desc),
@@ -181,7 +181,7 @@ object UserInfoStore {
                             activity
                         )
                     } else {
-                        authService.onDestroy()
+                        authState.onDestroy()
                         ErrorActivity.showError(
                             resources.getString(R.string.no_internet),
                             resources.getString(R.string.no_internet_desc),
