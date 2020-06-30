@@ -63,7 +63,10 @@ class CommonWebViewFragment: Fragment() {
         ): Boolean {
             Log.d("shouldOverrideUrlLoading", "before processing url: ${request.url}")
             if (request.url.toString().contains("$baseUrl/out?u=") || !request.url.toString().contains(URL(baseUrl).host)) {
-                val decodedUrl = URLDecoder.decode(request.url.toString().replace("$baseUrl/out?u=", ""), StandardCharsets.UTF_8.toString())
+                val decodedUrl = URLDecoder.decode(
+                    request.url.toString().replace(Regex("^.+\\?u=|\\&l.+$"), ""),
+                    StandardCharsets.UTF_8.toString()
+                )
                 val uri = Uri.parse(decodedUrl).buildUpon().scheme("http").build()
 
                 Log.d("shouldOverrideUrlLoading", "Url: $uri")
