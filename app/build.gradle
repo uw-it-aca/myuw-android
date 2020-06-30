@@ -6,19 +6,44 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
+// Defining openid props from local.properties
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def myuw_base_url = properties.getProperty('myuw.base_url')
+
+def openid_discovery_uri = properties.getProperty('openid.discovery_uri')
+def openid_authorization_scope = properties.getProperty('openid.authorization_scope')
+def openid_redirect_uri = properties.getProperty('openid.redirect_uri')
+def openid_client_id = properties.getProperty('openid.client_id')
+
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.0"
+    buildToolsVersion "29.0.3"
     defaultConfig {
-        applicationId "com.example.myuw"
+        applicationId "edu.uw.myuw_android"
         minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        resValue "string", "myuw_base_url", "${myuw_base_url}"
+        resValue "string", "myuw_affiliation_endpoint", "${myuw_base_url}${properties.getProperty('myuw.affiliation_endpoint')}"
+        resValue "string", "openid_discovery_uri", "${openid_discovery_uri}"
+        resValue "string", "openid_authorization_scope", "${openid_authorization_scope}"
+        resValue "string", "openid_redirect_uri", "${openid_redirect_uri}"
+        resValue "string", "openid_client_id", "${openid_client_id}"
+
+        manifestPlaceholders = [
+                redirect_scheme: "${openid_redirect_uri.split(':')[0]}"
+        ]
     }
     buildTypes {
+        debug {
+            manifestPlaceholders += [usesCleartextTraffic: "true"]
+        }
         release {
+            manifestPlaceholders += [usesCleartextTraffic: "false"]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -37,14 +62,16 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.core:core-ktx:1.3.0'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.navigation:navigation-fragment:2.1.0'
-    implementation 'androidx.navigation:navigation-ui:2.1.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
+    implementation 'androidx.navigation:navigation-fragment:2.2.2'
+    implementation 'androidx.navigation:navigation-ui:2.2.2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'net.openid:appauth:0.7.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
