@@ -1,27 +1,19 @@
 package edu.uw.myuw_android
 
-import android.app.SearchManager
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
 import com.google.android.material.navigation.NavigationView
 import edu.my.myuw_android.R
 import kotlinx.android.synthetic.main.activity_nav_drawer_main.*
-import net.openid.appauth.AuthState
 
 class NavDrawerMain : AppCompatActivity() {
 
@@ -107,7 +99,12 @@ class NavDrawerMain : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment);
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+        val currentPageId = (navHostFragment?.childFragmentManager?.fragments?.get(0) as? CommonWebViewFragment)?.args?.uniqueId
+        val currentPageWebview = (navHostFragment?.childFragmentManager?.fragments?.get(0) as? CommonWebViewFragment)?.webView
+        CommonWebViewFragment.webViewMap.clear()
+        if (currentPageId != null && currentPageWebview != null)
+            CommonWebViewFragment.webViewMap[currentPageId] = currentPageWebview
         (navHostFragment?.childFragmentManager?.fragments?.get(0) as? CommonWebViewFragment)?.webView?.reload()
     }
 

@@ -24,7 +24,7 @@ import java.util.*
 
 
 class CommonWebViewFragment: Fragment() {
-    private val args: CommonWebViewFragmentArgs by navArgs()
+    public val args: CommonWebViewFragmentArgs by navArgs()
     lateinit var webView: WebView
     lateinit var baseUrl: String
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
