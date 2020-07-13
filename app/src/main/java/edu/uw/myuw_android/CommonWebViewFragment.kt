@@ -164,10 +164,11 @@ class CommonWebViewFragment: Fragment() {
             swipeRefreshLayout.setOnRefreshListener {
                 webView.reload()
             }
-            webView.setOnScrollChangeListener { _, _, top, _, _ ->
-                swipeRefreshLayout.isEnabled = top == 0
+            webView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+                swipeRefreshLayout.isEnabled = scrollY == 0
             }
 
+            swipeRefreshLayout.isEnabled = webView.scrollY == 0
             (webView.parent as ViewGroup?)?.removeView(webView)
             view.webView_attach_point.addView(webView)
         }
