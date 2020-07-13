@@ -41,6 +41,7 @@ class NavDrawerMain : AppCompatActivity() {
                 R.id.nav_accounts,
                 R.id.nav_notices,
                 R.id.nav_profile,
+                R.id.nav_teaching,
                 R.id.nav_academic_calendar,
                 R.id.nav_resources,
                 R.id.logout
