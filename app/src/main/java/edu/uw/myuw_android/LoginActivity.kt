@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import edu.my.myuw_android.R
@@ -12,7 +13,9 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import net.openid.appauth.*
+import net.openid.appauth.AuthorizationRequest
+import net.openid.appauth.AuthorizationServiceConfiguration
+import net.openid.appauth.ResponseTypeValues
 import org.json.JSONObject
 import java.net.CookieHandler
 import java.net.CookieManager
@@ -148,5 +151,11 @@ class LoginActivity: AppCompatActivity() {
             ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
             this
         )
+    }
+
+    fun openEULA(_v: View) {
+        val browserIntent =
+            Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com"))
+        startActivity(browserIntent)
     }
 }

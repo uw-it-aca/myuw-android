@@ -34,4 +34,5 @@
     <string name="search_hint">Tuition, Transcript</string>
     <string name="error_affiliations_update">Signed Out</string>
     <string name="error_affilications_update_desc">You have been signed out, likely due to an application error or prolonged inactivity.\nSign in to continue.</string>
+    <string name="eula_prompt">Read the End User License Agreement</string>
 </resources>
