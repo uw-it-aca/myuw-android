@@ -34,4 +34,6 @@
     <string name="search_hint">Tuition, Transcript</string>
     <string name="error_affiliations_update">Signed Out</string>
     <string name="error_affilications_update_desc">You have been signed out, likely due to an application error or prolonged inactivity.\nSign in to continue.</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="signed_out_desc">You have been signed out successfully. In some cases, you may be signed out because of an application error or prolonged inactivity. Sign in to continue.</string>
 </resources>

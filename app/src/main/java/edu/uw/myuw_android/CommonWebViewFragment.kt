@@ -46,6 +46,7 @@ class CommonWebViewFragment: Fragment() {
                 Log.d("onPageFinished", "Logging out")
                 authState.deleteAuth()
                 val intent = Intent(activity, LoginActivity::class.java)
+                intent.putExtra("LOGGED_OUT", true)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
                 activity?.finish()
