@@ -131,6 +131,7 @@ class AuthStateWrapper(private val activity: Activity) {
         onDestroy()
         val intent = Intent(activity, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.putExtra("LOGGED_OUT", true)
         activity.startActivity(intent)
         activity.finish()
     }
