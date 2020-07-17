@@ -129,12 +129,9 @@ class AuthStateWrapper(private val activity: Activity) {
 
     fun showAuthenticationError() {
         onDestroy()
-        ErrorActivity.showError(
-            resources.getString(R.string.sign_in_error),
-            resources.getString(R.string.sign_in_error_desc),
-            resources.getString(R.string.onReceiveErrorButton),
-            ErrorActivity.ErrorHandlerEnum.RETRY_LOGIN,
-            activity
-        )
+        val intent = Intent(activity, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        activity.startActivity(intent)
+        activity.finish()
     }
 }
