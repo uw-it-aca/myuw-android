@@ -34,5 +34,8 @@
     <string name="search_hint">Tuition, Transcript</string>
     <string name="error_affiliations_update">Signed Out</string>
     <string name="error_affilications_update_desc">You have been signed out, likely due to an application error or prolonged inactivity.\nSign in to continue.</string>
-    <string name="eula_prompt">Read the End User License Agreement</string>
+    <string name="eula_prompt">End-User License Agreement (EULA)</string>
+    <string name="eula_notice">Please read the End-User License Agreement (the \"EULA\" or \"Agreement\") carefully before signing in.\n\nThe Agreement governs Your download and use of the MyUW application (\"Software\") provided by the University of Washington (the \"University\"). Your use of the Software constitutes Your acceptance of the terms of the Agreement and is subject to the Privacy Policy and Terms of Service of University.</string>
+    <string name="privacy_prompt">Privacy Policy</string>
+    <string name="tos_prompt">Terms of Service</string>
 </resources>

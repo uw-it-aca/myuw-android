@@ -154,8 +154,23 @@ class LoginActivity: AppCompatActivity() {
     }
 
     fun openEULA(_v: View) {
-        val browserIntent =
-            Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com"))
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.myuw_eula_url))
+        )
+        startActivity(browserIntent)
+    }
+
+    fun openPrivacy(_v: View) {
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.myuw_privacy_url))
+        )
+        startActivity(browserIntent)
+    }
+
+    fun openTOS(_v: View) {
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.myuw_tos_url))
+        )
         startActivity(browserIntent)
     }
 }
