@@ -38,4 +38,6 @@
     <string name="eula_notice">Please read the End-User License Agreement (the \"EULA\" or \"Agreement\") carefully before signing in.\n\nThe Agreement governs Your download and use of the MyUW application (\"Software\") provided by the University of Washington (the \"University\"). Your use of the Software constitutes Your acceptance of the terms of the Agreement and is subject to the Privacy Policy and Terms of Service of University.</string>
     <string name="privacy_prompt">Privacy Policy</string>
     <string name="tos_prompt">Terms of Service</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="signed_out_desc">You have been signed out successfully. In some cases, you may be signed out because of an application error or prolonged inactivity. Sign in to continue.</string>
 </resources>

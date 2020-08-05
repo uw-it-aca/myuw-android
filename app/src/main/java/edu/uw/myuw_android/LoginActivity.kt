@@ -49,7 +49,13 @@ class LoginActivity: AppCompatActivity() {
             afterLogin.visibility = ViewGroup.VISIBLE
             startMainActivity()
         } else {
-            signed_status.text = getString(R.string.not_signed_in)
+            if (intent.getBooleanExtra("LOGGED_OUT", false)) {
+                signed_status.text = getString(R.string.signed_out)
+                signed_desc.text = getString(R.string.signed_out_desc)
+            } else {
+                signed_status.text = getString(R.string.not_signed_in)
+                signed_desc.text = getString(R.string.login_info)
+            }
         }
     }
 
