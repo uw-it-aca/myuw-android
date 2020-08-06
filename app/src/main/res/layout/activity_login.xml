@@ -27,6 +27,7 @@
             android:layout_height="15dp" />
 
         <TextView
+            android:id="@+id/signed_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="5dp"
@@ -38,6 +39,18 @@
             android:layout_width="match_parent"
             android:layout_height="30dp" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="5dp"
+            android:text="@string/eula_notice"
+            android:textColor="#868686"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp" />
+
         <Button
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
@@ -46,6 +59,35 @@
             android:text="@string/sign_in"
             android:textColor="@color/design_default_color_on_primary"
             android:textSize="18sp" />
+
+        <TextView
+            android:text="@string/eula_prompt"
+            android:textColor="@color/colorPrimary"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:onClick="openEULA"
+            android:clickable="true"
+            android:paddingTop="@dimen/activity_horizontal_margin"
+            android:textSize="16sp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="@string/privacy_prompt"
+            android:textColor="@color/colorPrimary"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:onClick="openPrivacy"
+            android:clickable="true"
+            android:textSize="16sp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="@string/tos_prompt"
+            android:textColor="@color/colorPrimary"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:onClick="openTOS"
+            android:clickable="true"
+            android:textSize="16sp"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout

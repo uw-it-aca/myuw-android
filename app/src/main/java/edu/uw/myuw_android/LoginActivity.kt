@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import edu.my.myuw_android.R
@@ -12,7 +13,9 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import net.openid.appauth.*
+import net.openid.appauth.AuthorizationRequest
+import net.openid.appauth.AuthorizationServiceConfiguration
+import net.openid.appauth.ResponseTypeValues
 import org.json.JSONObject
 import java.net.CookieHandler
 import java.net.CookieManager
@@ -46,7 +49,13 @@ class LoginActivity: AppCompatActivity() {
             afterLogin.visibility = ViewGroup.VISIBLE
             startMainActivity()
         } else {
-            signed_status.text = getString(R.string.not_signed_in)
+            if (intent.getBooleanExtra("LOGGED_OUT", false)) {
+                signed_status.text = getString(R.string.signed_out)
+                signed_desc.text = getString(R.string.signed_out_desc)
+            } else {
+                signed_status.text = getString(R.string.not_signed_in)
+                signed_desc.text = getString(R.string.login_info)
+            }
         }
     }
 
@@ -148,5 +157,26 @@ class LoginActivity: AppCompatActivity() {
             ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
             this
         )
+    }
+
+    fun openEULA(_v: View) {
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.myuw_eula_url))
+        )
+        startActivity(browserIntent)
+    }
+
+    fun openPrivacy(_v: View) {
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.myuw_privacy_url))
+        )
+        startActivity(browserIntent)
+    }
+
+    fun openTOS(_v: View) {
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.myuw_tos_url))
+        )
+        startActivity(browserIntent)
     }
 }

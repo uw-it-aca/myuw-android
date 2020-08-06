@@ -24,7 +24,7 @@ import java.util.*
 
 
 class CommonWebViewFragment: Fragment() {
-    private val args: CommonWebViewFragmentArgs by navArgs()
+    public val args: CommonWebViewFragmentArgs by navArgs()
     lateinit var webView: WebView
     lateinit var baseUrl: String
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -46,6 +46,7 @@ class CommonWebViewFragment: Fragment() {
                 Log.d("onPageFinished", "Logging out")
                 authState.deleteAuth()
                 val intent = Intent(activity, LoginActivity::class.java)
+                intent.putExtra("LOGGED_OUT", true)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
                 activity?.finish()
@@ -164,10 +165,11 @@ class CommonWebViewFragment: Fragment() {
             swipeRefreshLayout.setOnRefreshListener {
                 webView.reload()
             }
-            webView.setOnScrollChangeListener { _, _, top, _, _ ->
-                swipeRefreshLayout.isEnabled = top == 0
+            webView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+                swipeRefreshLayout.isEnabled = scrollY == 0
             }
 
+            swipeRefreshLayout.isEnabled = webView.scrollY == 0
             (webView.parent as ViewGroup?)?.removeView(webView)
             view.webView_attach_point.addView(webView)
         }

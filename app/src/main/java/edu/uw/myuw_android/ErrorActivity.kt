@@ -67,8 +67,6 @@ class ErrorActivity : AppCompatActivity() {
                 putExtra(EXTRA_ERROR_BUTTON_FUNC, errorHandler)
             }
 
-            AuthStateWrapper(activity).deleteAuth().onDestroy()
-
             activity.startActivity(intent)
             activity.finish()
         }
