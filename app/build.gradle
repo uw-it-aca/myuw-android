@@ -11,6 +11,9 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 def myuw_base_url = properties.getProperty('myuw.base_url')
+def myuw_eula_url = properties.getProperty('myuw.eula_url')
+def myuw_privacy_url = properties.getProperty('myuw.privacy_url')
+def myuw_tos_url = properties.getProperty('myuw.tos_url')
 
 def openid_discovery_uri = properties.getProperty('openid.discovery_uri')
 def openid_authorization_scope = properties.getProperty('openid.authorization_scope')
@@ -24,11 +27,14 @@ android {
         applicationId "edu.uw.myuw_android"
         minSdkVersion 26
         targetSdkVersion 29
-        versionCode 1
+        versionCode 2
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resValue "string", "myuw_base_url", "${myuw_base_url}"
         resValue "string", "myuw_affiliation_endpoint", "${myuw_base_url}${properties.getProperty('myuw.affiliation_endpoint')}"
+        resValue "string", "myuw_eula_url", "${myuw_eula_url}"
+        resValue "string", "myuw_privacy_url", "${myuw_privacy_url}"
+        resValue "string", "myuw_tos_url", "${myuw_tos_url}"
         resValue "string", "openid_discovery_uri", "${openid_discovery_uri}"
         resValue "string", "openid_authorization_scope", "${openid_authorization_scope}"
         resValue "string", "openid_redirect_uri", "${openid_redirect_uri}"
