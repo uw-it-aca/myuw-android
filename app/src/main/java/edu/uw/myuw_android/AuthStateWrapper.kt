@@ -128,6 +128,7 @@ class AuthStateWrapper(private val activity: Activity) {
     }
 
     fun showAuthenticationError() {
+        deleteAuth()
         onDestroy()
         val intent = Intent(activity, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
