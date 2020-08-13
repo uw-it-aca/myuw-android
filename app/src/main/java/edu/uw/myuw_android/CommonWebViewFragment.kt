@@ -100,6 +100,7 @@ class CommonWebViewFragment: Fragment() {
             request: WebResourceRequest?,
             errorResponse: WebResourceResponse?
         ) {
+            Log.d("CustomWebViewClient - onReceivedHttpError", errorResponse.toString());
             if (errorResponse?.statusCode == 401) {
                 if (view?.url?.endsWith("/logout") == true) {
                     authState.deleteAuth()
