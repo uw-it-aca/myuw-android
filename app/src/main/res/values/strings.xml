@@ -26,7 +26,7 @@
     <string name="sign_in_error_desc">You have been signed out, likely due to an application error or prolonged inactivity.\nSign in to continue.</string>
     <string name="no_internet">No Internet Connection</string>
     <string name="no_internet_desc">It looks like you’re offline. Connect to the internet and retry to access MyUW.</string>
-    <string name="login_info">Please sign in to continue.</string>
+    <string name="login_info">The MyUW app is designed to keep you signed in to MyUW for convenience. Here are some tips to keep your UW NetID and personal information safe:\n\n&#8226; Use a strong password\n&#8226; Configure your device to require a passcode, biometric factor, or other security measure to unlock it\n&#8226; Make sure your device is locked when not in use\n&#8226; Report a lost or stolen device to</string>
     <string name="onReceiveError">Unable to Load Page</string>
     <string name="onReceiveErrorDesc">A server error has occurred. We are aware of the issue and are working to resolve it.\nPlease try again in a few minutes.</string>
     <string name="onReceiveErrorButton">Retry</string>
@@ -40,4 +40,5 @@
     <string name="tos_prompt">Terms of Service</string>
     <string name="signed_out">Signed Out</string>
     <string name="signed_out_desc">You have been signed out successfully. In some cases, you may be signed out because of an application error or prolonged inactivity. Sign in to continue.</string>
+    <string name="help_uw_edu">help@uw.edu</string>
 </resources>

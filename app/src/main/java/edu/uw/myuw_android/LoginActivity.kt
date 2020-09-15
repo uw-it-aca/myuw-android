@@ -50,9 +50,11 @@ class LoginActivity: AppCompatActivity() {
             startMainActivity()
         } else {
             if (intent.getBooleanExtra("LOGGED_OUT", false)) {
+                help_text.visibility = View.GONE
                 signed_status.text = getString(R.string.signed_out)
                 signed_desc.text = getString(R.string.signed_out_desc)
             } else {
+                help_text.visibility = View.VISIBLE
                 signed_status.text = getString(R.string.not_signed_in)
                 signed_desc.text = getString(R.string.login_info)
             }
@@ -176,6 +178,13 @@ class LoginActivity: AppCompatActivity() {
     fun openTOS(_v: View) {
         val browserIntent = Intent(
             Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.myuw_tos_url))
+        )
+        startActivity(browserIntent)
+    }
+
+    fun openHelp(_v: View) {
+        val browserIntent = Intent(
+            Intent.ACTION_SENDTO, Uri.parse(resources.getString(R.string.help_uw_edu))
         )
         startActivity(browserIntent)
     }
