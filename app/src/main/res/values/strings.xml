@@ -44,7 +44,7 @@
     <string name="privacy_prompt">Privacy Policy</string>
     <string name="tos_prompt">Terms of Service</string>
     <string name="signed_out">Signed Out</string>
-    <string name="signed_out_desc">You have been signed out successfully. In some cases, you may be signed out because of an application error or prolonged inactivity. Sign in to continue.</string>
+    <string name="signed_out_desc">You have been signed out successfully. In some cases, you may be signed out because of an application error or prolonged inactivity.</string>
     <string name="help_uw_edu">help@uw.edu</string>
     <string name="report_help_uw_edu">Report a problem: help@uw.edu</string>
 </resources>

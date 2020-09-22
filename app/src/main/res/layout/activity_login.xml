@@ -40,6 +40,25 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/description" />
 
+            <TextView
+                android:id="@+id/signed_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:visibility="gone"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="@dimen/description" />
+
+            <TextView
+                android:id="@+id/signed_prompt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="5dp"
+                android:text="@string/login_sign_in"
+                android:textColor="@color/black"
+                android:textSize="@dimen/description" />
+
             <Button
                 android:id="@+id/loginButton"
                 android:layout_width="match_parent"
@@ -91,6 +110,10 @@
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
 
             <TextView
                 android:layout_width="match_parent"

@@ -56,17 +56,16 @@ class LoginActivity: AppCompatActivity() {
             if (intent.getBooleanExtra("LOGGED_OUT", false)) {
                 signed_status.text = getString(R.string.signed_out)
                 signed_desc.text = getString(R.string.signed_out_desc)
+                signed_list.visibility = ViewGroup.GONE
             } else {
                 signed_status.text = getString(R.string.not_signed_in)
-                signed_desc.text = TextUtils.concat(
-                    getText(R.string.login_info),
-                    "\n",
+                signed_desc.text = getString(R.string.login_info)
+                signed_list.visibility = ViewGroup.VISIBLE
+                signed_list.text = TextUtils.concat(
                     getBulletedList(getText(R.string.login_list_1)),
                     getBulletedList(getText(R.string.login_list_2)),
                     getBulletedList(getText(R.string.login_list_3)),
-                    getBulletedList(getText(R.string.login_list_4)),
-                    "\n",
-                    getText(R.string.login_sign_in)
+                    getBulletedList(getText(R.string.login_list_4))
                 )
             }
         }
