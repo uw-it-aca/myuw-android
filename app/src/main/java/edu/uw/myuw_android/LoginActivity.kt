@@ -3,6 +3,9 @@ package edu.uw.myuw_android
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.TextUtils
+import android.text.style.BulletSpan
 import android.util.Base64
 import android.util.Log
 import android.view.View
@@ -45,18 +48,26 @@ class LoginActivity: AppCompatActivity() {
         if (authState.couldBeAuthorized) {
             signed_status.text = getString(R.string.signed_in)
             loginButton.isClickable = false
+
             beforeLogin.visibility = ViewGroup.GONE
             afterLogin.visibility = ViewGroup.VISIBLE
             startMainActivity()
         } else {
             if (intent.getBooleanExtra("LOGGED_OUT", false)) {
-                help_text.visibility = View.GONE
                 signed_status.text = getString(R.string.signed_out)
                 signed_desc.text = getString(R.string.signed_out_desc)
             } else {
-                help_text.visibility = View.VISIBLE
                 signed_status.text = getString(R.string.not_signed_in)
-                signed_desc.text = getString(R.string.login_info)
+                signed_desc.text = TextUtils.concat(
+                    getText(R.string.login_info),
+                    "\n",
+                    getBulletedList(getText(R.string.login_list_1)),
+                    getBulletedList(getText(R.string.login_list_2)),
+                    getBulletedList(getText(R.string.login_list_3)),
+                    getBulletedList(getText(R.string.login_list_4)),
+                    "\n",
+                    getText(R.string.login_sign_in)
+                )
             }
         }
     }
@@ -187,5 +198,11 @@ class LoginActivity: AppCompatActivity() {
             Intent.ACTION_SENDTO, Uri.parse(resources.getString(R.string.help_uw_edu))
         )
         startActivity(browserIntent)
+    }
+
+    private fun getBulletedList(cs: CharSequence): SpannableString {
+        val s = SpannableString(cs)
+        s.setSpan(BulletSpan(15), 0, cs.length, 0)
+        return s
     }
 }
