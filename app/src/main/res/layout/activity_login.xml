@@ -19,7 +19,7 @@
             android:visibility="visible">
 
             <TextView
-                android:id="@+id/signed_status"
+                android:id="@+id/login_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/not_signed_in"
@@ -32,7 +32,7 @@
                 android:layout_height="15dp" />
 
             <TextView
-                android:id="@+id/signed_desc"
+                android:id="@+id/login_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="5dp"
@@ -41,7 +41,7 @@
                 android:textSize="@dimen/description" />
 
             <TextView
-                android:id="@+id/signed_list"
+                android:id="@+id/login_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="15dp"
@@ -51,7 +51,7 @@
                 android:textSize="@dimen/description" />
 
             <TextView
-                android:id="@+id/signed_prompt"
+                android:id="@+id/login_prompt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="5dp"
