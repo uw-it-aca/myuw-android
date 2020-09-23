@@ -2,8 +2,7 @@ package edu.uw.myuw_android
 
 import android.os.AsyncTask
 import java.io.IOException
-import java.net.InetSocketAddress
-import java.net.Socket
+import java.net.InetAddress
 
 class InternetCheck(private val onInternetChecked: (Boolean) -> Unit) :
     AsyncTask<Void, Void, Boolean>() {
@@ -13,10 +12,8 @@ class InternetCheck(private val onInternetChecked: (Boolean) -> Unit) :
 
     override fun doInBackground(vararg voids: Void): Boolean {
         return try {
-            val sock = Socket()
-            sock.connect(InetSocketAddress("8.8.8.8", 53), 1500)
-            sock.close()
-            true
+            val ipAddr: InetAddress = InetAddress.getByName("www.washington.edu")
+            !ipAddr.equals("")
         } catch (e: IOException) {
             false
         }

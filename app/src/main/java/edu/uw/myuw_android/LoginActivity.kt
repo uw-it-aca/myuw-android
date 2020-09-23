@@ -3,6 +3,9 @@ package edu.uw.myuw_android
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.TextUtils
+import android.text.style.BulletSpan
 import android.util.Base64
 import android.util.Log
 import android.view.View
@@ -43,18 +46,27 @@ class LoginActivity: AppCompatActivity() {
         authState = AuthStateWrapper(this)
 
         if (authState.couldBeAuthorized) {
-            signed_status.text = getString(R.string.signed_in)
+            login_status.text = getString(R.string.signed_in)
             loginButton.isClickable = false
+
             beforeLogin.visibility = ViewGroup.GONE
             afterLogin.visibility = ViewGroup.VISIBLE
             startMainActivity()
         } else {
             if (intent.getBooleanExtra("LOGGED_OUT", false)) {
-                signed_status.text = getString(R.string.signed_out)
-                signed_desc.text = getString(R.string.signed_out_desc)
+                login_status.text = getString(R.string.signed_out)
+                login_desc.text = getString(R.string.signed_out_desc)
+                login_list.visibility = ViewGroup.GONE
             } else {
-                signed_status.text = getString(R.string.not_signed_in)
-                signed_desc.text = getString(R.string.login_info)
+                login_status.text = getString(R.string.not_signed_in)
+                login_desc.text = getString(R.string.login_info)
+                login_list.visibility = ViewGroup.VISIBLE
+                login_list.text = TextUtils.concat(
+                    getBulletedList(getText(R.string.login_list_1)),
+                    getBulletedList(getText(R.string.login_list_2)),
+                    getBulletedList(getText(R.string.login_list_3)),
+                    getBulletedList(getText(R.string.login_list_4))
+                )
             }
         }
     }
@@ -178,5 +190,18 @@ class LoginActivity: AppCompatActivity() {
             Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.myuw_tos_url))
         )
         startActivity(browserIntent)
+    }
+
+    fun openHelp(_v: View) {
+        val browserIntent = Intent(
+            Intent.ACTION_SENDTO, Uri.parse(resources.getString(R.string.help_uw_edu))
+        )
+        startActivity(browserIntent)
+    }
+
+    private fun getBulletedList(cs: CharSequence): SpannableString {
+        val s = SpannableString(cs)
+        s.setSpan(BulletSpan(15), 0, cs.length, 0)
+        return s
     }
 }
