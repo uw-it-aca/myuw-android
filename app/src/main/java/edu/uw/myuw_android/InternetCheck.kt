@@ -12,7 +12,7 @@ class InternetCheck(private val onInternetChecked: (Boolean) -> Unit) :
 
     override fun doInBackground(vararg voids: Void): Boolean {
         return try {
-            val ipAddr: InetAddress = InetAddress.getByName("google.com")
+            val ipAddr: InetAddress = InetAddress.getByName("www.washington.edu")
             !ipAddr.equals("")
         } catch (e: IOException) {
             false
