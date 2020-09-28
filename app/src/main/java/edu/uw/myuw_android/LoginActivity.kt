@@ -194,7 +194,7 @@ class LoginActivity: AppCompatActivity() {
 
     fun openHelp(_v: View) {
         val browserIntent = Intent(
-            Intent.ACTION_SENDTO, Uri.parse(resources.getString(R.string.help_uw_edu))
+            Intent.ACTION_SENDTO, Uri.parse("mailto:" + resources.getString(R.string.help_uw_edu))
         )
         startActivity(browserIntent)
     }
