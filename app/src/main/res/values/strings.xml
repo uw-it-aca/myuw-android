@@ -26,7 +26,12 @@
     <string name="sign_in_error_desc">You have been signed out, likely due to an application error or prolonged inactivity.\nSign in to continue.</string>
     <string name="no_internet">No Internet Connection</string>
     <string name="no_internet_desc">It looks like you’re offline. Connect to the internet and retry to access MyUW.</string>
-    <string name="login_info">Please sign in to continue.</string>
+    <string name="login_info">The MyUW app is designed to keep you signed in to MyUW for convenience. Here are some tips to keep your UW NetID and personal information safe:\n</string>
+    <string name="login_list_1">Use a strong password\n</string>
+    <string name="login_list_2">Configure your device to require a passcode, biometric factor, or other security measure to unlock it\n</string>
+    <string name="login_list_3">Make sure your device is locked when not in use\n</string>
+    <string name="login_list_4">Report a lost or stolen device\n</string>
+    <string name="login_sign_in">Please sign in to continue.\n</string>
     <string name="onReceiveError">Unable to Load Page</string>
     <string name="onReceiveErrorDesc">A server error has occurred. We are aware of the issue and are working to resolve it.\nPlease try again in a few minutes.</string>
     <string name="onReceiveErrorButton">Retry</string>
@@ -35,9 +40,11 @@
     <string name="error_affiliations_update">Signed Out</string>
     <string name="error_affilications_update_desc">You have been signed out, likely due to an application error or prolonged inactivity.\nSign in to continue.</string>
     <string name="eula_prompt">End-User License Agreement (EULA)</string>
-    <string name="eula_notice">Please read the End-User License Agreement (the \"EULA\" or \"Agreement\") carefully before signing in.\n\nThe Agreement governs Your download and use of the MyUW application (\"Software\") provided by the University of Washington (the \"University\"). Your use of the Software constitutes Your acceptance of the terms of the Agreement and is subject to the Privacy Policy and Terms of Service of University.</string>
+    <string name="eula_notice">Please read the End-User License Agreement (the \"EULA\" or \"Agreement\") carefully before signing in. The Agreement governs Your download and use of the MyUW application (\"Software\") provided by the University of Washington (the \"University\"). Your use of the Software constitutes Your acceptance of the terms of the Agreement and is subject to the Privacy Policy and Terms of Service of University.</string>
     <string name="privacy_prompt">Privacy Policy</string>
     <string name="tos_prompt">Terms of Service</string>
     <string name="signed_out">Signed Out</string>
-    <string name="signed_out_desc">You have been signed out successfully. In some cases, you may be signed out because of an application error or prolonged inactivity. Sign in to continue.</string>
+    <string name="signed_out_desc">You have been signed out successfully. In some cases, you may be signed out because of an application error or prolonged inactivity.</string>
+    <string name="help_uw_edu">help@uw.edu</string>
+    <string name="report_help_uw_edu">Report a problem: help@uw.edu</string>
 </resources>
