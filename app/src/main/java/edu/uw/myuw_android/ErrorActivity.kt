@@ -21,6 +21,9 @@ class ErrorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        AuthStateWrapper.tryAuthServiceInit(this)
+
         setContentView(R.layout.activity_error)
 
         intent.let {
@@ -39,6 +42,16 @@ class ErrorActivity : AppCompatActivity() {
                 } ?: Log.e("ErrorActivity - onCreate", "No ErrorButtonFunc was passed")
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        AuthStateWrapper.tryAuthServiceInit(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        AuthStateWrapper.tryAuthServiceDispose()
     }
 
     // Error Handling Functions

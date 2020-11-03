@@ -43,6 +43,7 @@ class LoginActivity: AppCompatActivity() {
             tryLoginWithAppAuth()
         }
 
+        AuthStateWrapper.tryAuthServiceInit(this)
         authState = AuthStateWrapper(this)
 
         if (authState.couldBeAuthorized) {
@@ -71,9 +72,14 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        authState.onDestroy()
+    override fun onResume() {
+        super.onResume()
+        AuthStateWrapper.tryAuthServiceInit(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        AuthStateWrapper.tryAuthServiceDispose()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -68,7 +68,7 @@ class CommonWebViewFragment: Fragment() {
                     request.url.toString().replace(Regex("^.+\\?u=|\\&l.+$"), ""),
                     StandardCharsets.UTF_8.toString()
                 )
-                val uri = Uri.parse(decodedUrl).buildUpon().scheme("http").build()
+                val uri = Uri.parse(decodedUrl).buildUpon().scheme("https").build()
 
                 Log.d("shouldOverrideUrlLoading", "Url: $uri")
                 startActivity(Intent(Intent.ACTION_VIEW, uri))
@@ -100,7 +100,7 @@ class CommonWebViewFragment: Fragment() {
             request: WebResourceRequest?,
             errorResponse: WebResourceResponse?
         ) {
-            Log.d("CustomWebViewClient - onReceivedHttpError", errorResponse.toString());
+            Log.d(" - onReceivedHttpError", errorResponse?.reasonPhrase.toString());
             if (errorResponse?.statusCode == 401) {
                 if (view?.url?.endsWith("/logout") == true) {
                     authState.deleteAuth()
@@ -122,6 +122,16 @@ class CommonWebViewFragment: Fragment() {
                             }, true)
                         } else raiseNoInternet()
                     }
+                }
+            } else if (errorResponse?.statusCode == 500) {
+                activity?.let {
+                    ErrorActivity.showError(
+                        "Unable to load page",
+                        "A server error has occurred. We are aware of the issue and are working to resolve it. Please try again in a few minutes.",
+                        "Retry",
+                        ErrorActivity.ErrorHandlerEnum.RELOAD_PAGE,
+                        it
+                    )
                 }
             } else super.onReceivedHttpError(view, request, errorResponse)
         }
@@ -202,11 +212,6 @@ class CommonWebViewFragment: Fragment() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        authState.onDestroy()
-    }
-
     override fun onPause() {
         webView.onPause()
         super.onPause()
@@ -224,7 +229,6 @@ class CommonWebViewFragment: Fragment() {
 
     private fun raiseNoInternet() {
         activity?.let {
-            authState.onDestroy()
             ErrorActivity.showError(
                 resources.getString(R.string.no_internet),
                 resources.getString(R.string.no_internet_desc),
@@ -237,7 +241,6 @@ class CommonWebViewFragment: Fragment() {
 
     private fun raiseUnableToConnect() {
         activity?.let {
-            authState.onDestroy()
             ErrorActivity.showError(
                 resources.getString(R.string.onReceiveError),
                 resources.getString(R.string.onReceiveErrorDesc),
