@@ -21,8 +21,6 @@ import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.util.*
 
-
-
 class CommonWebViewFragment: Fragment() {
     public val args: CommonWebViewFragmentArgs by navArgs()
     lateinit var webView: WebView
@@ -66,10 +64,11 @@ class CommonWebViewFragment: Fragment() {
             Log.d("shouldOverrideUrlLoading", "before processing url: ${request.url}")
             if (request.url.toString().contains("$baseUrl/out?u=") || !request.url.toString().contains(URL(baseUrl).host)) {
                 val decodedUrl = URLDecoder.decode(
-                    request.url.toString().replace(Regex("^.+\\?u=|\\&l.+$"), ""),
+                    request.url.toString().replace(Regex("^.+\\?u=|&l.+$"), ""),
                     StandardCharsets.UTF_8.toString()
                 )
-                val uri = Uri.parse(decodedUrl).buildUpon().scheme("https").build()
+                Log.d("shouldOverrideUrlLoading", "decodedUrl: $decodedUrl")
+                val uri = Uri.parse(decodedUrl)
 
                 Log.d("shouldOverrideUrlLoading", "Url: $uri")
                 startActivity(Intent(Intent.ACTION_VIEW, uri))
