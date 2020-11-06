@@ -63,7 +63,6 @@ class LoginActivity: AppCompatActivity() {
                 login_desc.text = getString(R.string.login_info)
                 login_list.visibility = ViewGroup.VISIBLE
                 login_list.text = TextUtils.concat(
-                    getBulletedList(getText(R.string.login_list_1)),
                     getBulletedList(getText(R.string.login_list_2)),
                     getBulletedList(getText(R.string.login_list_3)),
                     getBulletedList(getText(R.string.login_list_4))
