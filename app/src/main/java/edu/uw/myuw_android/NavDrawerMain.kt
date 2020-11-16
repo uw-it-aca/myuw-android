@@ -22,6 +22,9 @@ class NavDrawerMain : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        AuthStateWrapper.tryAuthServiceInit(this)
+
         setContentView(R.layout.activity_nav_drawer_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -100,6 +103,7 @@ class NavDrawerMain : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        AuthStateWrapper.tryAuthServiceInit(this)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         val currentPageId = (navHostFragment?.childFragmentManager?.fragments?.get(0) as? CommonWebViewFragment)?.args?.uniqueId
         val currentPageWebview = (navHostFragment?.childFragmentManager?.fragments?.get(0) as? CommonWebViewFragment)?.webView
@@ -107,6 +111,11 @@ class NavDrawerMain : AppCompatActivity() {
         if (currentPageId != null && currentPageWebview != null)
             CommonWebViewFragment.webViewMap[currentPageId] = currentPageWebview
         (navHostFragment?.childFragmentManager?.fragments?.get(0) as? CommonWebViewFragment)?.webView?.reload()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        AuthStateWrapper.tryAuthServiceDispose()
     }
 
     override fun onDestroy() {

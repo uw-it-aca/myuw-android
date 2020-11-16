@@ -43,6 +43,7 @@ class LoginActivity: AppCompatActivity() {
             tryLoginWithAppAuth()
         }
 
+        AuthStateWrapper.tryAuthServiceInit(this)
         authState = AuthStateWrapper(this)
 
         if (authState.couldBeAuthorized) {
@@ -62,7 +63,6 @@ class LoginActivity: AppCompatActivity() {
                 login_desc.text = getString(R.string.login_info)
                 login_list.visibility = ViewGroup.VISIBLE
                 login_list.text = TextUtils.concat(
-                    getBulletedList(getText(R.string.login_list_1)),
                     getBulletedList(getText(R.string.login_list_2)),
                     getBulletedList(getText(R.string.login_list_3)),
                     getBulletedList(getText(R.string.login_list_4))
@@ -71,9 +71,14 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        authState.onDestroy()
+    override fun onResume() {
+        super.onResume()
+        AuthStateWrapper.tryAuthServiceInit(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        AuthStateWrapper.tryAuthServiceDispose()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

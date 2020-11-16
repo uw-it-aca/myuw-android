@@ -172,7 +172,6 @@ object UserInfoStore {
                 Log.e("updateAffiliations - http error", e.toString())
                 InternetCheck {
                     if (it) {
-                        authState.onDestroy()
                         ErrorActivity.showError(
                             resources.getString(R.string.error_affiliations_update),
                             resources.getString(R.string.error_affilications_update_desc),
@@ -181,7 +180,6 @@ object UserInfoStore {
                             activity
                         )
                     } else {
-                        authState.onDestroy()
                         ErrorActivity.showError(
                             resources.getString(R.string.no_internet),
                             resources.getString(R.string.no_internet_desc),

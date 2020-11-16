@@ -27,7 +27,6 @@
     <string name="no_internet">No Internet Connection</string>
     <string name="no_internet_desc">It looks like you’re offline. Connect to the internet and retry to access MyUW.</string>
     <string name="login_info">The MyUW app is designed to keep you signed in to MyUW for convenience. Here are some tips to keep your UW NetID and personal information safe:\n</string>
-    <string name="login_list_1">Use a strong password\n</string>
     <string name="login_list_2">Configure your device to require a passcode, biometric factor, or other security measure to unlock it\n</string>
     <string name="login_list_3">Make sure your device is locked when not in use\n</string>
     <string name="login_list_4">Report a lost or stolen device\n</string>
