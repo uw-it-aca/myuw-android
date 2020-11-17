@@ -9,6 +9,7 @@ import android.net.Uri
 import android.util.Log
 import edu.my.myuw_android.R
 import net.openid.appauth.*
+import java.util.concurrent.atomic.AtomicReference
 
 class AuthStateWrapper(private val activity: Activity) {
     private val authSharedPreferences: SharedPreferences =
@@ -16,7 +17,29 @@ class AuthStateWrapper(private val activity: Activity) {
     private val affiliationsSharedPreferences =
         activity.getSharedPreferences("affiliations", Context.MODE_PRIVATE)
     private val resources: Resources = activity.resources
-    private var authorizationService: AuthorizationService = AuthorizationService(activity)
+
+    companion object {
+        private var authorizationService: AtomicReference<AuthorizationService> = AtomicReference()
+
+        fun tryAuthServiceInit(activity: Activity): Boolean {
+            Log.d("AuthStateWrapperStatic", "AuthStateWrapper - tryAuthServiceInit")
+            authorizationService.get()?.let {
+                return false
+            }
+            Log.d("AuthStateWrapperStatic", "AuthStateWrapper - tryAuthServiceInit: create new")
+            authorizationService.set(AuthorizationService(activity))
+            return true
+        }
+
+        fun tryAuthServiceDispose(): Boolean {
+            authorizationService.get()?.let {
+                authorizationService.set(null)
+                it.dispose()
+                return true
+            }
+            return false
+        }
+    }
 
     /*
     Extends AuthState class to update the shared preferences when an update is made
@@ -72,7 +95,7 @@ class AuthStateWrapper(private val activity: Activity) {
         authState.let {
             if (resp != null) {
                 it.update(resp, ex, activity)
-                authorizationService.performTokenRequest(
+                authorizationService.get().performTokenRequest(
                     resp.createTokenExchangeRequest()
                 ) { response, ex_new ->
                     if (response != null) {
@@ -91,7 +114,7 @@ class AuthStateWrapper(private val activity: Activity) {
             when {
                 it.needsTokenRefresh || force -> {
                     val refreshRequest = it.createTokenRefreshRequest()
-                    authorizationService.performTokenRequest(refreshRequest) { response, ex ->
+                    authorizationService.get().performTokenRequest(refreshRequest) { response, ex ->
                         if (response != null) {
                             it.update(response, ex, activity)
                             callback(it.accessToken!!, it.idToken!!)
@@ -111,7 +134,7 @@ class AuthStateWrapper(private val activity: Activity) {
     }
 
     fun getAuthorizationRequestIntent(request: AuthorizationRequest): Intent {
-        return authorizationService.getAuthorizationRequestIntent(request)
+        return authorizationService.get().getAuthorizationRequestIntent(request)
     }
 
     fun deleteAuth(): AuthStateWrapper {
@@ -123,13 +146,8 @@ class AuthStateWrapper(private val activity: Activity) {
         return this
     }
 
-    fun onDestroy() {
-        authorizationService.dispose()
-    }
-
     fun showAuthenticationError() {
         deleteAuth()
-        onDestroy()
         val intent = Intent(activity, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra("LOGGED_OUT", true)
