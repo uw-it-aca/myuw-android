@@ -20,9 +20,6 @@ import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
 import org.json.JSONObject
-import java.net.CookieHandler
-import java.net.CookieManager
-import java.net.CookiePolicy
 
 class LoginActivity: AppCompatActivity() {
 
@@ -36,8 +33,6 @@ class LoginActivity: AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
-        CookieHandler.setDefault(CookieManager(null, CookiePolicy.ACCEPT_NONE))
 
         loginButton.setOnClickListener {
             tryLoginWithAppAuth()

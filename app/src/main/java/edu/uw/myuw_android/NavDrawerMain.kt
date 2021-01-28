@@ -56,6 +56,7 @@ class NavDrawerMain : AppCompatActivity() {
         navView.getHeaderView(0).setOnClickListener{
             navController.navigate(R.id.nav_profile)
             navView.setCheckedItem(R.id.nav_profile)
+            currentMenuItemId = R.id.nav_profile
             drawerLayout.closeDrawer(navView)
         }
 
