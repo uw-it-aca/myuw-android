@@ -33,7 +33,7 @@ class ErrorActivity : AppCompatActivity() {
 
             errorButton.setOnClickListener { _ ->
                 val serializedHandler = it.getSerializableExtra(EXTRA_ERROR_BUTTON_FUNC)
-                Log.d("ErrorActivity - onCreate", serializedHandler?.toString())
+                Log.d("ErrorActivity - onCreate", serializedHandler.toString())
                 serializedHandler?.also { errorHandler ->
                     when (errorHandler as ErrorHandlerEnum) {
                         ErrorHandlerEnum.RETRY_LOGIN -> retryLogin()
