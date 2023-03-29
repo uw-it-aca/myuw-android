@@ -21,12 +21,12 @@ def openid_redirect_uri = properties.getProperty('openid.redirect_uri')
 def openid_client_id = properties.getProperty('openid.client_id')
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "edu.uw.myuw_android"
         minSdkVersion 26
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 7
         versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
