@@ -22,7 +22,6 @@ def openid_client_id = properties.getProperty('openid.client_id')
 
 android {
     compileSdkVersion 33
-    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "edu.uw.myuw_android"
         minSdkVersion 26
