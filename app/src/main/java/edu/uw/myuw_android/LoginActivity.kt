@@ -141,9 +141,6 @@ class LoginActivity: AppCompatActivity() {
 
                 val idObject = JSONObject(String(Base64.decode(authState.idToken!!.split(".")[1], Base64.URL_SAFE)))
                 UserInfoStore.name.postValue(idObject["sub"] as String)
-                // TODO: Fix this
-                // UserInfoStore.email.postValue(idObject["email"] as String)
-                // UserInfoStore.netId.postValue((idObject["email"] as String).split('@')[0])
 
                 runBlocking {
                     job.join()
