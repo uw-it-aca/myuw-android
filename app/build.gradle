@@ -26,8 +26,8 @@ android {
         applicationId "edu.uw.myuw_android"
         minSdkVersion 26
         targetSdkVersion 33
-        versionCode 8
-        versionName "1.0.2"
+        versionCode 9
+        versionName "1.0.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resValue "string", "myuw_base_url", "${myuw_base_url}"
         resValue "string", "myuw_affiliation_endpoint", "${myuw_base_url}${properties.getProperty('myuw.affiliation_endpoint')}"
