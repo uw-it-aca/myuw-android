@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 
 class CommonWebViewFragment: Fragment() {
-    public val args: CommonWebViewFragmentArgs by navArgs()
+    val args: CommonWebViewFragmentArgs by navArgs()
     lateinit var webView: WebView
     lateinit var baseUrl: String
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -100,7 +100,7 @@ class CommonWebViewFragment: Fragment() {
             request: WebResourceRequest?,
             errorResponse: WebResourceResponse?
         ) {
-            Log.d(" - onReceivedHttpError", errorResponse?.reasonPhrase.toString());
+            Log.d(" - onReceivedHttpError", errorResponse?.reasonPhrase.toString())
             if (errorResponse?.statusCode == 401) {
                 if (view?.url?.endsWith("/logout") == true) {
                     authState.deleteAuth()
