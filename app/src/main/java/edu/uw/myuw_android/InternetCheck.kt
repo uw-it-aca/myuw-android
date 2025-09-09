@@ -10,6 +10,7 @@ class InternetCheck(private val onInternetChecked: (Boolean) -> Unit) :
         execute()
     }
 
+    @Deprecated("doInBackground() is deprecated - ??")
     override fun doInBackground(vararg voids: Void): Boolean {
         return try {
             val ipAddr: InetAddress = InetAddress.getByName("www.washington.edu")
@@ -20,6 +21,7 @@ class InternetCheck(private val onInternetChecked: (Boolean) -> Unit) :
 
     }
 
+    @Deprecated("onPostExecute() is deprecated - ??")
     override fun onPostExecute(internet: Boolean) {
         onInternetChecked(internet)
     }

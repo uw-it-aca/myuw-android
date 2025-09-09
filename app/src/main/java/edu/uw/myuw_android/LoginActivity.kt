@@ -76,6 +76,7 @@ class LoginActivity: AppCompatActivity() {
         AuthStateWrapper.tryAuthServiceDispose()
     }
 
+    @Deprecated("onActivityResult() is deprecated - ??")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_AUTH) {
             data?.also { it ->
