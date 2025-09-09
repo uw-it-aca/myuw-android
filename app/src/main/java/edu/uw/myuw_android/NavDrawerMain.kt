@@ -124,6 +124,7 @@ class NavDrawerMain : AppCompatActivity() {
         CommonWebViewFragment.webViewMap.clear()
     }
 
+    @Deprecated("onBackPressed() is deprecated - ??")
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(nav_view)) {
             drawer_layout.closeDrawer(nav_view)
