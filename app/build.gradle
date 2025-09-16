@@ -68,8 +68,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    //noinspection GradleDependency - 1.10.0 not working with current codebase
-    implementation 'androidx.core:core-ktx:1.9.0'
+    //noinspection GradleDependency - 1.15.0 not working with current codebase
+    implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'com.google.android.material:material:1.13.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     //noinspection GradleDependency - 2.8.0 not working with current codebase
