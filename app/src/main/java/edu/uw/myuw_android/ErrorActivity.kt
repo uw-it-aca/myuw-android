@@ -8,10 +8,10 @@ import android.util.Log
 import edu.my.myuw_android.R
 import kotlinx.android.synthetic.main.activity_error.*
 
-const val EXTRA_ERROR_MESSAGE_HEADING = "edu.uw.myuw_andorid.ERROR_MESSAGE_HEADING"
-const val EXTRA_ERROR_MESSAGE = "edu.uw.myuw_andorid.ERROR_MESSAGE"
-const val EXTRA_ERROR_BUTTON_TEXT = "edu.uw.myuw_andorid.ERROR_BUTTON_TEXT"
-const val EXTRA_ERROR_BUTTON_FUNC = "edu.uw.myuw_andorid.ERROR_BUTTON_FUNC"
+const val EXTRA_ERROR_MESSAGE_HEADING = "edu.uw.myuw_android.ERROR_MESSAGE_HEADING"
+const val EXTRA_ERROR_MESSAGE = "edu.uw.myuw_android.ERROR_MESSAGE"
+const val EXTRA_ERROR_BUTTON_TEXT = "edu.uw.myuw_android.ERROR_BUTTON_TEXT"
+const val EXTRA_ERROR_BUTTON_FUNC = "edu.uw.myuw_android.ERROR_BUTTON_FUNC"
 
 class ErrorActivity : AppCompatActivity() {
     enum class ErrorHandlerEnum {
